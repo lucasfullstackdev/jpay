@@ -27,7 +27,6 @@ class BankingService
       $statusCode = $response->getStatusCode();
 
       if ($statusCode === 200) {
-        // return json_decode($response->getBody()->getContents(), true);
         return new CustomerOshi(
           (object) json_decode($response->getBody()->getContents(), true)
         );

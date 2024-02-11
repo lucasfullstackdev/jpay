@@ -3,19 +3,28 @@
 namespace App\Services;
 
 use App\Http\Requests\Purchase;
-use App\Services\Banking\CustomerService;
+use App\Jobs\CreateBillingJob;
+use App\Jobs\CreateExternalCustomerJob;
+use App\Models\Customer;
 
 class TaxDomicileService extends Service
 {
-  public function __construct(private CustomerService $customerService)
+  public function purchase(Purchase $purchase)
   {
+    /* Se Cliente ja existe, criar cobranca */
+    $customer = $this->getCustomer($purchase->document);
+    if (!empty($customer)) {
+      return CreateBillingJob::dispatch($customer);
+    }
+
+    /* Se Cliente nao existir, criar */
+    return CreateExternalCustomerJob::dispatch(
+      $purchase->only(['name', 'email', 'phone', 'document'])
+    );
   }
 
-  public function purchase(Purchase $request)
+  public function getCustomer(string $document): ?Customer
   {
-    $customer = $this->customerService->store($request);
-    
-    dd($customer);
-    dd($request->all());
+    return Customer::where('document', $document)->first() ?? null;
   }
 }

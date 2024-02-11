@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\Purchase;
-use App\Services\CustomerService;
 use App\Services\TaxDomicileService;
 
 class TaxDomicileController extends Controller
