@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Auth\Api\AuthController;
+use App\Http\Controllers\TaxDomicileController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -27,5 +28,11 @@ Route::prefix('auth')->group(function () {
         Route::get('me', [AuthController::class, 'me']);
         Route::post('logout', [AuthController::class, 'logout']);
         Route::post('logout/all', [AuthController::class, 'logoutAll']);
+    });
+});
+
+Route::prefix('v1')->group(function () {
+    Route::prefix('tax-domicile')->group(function () {
+        Route::post('purchase', [TaxDomicileController::class, 'purchase']);
     });
 });
