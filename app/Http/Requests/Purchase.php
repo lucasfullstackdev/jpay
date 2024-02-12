@@ -36,6 +36,7 @@ class Purchase extends BaseRequest
             'company.street.required'       => 'O Logradouro da empresa é obrigatório.',
             'company.number.required'       => 'O Número da Sede da empresa é obrigatório.',
             'company.neighborhood.required' => 'O Bairro da empresa é obrigatório.',
+            'company.zipCode.required'      => 'O CEP da empresa é obrigatório.',
         ];
     }
 }
