@@ -12,7 +12,6 @@ class TaxDomicileService extends Service
 {
   public function purchase(Purchase $purchase)
   {
-    /* Se Cliente ja existe, criar cobranca */
     $customer = $this->getCustomer($purchase->document);
     if (!empty($customer)) {
       return CreateBillingJob::dispatch(
@@ -22,7 +21,7 @@ class TaxDomicileService extends Service
 
     /* Se Cliente nao existir, criar */
     return CreateExternalCustomerJob::dispatch(
-      $purchase->only(['name', 'email', 'phone', 'document'])
+      $purchase->only(['name', 'email', 'phone', 'document', 'company'])
     );
   }
 

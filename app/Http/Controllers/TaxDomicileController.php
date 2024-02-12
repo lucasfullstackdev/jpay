@@ -14,7 +14,5 @@ class TaxDomicileController extends Controller
     public function purchase(Purchase $request)
     {
         $this->taxDomicileService->purchase($request);
-
-        // dd($request->all());
     }
 }

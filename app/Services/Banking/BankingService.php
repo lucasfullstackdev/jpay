@@ -11,6 +11,7 @@ use App\Services\Banking\Asaas\AsaasBilling;
 use App\Services\Banking\Asaas\AsaasCustomer;
 use Exception;
 use GuzzleHttp\Client;
+use Illuminate\Support\Facades\Log;
 
 class BankingService
 {
@@ -29,9 +30,10 @@ class BankingService
       $statusCode = $response->getStatusCode();
 
       if ($statusCode === 200) {
-        return new CustomerOshi(
-          (object) json_decode($response->getBody()->getContents(), true)
-        );
+        $response = json_decode($response->getBody()->getContents(), true );
+        $response['document'] = $customer->document;
+
+        return new CustomerOshi((object) $response);
       }
 
       /**
