@@ -6,6 +6,7 @@ use App\Http\Requests\Purchase;
 use App\Jobs\CreateBillingJob;
 use App\Jobs\CreateExternalCustomerJob;
 use App\Models\Customer;
+use App\Services\Banking\Asaas\AsaasBilling;
 
 class TaxDomicileService extends Service
 {
@@ -14,7 +15,9 @@ class TaxDomicileService extends Service
     /* Se Cliente ja existe, criar cobranca */
     $customer = $this->getCustomer($purchase->document);
     if (!empty($customer)) {
-      return CreateBillingJob::dispatch($customer);
+      return CreateBillingJob::dispatch(
+        new AsaasBilling($customer)
+      );
     }
 
     /* Se Cliente nao existir, criar */

@@ -5,6 +5,7 @@ namespace App\Jobs;
 use App\Dtos\Customer\CustomerOshi;
 use App\Http\Requests\Purchase;
 use App\Models\Customer;
+use App\Services\Banking\Asaas\AsaasBilling;
 use App\Services\Banking\Asaas\AsaasCustomer;
 use App\Services\Banking\BankingService;
 use Illuminate\Bus\Queueable;
@@ -34,8 +35,10 @@ class CreateExternalCustomerJob implements ShouldQueue
      */
     public function handle(): void
     {
+        $customer = Customer::create($this->sendCustomer($this->purchase));
+
         CreateBillingJob::dispatch(
-            Customer::create($this->sendCustomer($this->purchase))
+            new AsaasBilling($customer)
         );
     }
 

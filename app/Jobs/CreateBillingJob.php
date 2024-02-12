@@ -2,22 +2,29 @@
 
 namespace App\Jobs;
 
-use App\Models\Customer;
+use App\Models\BillingSending;
+use App\Services\Banking\Asaas\AsaasBilling;
+use App\Services\Banking\BankingService;
+use Carbon\Carbon;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Log;
 
 class CreateBillingJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
+    private BankingService $bankingService;
+
     /**
      * Create a new job instance.
      */
-    public function __construct(public Customer $customer)
+    public function __construct(public AsaasBilling $billing)
     {
+        $this->bankingService = new BankingService();
     }
 
     /**
@@ -25,6 +32,54 @@ class CreateBillingJob implements ShouldQueue
      */
     public function handle(): void
     {
-        //
+        // So devemos permitir caso o cliente nao tenha comprado no ultimo ano
+        if ($this->hasBillingActive()) {
+            return;
+        }
+
+        BillingSending::create(
+            $this->sendBilling()
+        );
+    }
+
+    /**
+     * Regra que deve ser implementada para evitar multiplas cobrancas:
+     * 
+     * se cliente nunca comprou -> enviar cobranca
+     * se cliente possui uma compra feita em menos de 12 meses -> bloquear
+     * se cliente nao possui uma compra feita em menos de 12 meses -> enviar cobranca
+     */
+    private function hasBillingActive(): bool
+    {
+        $billing = $this->getBilling();
+
+        // Se nao tiver cobranca, permitir que possa criar uma nova cobranca
+        if (empty($billing)) {
+            return false;
+        }
+
+        // Se o domicílio fiscal tiver menos de 1 ano, não premitir criar nova cobranca
+        if ($this->billingMadeInLessThanAYear($billing)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    private function billingMadeInLessThanAYear(BillingSending $billing): bool
+    {
+        return !Carbon::now()->diffInYears($billing->created_at);
+    }
+
+    private function getBilling(): ?BillingSending
+    {
+        return BillingSending::where('customer', $this->billing->customer)->orderBy('created_at', 'desc')->first() ?? null;
+    }
+
+    private function sendBilling()
+    {
+        return (array) $this->bankingService->createBilling(
+            $this->billing
+        );
     }
 }
