@@ -68,6 +68,10 @@ class CreateExternalCustomerJob implements ShouldQueue
             $company->country = $customerToUpdate->company->country;
             $company->save();
             DB::commit();
+
+            CreateBillingJob::dispatch(
+                new AsaasBilling($customer)
+            );
         } catch (\Throwable $th) {
             dd($th->getMessage());
         }
