@@ -64,14 +64,12 @@ class CreateExternalCustomerJob implements ShouldQueue
             $customer->save();
             DB::commit();
 
-            // CreateBillingJob::dispatch(
-            //     new AsaasBilling($customer)
-            // );
+            CreateBillingJob::dispatch(
+                new AsaasBilling($customer)
+            );
         } catch (\Throwable $th) {
             dd($th->getMessage());
         }
-
-        dd('salvou!');
     }
 
     private function sendCustomer($purchase): object

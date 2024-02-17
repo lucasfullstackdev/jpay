@@ -21,7 +21,8 @@ class Customer extends Model
         'neighborhood',
         'city',
         'state',
-        'country'
+        'country',
+        'postal_code'
     ];
 
     public function company()

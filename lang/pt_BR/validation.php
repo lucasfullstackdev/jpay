@@ -191,7 +191,8 @@ return [
         'month'     => 'mês',
         'name'      => 'nome',
 
-        'postal_code'   => 'cep',
+        'postal_code' => 'cep',
+        'document'    => 'documento',
 
         # Dados da empresa
         'company.document'     => 'CNPJ da empresa',

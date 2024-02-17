@@ -40,17 +40,4 @@ class Purchase extends BaseRequest
             'company.postal_code'  => 'required|string',
         ];
     }
-
-    public function messages(): array
-    {
-        return [
-            'document.required' => 'O campo documento é obrigatório.',
-            'company.document.required'     => 'O documento da empresa é obrigatório.',
-            'company.name.required'         => 'A Razão Social da empresa é obrigatório.',
-            'company.street.required'       => 'O Logradouro da empresa é obrigatório.',
-            'company.number.required'       => 'O Número da Sede da empresa é obrigatório.',
-            'company.neighborhood.required' => 'O Bairro da empresa é obrigatório.',
-            'company.postal_code.required'      => 'O CEP da empresa é obrigatório.',
-        ];
-    }
 }
