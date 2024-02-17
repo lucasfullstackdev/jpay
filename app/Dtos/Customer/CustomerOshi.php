@@ -19,6 +19,7 @@ class CustomerOshi
   public string $state;
   public string $country;
   public string $postal_code;
+  public ?string $complement;
 
   public CompanyOshi $company;
 
@@ -38,6 +39,7 @@ class CustomerOshi
     $this->state        = $customer->state;
     $this->country      = $customer->country ?? 'Brasil';
     $this->postal_code  = $customer->postal_code ?? $customer->postalCode;
+    $this->complement   = $customer->complement ?? null;
 
     # Empresa do cliente
     $this->company = new CompanyOshi($customer);

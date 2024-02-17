@@ -193,6 +193,7 @@ return [
 
         'postal_code' => 'cep',
         'document'    => 'documento',
+        
 
         # Dados da empresa
         'company.document'     => 'CNPJ da empresa',
@@ -204,6 +205,7 @@ return [
         'company.city'         => 'cidade da empresa',
         'company.state'        => 'estado da empresa',
         'company.country'      => 'país da empresa',
+        'company.complement'   => 'complemento',
 
         'company_name'   => 'razão social',
         'neighborhood' => 'bairro',

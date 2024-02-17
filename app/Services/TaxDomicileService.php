@@ -21,7 +21,7 @@ class TaxDomicileService extends Service
 
     /* Se Cliente nao existir, criar */
     return CreateExternalCustomerJob::dispatch(
-      $purchase->only(['name', 'email', 'phone', 'document', 'street', 'number', 'neighborhood', 'city', 'state', 'country', 'postal_code', 'company'])
+      $purchase->only(['name', 'email', 'phone', 'document', 'street', 'number', 'neighborhood', 'city', 'state', 'country', 'postal_code', 'complement', 'company'])
     );
   }
 

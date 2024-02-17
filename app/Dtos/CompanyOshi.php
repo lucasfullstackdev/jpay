@@ -15,6 +15,7 @@ class CompanyOshi
   public ?string $city;
   public ?string $state;
   public ?string $country;
+  public ?string $complement;
   public ?string $owner_id;
 
   public function __construct(object $customer)
@@ -28,5 +29,6 @@ class CompanyOshi
     $this->city          = $customer->company['city']         ?? null;
     $this->state         = $customer->company['state']        ?? null;
     $this->country       = $customer->company['country']      ?? null;
+    $this->complement    = $customer->company['complement']   ?? null;
   }
 }

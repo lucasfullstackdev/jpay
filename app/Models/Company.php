@@ -20,6 +20,7 @@ class Company extends Model
         'city',
         'state',
         'country',
-        'postal_code'
+        'postal_code',
+        'complement'
     ];
 }
