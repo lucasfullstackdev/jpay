@@ -32,6 +32,6 @@ class AsaasCustomer implements CustomerInterface
     $this->company       = $customer->company['name'];
     $this->document      = $customer->company['document'];
     $this->addressNumber = $customer->company['number'];
-    $this->postalCode    = $customer->company['zipCode'];
+    $this->postalCode    = $customer->company['postal_code'];
   }
 }

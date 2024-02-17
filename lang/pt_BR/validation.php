@@ -190,7 +190,20 @@ return [
         'mobile'    => 'celular',
         'month'     => 'mês',
         'name'      => 'nome',
-        'zipcode'   => 'cep',
+
+        'postal_code'   => 'cep',
+
+        # Dados da empresa
+        'company.document'     => 'CNPJ da empresa',
+        'company.name'         => 'razão social da empresa',
+        'company.street'       => 'logradouro da empresa',
+        'company.number'       => 'número da empresa',
+        'company.neighborhood' => 'bairro da empresa',
+        'company.postal_code'  => 'cep da empresa',
+        'company.city'         => 'cidade da empresa',
+        'company.state'        => 'estado da empresa',
+        'company.country'      => 'país da empresa',
+
         'company_name'   => 'razão social',
         'neighborhood' => 'bairro',
         'number'    => 'número',

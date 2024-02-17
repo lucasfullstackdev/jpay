@@ -18,6 +18,7 @@ class CustomerOshi
   public string $city;
   public string $state;
   public string $country;
+  public string $postal_code;
 
   public CompanyOshi $company;
 
@@ -36,6 +37,7 @@ class CustomerOshi
     $this->city         = $customer->city;
     $this->state        = $customer->state;
     $this->country      = $customer->country ?? 'Brasil';
+    $this->postal_code  = $customer->postal_code ?? $customer->postalCode;
 
     # Empresa do cliente
     $this->company = new CompanyOshi($customer);

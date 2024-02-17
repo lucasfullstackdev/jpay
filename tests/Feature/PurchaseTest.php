@@ -19,13 +19,17 @@ class PurchaseTest extends TestCase
         'city' => 'cidade',
         'state' => 'PE',
         'country' => 'Brasil',
+        "postal_code" => "56328130",
         "company" => [
             "document" => "48248201031",
             "name" => "Razao social",
             "street" => "rua da empresa",
             "number" => "48",
             "neighborhood" => "bairro",
-            "zipCode" => "56328130"
+            "city" => "Florianópolis",
+            "state" => "SC",
+            "country" => "Brasil",
+            "postal_code" => "56328130"
         ]
     ];
 
@@ -35,46 +39,54 @@ class PurchaseTest extends TestCase
         $response = (object) $response->json();
 
         $this->assertFalse($response->success);
-        $this->assertCount(16, $response->errors);
+        $this->assertCount(20, $response->errors);
         $this->assertEquals([
-            'name',
-            'email',
-            'phone',
-            'document',
-            'street',
-            'number',
-            'neighborhood',
-            'city',
-            'state',
-            'country',
-            'company.document',
-            'company.name',
-            'company.street',
-            'company.number',
-            'company.neighborhood',
-            'company.zipCode',
+            "name",
+            "email",
+            "phone",
+            "document",
+            "street",
+            "number",
+            "neighborhood",
+            "city",
+            "state",
+            "country",
+            "postal_code",
+            "company.document",
+            "company.name",
+            "company.street",
+            "company.number",
+            "company.neighborhood",
+            "company.city",
+            "company.state",
+            "company.country",
+            "company.postal_code",
         ], array_keys($response->errors));
 
         $this->assertEquals('O campo nome é obrigatório.', $response->errors['name'][0]);
         $this->assertEquals('O campo email é obrigatório.', $response->errors['email'][0]);
         $this->assertEquals('O campo telefone é obrigatório.', $response->errors['phone'][0]);
         $this->assertEquals('O campo documento é obrigatório.', $response->errors['document'][0]);
-        
-        # Endereco do cliente
-        $this->assertEQuals("O campo rua é obrigatório.", $response->errors['street'][0]);
-        $this->assertEQuals("O campo número é obrigatório.", $response->errors['number'][0]);
-        $this->assertEQuals("O campo bairro é obrigatório.", $response->errors['neighborhood'][0]);
-        $this->assertEQuals("O campo cidade é obrigatório.", $response->errors['city'][0]);
-        $this->assertEQuals("O campo estado é obrigatório.", $response->errors['state'][0]);
-        $this->assertEQuals("O campo país é obrigatório.", $response->errors['country'][0]);
+
+        # Endereço do cliente
+        $this->assertEquals('O campo rua é obrigatório.', $response->errors['street'][0]);
+        $this->assertEquals('O campo número é obrigatório.', $response->errors['number'][0]);
+        $this->assertEquals('O campo bairro é obrigatório.', $response->errors['neighborhood'][0]);
+        $this->assertEquals('O campo cidade é obrigatório.', $response->errors['city'][0]);
+        $this->assertEquals('O campo estado é obrigatório.', $response->errors['state'][0]);
+        $this->assertEquals('O campo cep é obrigatório.', $response->errors['postal_code'][0]);
+        $this->assertEquals('O campo país é obrigatório.', $response->errors['country'][0]);
 
         # Dados da empresa
-        $this->assertEquals('O documento da empresa é obrigatório.', $response->errors['company.document'][0]);
-        $this->assertEquals('A Razão Social da empresa é obrigatório.', $response->errors['company.name'][0]);
-        $this->assertEquals('O Logradouro da empresa é obrigatório.', $response->errors['company.street'][0]);
-        $this->assertEquals('O Número da Sede da empresa é obrigatório.', $response->errors['company.number'][0]);
-        $this->assertEquals('O Bairro da empresa é obrigatório.', $response->errors['company.neighborhood'][0]);
-        $this->assertEquals('O CEP da empresa é obrigatório.', $response->errors['company.zipCode'][0]);
+        $this->assertEquals('O campo CNPJ da empresa é obrigatório.', $response->errors['company.document'][0]);
+        $this->assertEquals('O campo razão social da empresa é obrigatório.', $response->errors['company.name'][0]);
+        $this->assertEquals('O campo logradouro da empresa é obrigatório.', $response->errors['company.street'][0]);
+        $this->assertEquals('O campo número da empresa é obrigatório.', $response->errors['company.number'][0]);
+        $this->assertEquals('O campo bairro da empresa é obrigatório.', $response->errors['company.neighborhood'][0]);
+        $this->assertEquals('O campo cidade da empresa é obrigatório.', $response->errors['company.city'][0]);
+        $this->assertEquals('O campo estado da empresa é obrigatório.', $response->errors['company.state'][0]);
+        $this->assertEquals('O campo país da empresa é obrigatório.', $response->errors['company.country'][0]);
+        $this->assertEquals('O campo cep da empresa é obrigatório.', $response->errors['company.postal_code'][0]);
     }
 
     public function test_purchase_whitout_name()
@@ -185,6 +197,30 @@ class PurchaseTest extends TestCase
         $this->assertEQuals("O campo estado é obrigatório.", $response->errors['state'][0]);
     }
 
+    public function test_purchase_whitout_postal_code()
+    {
+        unset($this->body['postal_code']);
+
+        $response = $this->json('POST', '/api/v1/tax-domicile/purchase', $this->body);
+        $response = (object) $response->json();
+
+        $this->assertFalse($response->success);
+        $this->assertCount(1, $response->errors);
+        $this->assertEquals('O campo cep é obrigatório.', $response->errors['postal_code'][0]);
+    }
+
+    public function test_purchase_whitout_country()
+    {
+        unset($this->body['country']);
+
+        $response = $this->json('POST', '/api/v1/tax-domicile/purchase', $this->body);
+        $response = (object) $response->json();
+
+        $this->assertFalse($response->success);
+        $this->assertCount(1, $response->errors);
+        $this->assertEquals('O campo país é obrigatório.', $response->errors['country'][0]);
+    }
+
     public function test_purchase_whitout_company_document()
     {
         unset($this->body['company']['document']);
@@ -194,7 +230,7 @@ class PurchaseTest extends TestCase
 
         $this->assertFalse($response->success);
         $this->assertCount(1, $response->errors);
-        $this->assertEquals('O documento da empresa é obrigatório.', $response->errors['company.document'][0]);
+        $this->assertEquals('O campo CNPJ da empresa é obrigatório.', $response->errors['company.document'][0]);
     }
 
     public function test_purchase_whitout_company_name()
@@ -206,7 +242,7 @@ class PurchaseTest extends TestCase
 
         $this->assertFalse($response->success);
         $this->assertCount(1, $response->errors);
-        $this->assertEquals('A Razão Social da empresa é obrigatório.', $response->errors['company.name'][0]);
+        $this->assertEquals('O campo razão social da empresa é obrigatório.', $response->errors['company.name'][0]);
     }
 
     public function test_purchase_whitout_company_street()
@@ -218,7 +254,7 @@ class PurchaseTest extends TestCase
 
         $this->assertFalse($response->success);
         $this->assertCount(1, $response->errors);
-        $this->assertEquals('O Logradouro da empresa é obrigatório.', $response->errors['company.street'][0]);
+        $this->assertEquals('O campo logradouro da empresa é obrigatório.', $response->errors['company.street'][0]);
     }
 
     public function test_purchase_whitout_company_number()
@@ -230,7 +266,7 @@ class PurchaseTest extends TestCase
 
         $this->assertFalse($response->success);
         $this->assertCount(1, $response->errors);
-        $this->assertEquals('O Número da Sede da empresa é obrigatório.', $response->errors['company.number'][0]);
+        $this->assertEquals('O campo número da empresa é obrigatório.', $response->errors['company.number'][0]);
     }
 
     public function test_purchase_whitout_company_neighborhood()
@@ -242,18 +278,42 @@ class PurchaseTest extends TestCase
 
         $this->assertFalse($response->success);
         $this->assertCount(1, $response->errors);
-        $this->assertEquals('O Bairro da empresa é obrigatório.', $response->errors['company.neighborhood'][0]);
+        $this->assertEquals('O campo bairro da empresa é obrigatório.', $response->errors['company.neighborhood'][0]);
     }
 
     public function test_purchase_whitout_company_state()
     {
-        unset($this->body['company']['zipCode']);
+        unset($this->body['company']['postal_code']);
 
         $response = $this->json('POST', '/api/v1/tax-domicile/purchase', $this->body);
         $response = (object) $response->json();
 
         $this->assertFalse($response->success);
         $this->assertCount(1, $response->errors);
-        $this->assertEquals('O CEP da empresa é obrigatório.', $response->errors['company.zipCode'][0]);
+        $this->assertEquals('O campo cep da empresa é obrigatório.', $response->errors['company.postal_code'][0]);
+    }
+
+    public function test_purchase_whitout_company_city()
+    {
+        unset($this->body['company']['city']);
+
+        $response = $this->json('POST', '/api/v1/tax-domicile/purchase', $this->body);
+        $response = (object) $response->json();
+
+        $this->assertFalse($response->success);
+        $this->assertCount(1, $response->errors);
+        $this->assertEquals('O campo cidade da empresa é obrigatório.', $response->errors['company.city'][0]);
+    }
+
+    public function test_purchase_whitout_company_country()
+    {
+        unset($this->body['company']['country']);
+
+        $response = $this->json('POST', '/api/v1/tax-domicile/purchase', $this->body);
+        $response = (object) $response->json();
+
+        $this->assertFalse($response->success);
+        $this->assertCount(1, $response->errors);
+        $this->assertEquals('O campo país da empresa é obrigatório.', $response->errors['company.country'][0]);
     }
 }

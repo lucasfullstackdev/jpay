@@ -19,12 +19,12 @@ class CompanyOshi
 
   public function __construct(object $customer)
   {
-    $this->name          = $customer->company['name']         ?? $customer->company       ?? null;
-    $this->document      = $customer->company['document']     ?? $customer->document      ?? null;
+    $this->name          = $customer->company['name']         ?? $customer->company  ?? null;
+    $this->document      = $customer->company['document']     ?? $customer->document ?? null;
     $this->street        = $customer->company['street']       ?? null;
     $this->number        = $customer->company['number']       ?? null;
     $this->neighborhood  = $customer->company['neighborhood'] ?? null;
-    $this->postal_code   = $customer->company['zipCode']      ?? null;
+    $this->postal_code   = $customer->company['postal_code']  ?? null;
     $this->city          = $customer->company['city']         ?? null;
     $this->state         = $customer->company['state']        ?? null;
     $this->country       = $customer->company['country']      ?? null;

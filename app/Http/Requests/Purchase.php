@@ -26,6 +26,7 @@ class Purchase extends BaseRequest
             'city'                 => 'required|string',
             'state'                => 'required|string',
             'country'              => 'required|string',
+            'postal_code'          => 'required|string',
 
             # Dados da empresa
             'company.document'     => 'required|string',
@@ -36,7 +37,7 @@ class Purchase extends BaseRequest
             'company.city'         => 'required|string',
             'company.state'        => 'required|string',
             'company.country'      => 'required|string',
-            'company.zipCode'      => 'required|string',
+            'company.postal_code'  => 'required|string',
         ];
     }
 
@@ -49,7 +50,7 @@ class Purchase extends BaseRequest
             'company.street.required'       => 'O Logradouro da empresa é obrigatório.',
             'company.number.required'       => 'O Número da Sede da empresa é obrigatório.',
             'company.neighborhood.required' => 'O Bairro da empresa é obrigatório.',
-            'company.zipCode.required'      => 'O CEP da empresa é obrigatório.',
+            'company.postal_code.required'      => 'O CEP da empresa é obrigatório.',
         ];
     }
 }
