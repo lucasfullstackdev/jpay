@@ -16,5 +16,17 @@ class Customer extends Model
         'phone',
         'document',
         'sku',
+        'street',
+        'number',
+        'neighborhood',
+        'city',
+        'state',
+        'country'
     ];
+
+    public function company()
+    {
+        return $this->hasOne(Company::class, 'owner_id', 'id');
+    }
+
 }

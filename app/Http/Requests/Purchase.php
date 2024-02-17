@@ -18,11 +18,24 @@ class Purchase extends BaseRequest
             'email'                => 'required|string|email:rfc,dns',
             'phone'                => 'required|string|min:11|max:11',
             'document'             => 'required|string|max:20',
+
+            # Endereco do cliente
+            'street'               => 'required|string',
+            'number'               => 'required|string',
+            'neighborhood'         => 'required|string',
+            'city'                 => 'required|string',
+            'state'                => 'required|string',
+            'country'              => 'required|string',
+
+            # Dados da empresa
             'company.document'     => 'required|string',
             'company.name'         => 'required|string',
             'company.street'       => 'required|string',
             'company.number'       => 'required|string',
             'company.neighborhood' => 'required|string',
+            'company.city'         => 'required|string',
+            'company.state'        => 'required|string',
+            'company.country'      => 'required|string',
             'company.zipCode'      => 'required|string',
         ];
     }

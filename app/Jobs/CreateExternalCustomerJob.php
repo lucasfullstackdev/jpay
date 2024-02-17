@@ -52,7 +52,7 @@ class CreateExternalCustomerJob implements ShouldQueue
             DB::beginTransaction();
             $customer = Customer::create((array) $customerOshi);
             $customerOshi->company->owner_id = $customer->id;
-            $company = Company::create((array) $customerOshi->company);
+            Company::create((array) $customerOshi->company);
             DB::commit();
 
             /** Enviando o cliente para o ASAAS */
@@ -62,19 +62,16 @@ class CreateExternalCustomerJob implements ShouldQueue
             DB::beginTransaction();
             $customer->sku = $customerToUpdate->sku;
             $customer->save();
-
-            $company->city = $customerToUpdate->company->city;
-            $company->state = $customerToUpdate->company->state;
-            $company->country = $customerToUpdate->company->country;
-            $company->save();
             DB::commit();
 
-            CreateBillingJob::dispatch(
-                new AsaasBilling($customer)
-            );
+            // CreateBillingJob::dispatch(
+            //     new AsaasBilling($customer)
+            // );
         } catch (\Throwable $th) {
             dd($th->getMessage());
         }
+
+        dd('salvou!');
     }
 
     private function sendCustomer($purchase): object
