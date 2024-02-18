@@ -3,21 +3,31 @@
 namespace App\Services\Signature;
 
 use App\Dtos\Document\DocumentOshi;
+use App\Dtos\Signer\SignerOshi;
 use App\Services\Signature\ClickSign\ClickSignDocument;
+use App\Services\Signature\ClickSign\ClickSignSigner;
 use GuzzleHttp\Client;
 use Symfony\Component\HttpFoundation\Response;
 
 class SignatureService
 {
+  private string $template;
+  private string $token;
+  private string $host;
+
+  public function __construct()
+  {
+    $this->host = env('CLICKSIGN_URL');
+    $this->template = env('CLICKSIGN_DOCUMENT_TEMPLATE');
+    $this->token = env('CLICKSIGN_TOKEN');
+  }
+
   public function sendDocument(ClickSignDocument $clickSignDocument)
   {
     $client = new Client();
-    $host = env('CLICKSIGN_URL');
-    $template = env('CLICKSIGN_DOCUMENT_TEMPLATE');
-    $token = env('CLICKSIGN_TOKEN');
 
     try {
-      $response = $client->post("$host/v2/templates/$template/documents?access_token=$token", [
+      $response = $client->post("$this->host/v2/templates/$this->template/documents?access_token=$this->token", [
         'json' => ['document' => $clickSignDocument->document]
       ]);
 
@@ -28,6 +38,28 @@ class SignatureService
         $response['customer'] = $clickSignDocument->customer->sku;
 
         return new DocumentOshi((object) $response);
+      }
+    } catch (\Throwable $th) {
+      dd($th->getMessage());
+    }
+  }
+
+  public function sendSigner(ClickSignSigner $clickSignSigner)
+  {
+    $client = new Client();
+
+    try {
+      $response = $client->post("$this->host/v1/signers?access_token=$this->token", [
+        'json' => ['signer' => $clickSignSigner->signer]
+      ]);
+
+      $statusCode = $response->getStatusCode();
+
+      if ($statusCode === Response::HTTP_CREATED) {
+        $response = json_decode($response->getBody()->getContents(), true);
+        $response['customer'] = $clickSignSigner->customer;
+
+        return new SignerOshi((object) $response);
       }
     } catch (\Throwable $th) {
       dd($th->getMessage());
