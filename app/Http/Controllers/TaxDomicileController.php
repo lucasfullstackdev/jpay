@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\Purchase;
 use App\Http\Requests\Webhook\Asaas;
 use App\Jobs\AsaasWebhookJob;
+use App\Jobs\CreateDocumentJob;
 use App\Services\TaxDomicileService;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -21,8 +22,10 @@ class TaxDomicileController extends Controller
 
     public function webhook(Asaas $request)
     {
-        AsaasWebhookJob::dispatch($request->only(['event', 'payment']));
+        CreateDocumentJob::dispatch((object) $request->payment);
 
-        return response()->json([], Response::HTTP_OK);
+        // AsaasWebhookJob::dispatch($request->only(['event', 'payment']));
+
+        // return response()->json([], Response::HTTP_OK);
     }
 }

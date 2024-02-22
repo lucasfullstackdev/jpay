@@ -34,6 +34,13 @@ class CreateDocumentJob implements ShouldQueue
      */
     public function handle(): void
     {
+        // $document = Document::find(5);
+
+        // CreateSignerJob::dispatch($document);
+
+        // return;
+        
+
         $this->customer = $this->getCustomer();
         /** Se nao encontrar o customer, barrar */
         if (empty($this->customer)) {
@@ -41,16 +48,18 @@ class CreateDocumentJob implements ShouldQueue
         }
 
         /** Se encontrar documento, barrar */
-        if ($this->hasDocument()) {
-            return;
-        }
+        // if ($this->hasDocument()) {
+        //     return;
+        // }
 
         try {
             $document = $this->sendDocument();
 
             DB::beginTransaction();
-            Document::create($document);
+            $document = Document::create($document);
             DB::commit();
+
+            CreateSignerJob::dispatch($document);
         } catch (\Throwable $th) {
             dd($th->getMessage());
         }

@@ -3,6 +3,8 @@
 namespace App\Services\Signature;
 
 use App\Dtos\Document\DocumentOshi;
+use App\Dtos\Document\DocumentSigner;
+use App\Dtos\Document\DocumentSignerOshi;
 use App\Dtos\Signer\SignerOshi;
 use App\Services\Signature\ClickSign\ClickSignDocument;
 use App\Services\Signature\ClickSign\ClickSignSigner;
@@ -48,6 +50,7 @@ class SignatureService
   {
     $client = new Client();
 
+    // dd($clickSignSigner->signer);
     try {
       $response = $client->post("$this->host/v1/signers?access_token=$this->token", [
         'json' => ['signer' => $clickSignSigner->signer]
@@ -61,6 +64,29 @@ class SignatureService
 
         return new SignerOshi((object) $response);
       }
+    } catch (\Throwable $th) {
+      dd($th->getMessage());
+    }
+  }
+
+  public function addSignerToDocument(DocumentSigner $documentSigner)
+  {
+    $client = new Client();
+
+    try {
+      $response = $client->post("$this->host/v1/lists?access_token=$this->token", [
+        'json' => ['list' => $documentSigner->list]
+      ]);
+
+      $statusCode = $response->getStatusCode();
+
+      if ($statusCode === Response::HTTP_CREATED) {
+        $response = json_decode($response->getBody()->getContents(), true);
+
+        return new DocumentSignerOshi((object) $response);
+      }
+
+      dd($statusCode, $response);
     } catch (\Throwable $th) {
       dd($th->getMessage());
     }

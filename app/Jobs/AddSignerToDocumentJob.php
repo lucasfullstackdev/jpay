@@ -2,10 +2,10 @@
 
 namespace App\Jobs;
 
+use App\Dtos\Document\DocumentSigner;
 use App\Models\Document;
-use App\Models\DocumentSigner;
+use App\Models\DocumentSigner as ModelsDocumentSigner;
 use App\Models\Signer;
-use App\Services\Signature\ClickSign\ClickSignSigner;
 use App\Services\Signature\SignatureService;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -14,16 +14,17 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\DB;
 
-class CreateSignerJob implements ShouldQueue
+class AddSignerToDocumentJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     private SignatureService $signatureService;
 
+    // AddSignerToDocumentJob::dispatch($this->document, $signer);
     /**
      * Create a new job instance.
      */
-    public function __construct(public Document $document)
+    public function __construct(public Document $document, public Signer $signer)
     {
         $this->signatureService = new SignatureService();
     }
@@ -33,35 +34,24 @@ class CreateSignerJob implements ShouldQueue
      */
     public function handle(): void
     {
-        /** se o customer já tiver signatário mapeado, não pode permitir criar outro */
-        // if ($this->hasSigner()) {
-        //     return;
-        // }
 
-        $response = $this->sendSigner();
         try {
+            $documentSignerOshi = $this->sendSigner();
+
             DB::beginTransaction();
-            /** Criando o signatário */
-            $signer = Signer::create($response);
+            ModelsDocumentSigner::create($documentSignerOshi);
             DB::commit();
 
-            AddSignerToDocumentJob::dispatch($this->document, $signer);
+            /** como conseguimos atribuir o cliente ao documento, agora iremos adicionar os demais signatários */
         } catch (\Throwable $th) {
-            dd($th->getMessage());
+            //throw $th;
         }
-
-        dd('salvou!');
     }
 
     private function sendSigner(): array
     {
-        return (array) $this->signatureService->sendSigner(
-            new ClickSignSigner($this->document)
+        return (array) $this->signatureService->addSignerToDocument(
+            new DocumentSigner($this->document, $this->signer)
         );
-    }
-
-    private function hasSigner(): bool
-    {
-        return (bool) Signer::where('customer', $this->document->customer)->first() ?? null;
     }
 }
