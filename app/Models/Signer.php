@@ -13,6 +13,7 @@ class Signer extends Model
     protected $fillable = [
         'customer',
         'signer_id',
+        'auth',
         'signer'
     ];
 }
