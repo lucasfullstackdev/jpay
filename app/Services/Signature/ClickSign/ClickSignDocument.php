@@ -2,8 +2,9 @@
 
 namespace App\Services\Signature\ClickSign;
 
+use App\Enums\SignerAs;
 use App\Models\Customer;
-use App\Models\Witness;
+use App\Models\OfficeSigner;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
 
@@ -34,7 +35,7 @@ class ClickSignDocument
 
   private function getWitnessess(): array
   {
-    return Witness::all()->map(fn ($witness) => [
+    return OfficeSigner::where('sign_as', SignerAs::WITNESS->value)->get()->map(fn ($witness) => [
       'name'     => $witness->name,
       'document' => $witness->documentFormatted,
     ])->toArray();
