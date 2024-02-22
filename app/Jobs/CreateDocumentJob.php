@@ -34,13 +34,6 @@ class CreateDocumentJob implements ShouldQueue
      */
     public function handle(): void
     {
-        // $document = Document::find(5);
-
-        // CreateSignerJob::dispatch($document);
-
-        // return;
-        
-
         $this->customer = $this->getCustomer();
         /** Se nao encontrar o customer, barrar */
         if (empty($this->customer)) {

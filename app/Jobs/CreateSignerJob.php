@@ -49,8 +49,6 @@ class CreateSignerJob implements ShouldQueue
         } catch (\Throwable $th) {
             dd($th->getMessage());
         }
-
-        dd('salvou!');
     }
 
     private function sendSigner(): array

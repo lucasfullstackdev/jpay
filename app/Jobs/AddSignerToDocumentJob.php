@@ -20,7 +20,6 @@ class AddSignerToDocumentJob implements ShouldQueue
 
     private SignatureService $signatureService;
 
-    // AddSignerToDocumentJob::dispatch($this->document, $signer);
     /**
      * Create a new job instance.
      */
@@ -34,7 +33,6 @@ class AddSignerToDocumentJob implements ShouldQueue
      */
     public function handle(): void
     {
-
         try {
             $documentSignerOshi = $this->sendSigner();
 
