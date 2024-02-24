@@ -5,6 +5,7 @@ namespace App\Jobs;
 use App\Dtos\Document\DocumentSigner;
 use App\Models\Document;
 use App\Models\DocumentSigner as ModelsDocumentSigner;
+use App\Models\OfficeSigner;
 use App\Models\Signer;
 use App\Services\Signature\SignatureService;
 use Illuminate\Bus\Queueable;
@@ -40,7 +41,13 @@ class AddSignerToDocumentJob implements ShouldQueue
             ModelsDocumentSigner::create($documentSignerOshi);
             DB::commit();
 
-            /** como conseguimos atribuir o cliente ao documento, agora iremos adicionar os demais signatários */
+            /** 
+             * como conseguimos atribuir o cliente ao documento, agora iremos adicionar os demais signatários
+             * Um job para cada signatário para que possamos paralelizar a adição dos signatários
+             */
+            foreach (OfficeSigner::all() as $officeSigner) {
+                AddOfficeSignersToDocumentJob::dispatch($this->document, $officeSigner);
+            }
         } catch (\Throwable $th) {
             //throw $th;
         }

@@ -36,5 +36,7 @@ class AddOfficeSigners extends Command
         echo "Signatário adicionado com sucesso!\n";
         // php artisan add-office-signers "Josué Leite" "8b7084ae-0e37-463f-951c-ed3dc0557b9f" "api" "sign";
         // php artisan add-office-signers "Lucas Santana de Oliveira" "e5176ad3-355c-498c-a355-a60feedcc5ea" "api" "witness";
+        // php artisan add-office-signers "Eduardo Batista" "57af1e18-76a6-4139-b66c-786ac37919a3" "api" "witness";
+        // 
     }
 }
