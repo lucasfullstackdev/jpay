@@ -48,6 +48,9 @@ class AddSignerToDocumentJob implements ShouldQueue
             foreach (OfficeSigner::all() as $officeSigner) {
                 AddOfficeSignersToDocumentJob::dispatch($this->document, $officeSigner);
             }
+
+            /* Agora que todos os signatários foram adicionados, podemos enviar o documento para assinatura */
+            SendSubscriptionNotificationToCustomerJob::dispatch($this->document);
         } catch (\Throwable $th) {
             //throw $th;
         }

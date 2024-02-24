@@ -7,6 +7,7 @@ use App\Dtos\Document\DocumentSigner;
 use App\Dtos\Document\DocumentSignerOshi;
 use App\Dtos\Signer\SignerOshi;
 use App\Services\Signature\ClickSign\ClickSignDocument;
+use App\Services\Signature\ClickSign\ClickSignNotification;
 use App\Services\Signature\ClickSign\ClickSignSigner;
 use GuzzleHttp\Client;
 use Symfony\Component\HttpFoundation\Response;
@@ -84,6 +85,28 @@ class SignatureService
         $response = json_decode($response->getBody()->getContents(), true);
 
         return new DocumentSignerOshi((object) $response);
+      }
+
+      dd($statusCode, $response);
+    } catch (\Throwable $th) {
+      dd($th->getMessage());
+    }
+  }
+
+  public function sendNotification(ClickSignNotification $documentSigner)
+  {
+    $client = new Client();
+
+    try {
+      $response = $client->post("$this->host/v1/notifications?access_token=$this->token", [
+        'json' => $documentSigner
+      ]);
+
+      $statusCode = $response->getStatusCode();
+
+      if ($statusCode === Response::HTTP_CREATED) {
+        $response = json_decode($response->getBody()->getContents(), true);
+        // return new DocumentSignerOshi((object) $response);
       }
 
       dd($statusCode, $response);
