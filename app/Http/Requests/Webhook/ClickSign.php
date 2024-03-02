@@ -11,6 +11,16 @@ class ClickSign extends FormRequest
      */
     public function authorize(): bool
     {
+        /* Validar se o segredo está presente */
+        if (empty($this->secret)) {
+            return false;
+        }
+
+        /* Validar se o segredo é válido */
+        if ($this->secret !== env('CLICKSIGN_WEBHOOK_SECRET')) {
+            return false;
+        }
+
         /* Validar se o evento está presente */
         if (empty($this->event)) {
             return false;
@@ -29,11 +39,6 @@ class ClickSign extends FormRequest
         return false;
     }
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
-     */
     public function rules(): array
     {
         return [
