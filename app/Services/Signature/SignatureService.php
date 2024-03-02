@@ -6,6 +6,7 @@ use App\Dtos\Document\DocumentOshi;
 use App\Dtos\Document\DocumentSigner;
 use App\Dtos\Document\DocumentSignerOshi;
 use App\Dtos\Signer\SignerOshi;
+use App\Services\Signature\ClickSign\ClickSignApiSign;
 use App\Services\Signature\ClickSign\ClickSignDocument;
 use App\Services\Signature\ClickSign\ClickSignNotification;
 use App\Services\Signature\ClickSign\ClickSignSigner;
@@ -110,6 +111,24 @@ class SignatureService
       }
 
       dd($statusCode, $response);
+    } catch (\Throwable $th) {
+      dd($th->getMessage());
+    }
+  }
+
+  public function signDocument(ClickSignApiSign $clickSignApiSign)
+  {
+    $client = new Client();
+
+    try {
+      $response = $client->post("$this->host/v1/sign?access_token=$this->token", [
+        'json' => $clickSignApiSign
+      ]);
+
+      $statusCode = $response->getStatusCode();
+      if ($statusCode === Response::HTTP_CREATED) {
+        $response = json_decode($response->getBody()->getContents(), true);
+      }
     } catch (\Throwable $th) {
       dd($th->getMessage());
     }

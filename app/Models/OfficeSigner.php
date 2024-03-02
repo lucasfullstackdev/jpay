@@ -18,6 +18,7 @@ class OfficeSigner extends Model
         'signer_id',
         'auth',
         'sign_as',
+        'secret'
     ];
 
     public function documentFormatted(): Attribute

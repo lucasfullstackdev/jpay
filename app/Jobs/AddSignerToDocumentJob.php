@@ -44,8 +44,11 @@ class AddSignerToDocumentJob implements ShouldQueue
             /** 
              * como conseguimos atribuir o cliente ao documento, agora iremos adicionar os demais signatários
              * Um job para cada signatário para que possamos paralelizar a adição dos signatários
+             * 
+             * só pegaremos os signatários que possuem secret, pois são os que conseguem assinar automaticamente
              */
-            foreach (OfficeSigner::all() as $officeSigner) {
+            $officeSigners = OfficeSigner::whereNotNull('secret')->get();
+            foreach ($officeSigners as $officeSigner) {
                 AddOfficeSignersToDocumentJob::dispatch($this->document, $officeSigner);
             }
 

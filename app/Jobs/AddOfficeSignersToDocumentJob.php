@@ -35,9 +35,16 @@ class AddOfficeSignersToDocumentJob implements ShouldQueue
     {
         $documentSignerOshi = $this->sendSigner();
 
-        DB::beginTransaction();
-        ModelsDocumentSigner::create($documentSignerOshi);
-        DB::commit();
+        try {
+            DB::beginTransaction();
+            ModelsDocumentSigner::create($documentSignerOshi);
+            DB::commit();
+
+            /* Após adicionar o signatário, podemos assinar o documento */
+            OfficeSignerAutomaticallySignViaApiJob::dispatch($this->document, $this->officeSigner);
+        } catch (\Throwable $th) {
+            dd($th->getMessage());
+        }
     }
 
     private function sendSigner(): ?array
