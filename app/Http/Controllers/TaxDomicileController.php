@@ -52,7 +52,7 @@ class TaxDomicileController extends Controller
     {
         /** Aplicando o hash_hmac para garantir que a requisição já não foi recebida antes */
         $identifier = hash_hmac('sha256', $request->payment['id'], $request->event);
-        if ($this->aSaasRequestHasAlreadyBeenReceived($identifier)) {
+        if ($this->asaasRequestHasAlreadyBeenReceived($identifier)) {
             return response()->json([], Response::HTTP_OK);
         }
 
@@ -76,7 +76,7 @@ class TaxDomicileController extends Controller
         return response()->json([], Response::HTTP_OK);
     }
 
-    private function aSaasRequestHasAlreadyBeenReceived($identifier): bool
+    private function asaasRequestHasAlreadyBeenReceived($identifier): bool
     {
         return BillingMonitoring::where('identifier', $identifier)->exists();
     }
