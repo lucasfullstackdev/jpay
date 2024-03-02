@@ -11,6 +11,7 @@ class BillingMonitoring extends Model
 
     protected $table = 'billing_monitoring';
     protected $fillable = [
+        'identifier',
         'event',
         'payment_id',
         'payment'

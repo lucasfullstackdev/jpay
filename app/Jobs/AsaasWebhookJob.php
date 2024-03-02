@@ -17,7 +17,7 @@ class AsaasWebhookJob implements ShouldQueue
     /**
      * Create a new job instance.
      */
-    public function __construct(public $request)
+    public function __construct(public array $request, public string $identifier)
     {
     }
 
@@ -27,6 +27,7 @@ class AsaasWebhookJob implements ShouldQueue
     public function handle(): void
     {
         BillingMonitoring::create([
+            'identifier' => $this->identifier,
             'event' => $this->request['event'],
             'payment_id' => $this->request['payment']['id'],
             'payment' => json_encode($this->request['payment'])
