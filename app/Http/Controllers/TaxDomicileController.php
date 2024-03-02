@@ -13,6 +13,7 @@ use App\Models\BillingMonitoring;
 use App\Models\DocumentMonitoring;
 use App\Services\TaxDomicileService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Hash;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -24,7 +25,20 @@ class TaxDomicileController extends Controller
 
     public function purchase(Purchase $request)
     {
+        /** Aplicando o hash para garantir que a requisição já não foi recebida antes */
+        $identifier = hash('sha256', json_encode($request->all()));
+        if ($this->purcharRequestHasAlreadyBeenReceived($identifier)) {
+            return response()->json([], Response::HTTP_CONFLICT);
+        }
+
+        /**
+         * Aqui eu estou usando o Cache para garantir que a requisição não seja processada 
+         * mais de uma vez em um intervalo de 24 horas
+         */
         $this->taxDomicileService->purchase($request);
+        Cache::put($identifier, true, now()->addHours(24));
+
+        return response()->json([], Response::HTTP_CREATED);
     }
 
     /**
@@ -62,8 +76,6 @@ class TaxDomicileController extends Controller
         return response()->json([], Response::HTTP_OK);
     }
 
-    // the request has already been received before
-
     private function aSaasRequestHasAlreadyBeenReceived($identifier): bool
     {
         return BillingMonitoring::where('identifier', $identifier)->exists();
@@ -72,5 +84,10 @@ class TaxDomicileController extends Controller
     private function clickSignRequestHasAlreadyBeenReceived($identifier): bool
     {
         return DocumentMonitoring::where('identifier', $identifier)->exists();
+    }
+
+    private function purcharRequestHasAlreadyBeenReceived($identifier): bool
+    {
+        return Cache::has($identifier);
     }
 }
