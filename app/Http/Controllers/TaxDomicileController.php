@@ -10,6 +10,7 @@ use App\Jobs\AsaasWebhookJob;
 use App\Jobs\ClickSignWebhookJob;
 use App\Jobs\CreateDocumentJob;
 use App\Models\BillingMonitoring;
+use App\Models\DocumentMonitoring;
 use App\Services\TaxDomicileService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -37,7 +38,7 @@ class TaxDomicileController extends Controller
     {
         /** Aplicando o hash_hmac para garantir que a requisição já não foi recebida antes */
         $identifier = hash_hmac('sha256', $request->payment['id'], $request->event);
-        if ($this->requestHasAlreadyBeenReceived($identifier)) {
+        if ($this->aSaasRequestHasAlreadyBeenReceived($identifier)) {
             return response()->json([], Response::HTTP_OK);
         }
 
@@ -51,15 +52,25 @@ class TaxDomicileController extends Controller
 
     public function documentWebhook(ClickSign $request)
     {
-        ClickSignWebhookJob::dispatch($request->all());
+        $identifier = hash('sha256', json_encode($request->all()));
+        if ($this->clickSignRequestHasAlreadyBeenReceived($identifier)) {
+            return response()->json([], Response::HTTP_OK);
+        }
+
+        ClickSignWebhookJob::dispatch($request->all(), $identifier);
 
         return response()->json([], Response::HTTP_OK);
     }
 
     // the request has already been received before
 
-    private function requestHasAlreadyBeenReceived($identifier): bool
+    private function aSaasRequestHasAlreadyBeenReceived($identifier): bool
     {
         return BillingMonitoring::where('identifier', $identifier)->exists();
+    }
+
+    private function clickSignRequestHasAlreadyBeenReceived($identifier): bool
+    {
+        return DocumentMonitoring::where('identifier', $identifier)->exists();
     }
 }

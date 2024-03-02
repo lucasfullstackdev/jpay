@@ -10,6 +10,7 @@ class DocumentMonitoring extends Model
     use HasFactory;
     protected $table = 'document_monitoring';
     protected $fillable = [
+        'identifier',
         'document',
         'event_name',
         'event',

@@ -16,7 +16,7 @@ class ClickSignWebhookJob implements ShouldQueue
     /**
      * Create a new job instance.
      */
-    public function __construct(public array $request)
+    public function __construct(public array $request, public string $identifier)
     {
     }
 
@@ -26,6 +26,7 @@ class ClickSignWebhookJob implements ShouldQueue
     public function handle(): void
     {
         DocumentMonitoring::create([
+            'identifier' => $this->identifier,
             'document' => $this->request['document']['key'],
             'event_name' => $this->request['event']['name'],
             'event' => json_encode($this->request['event']),
