@@ -32,8 +32,16 @@ Route::prefix('auth')->group(function () {
 });
 
 Route::prefix('v1')->group(function () {
-    Route::prefix('tax-domicile/purchase')->group(function () {
-        Route::post('/', [TaxDomicileController::class, 'purchase']);
-        Route::post('webhook', [TaxDomicileController::class, 'webhook']);
+    Route::prefix('tax-domicile')->group(function () {
+        Route::prefix('purchase')->group(function () {
+            Route::post('/', [TaxDomicileController::class, 'purchase']);
+            Route::post('webhook', [TaxDomicileController::class, 'purchaseWebhook']);
+        });
+
+        Route::prefix('document')->group(function () {
+            Route::post('webhook', [TaxDomicileController::class, 'documentWebhook']);
+        });
     });
+
+    //    ? Route::prefix('')
 });
