@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\AsaasEvent;
 use App\Http\Requests\Purchase;
 use App\Http\Requests\Webhook\Asaas;
 use App\Http\Requests\Webhook\ClickSign;
@@ -24,18 +25,19 @@ class TaxDomicileController extends Controller
     }
 
     /**
-     * Aqui a regra é a seguinte:
-     * - Receber o webhook do Asaas e salvar todos os dados no banco de dados
-     * - Se for reconhecido o pagamento, criar um documento fiscal e seguir fluxo normal
+     * Aqui as regras são:
+     * - Independente do evento, dispara o job para salvar o webhook
+     * - Se o evento for PAYMENT_RECEIVED, dispara o job para criar o documento
+     * - Retornar 200 rapidamente para o Asaas
      */
     public function purchaseWebhook(Asaas $request)
     {
-        CreateDocumentJob::dispatch((object) $request->payment);
+        AsaasWebhookJob::dispatch($request->only(['event', 'payment']));
+        if ($request->event == AsaasEvent::PAYMENT_RECEIVED->value) {
+            CreateDocumentJob::dispatch((object) $request->payment);
+        }
 
-        // AsaasWebhookJob::dispatch($request->only(['event', 'payment']));
-        // CreateDocumentJob::dispatch($request->all());
-
-        // return response()->json([], Response::HTTP_OK);
+        return response()->json([], Response::HTTP_OK);
     }
 
     public function documentWebhook(ClickSign $request)
