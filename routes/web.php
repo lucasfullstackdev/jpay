@@ -12,3 +12,9 @@ use Illuminate\Support\Facades\Route;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
+
+use Laravel\Horizon\Http\Middleware\Authorize;
+
+Route::get('/horizon', function () {
+  return view('vendor.horizon.index');
+});
