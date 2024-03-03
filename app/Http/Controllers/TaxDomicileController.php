@@ -28,7 +28,10 @@ class TaxDomicileController extends Controller
         /** Aplicando o hash para garantir que a requisição já não foi recebida antes */
         $identifier = hash('sha256', json_encode($request->all()));
         if ($this->purcharRequestHasAlreadyBeenReceived($identifier)) {
-            return response()->json([], Response::HTTP_CONFLICT);
+            return response()->json([
+                'success' => true,
+                'message' => 'Você já enviou uma requisição com esses dados. Aguarde o processamento da sua requisição.',
+            ], Response::HTTP_CONFLICT);
         }
 
         /**
@@ -38,7 +41,10 @@ class TaxDomicileController extends Controller
         $this->taxDomicileService->purchase($request);
         Cache::put($identifier, true, now()->addHours(24));
 
-        return response()->json([], Response::HTTP_CREATED);
+        return response()->json([
+            'success' => true,
+            'message' => 'Requisição recebida com sucesso',
+        ], Response::HTTP_CREATED);
     }
 
     /**

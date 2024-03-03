@@ -2,8 +2,10 @@
 
 namespace Tests\Feature;
 
+use App\Models\Customer;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Symfony\Component\HttpFoundation\Response;
 use Tests\TestCase;
 
 class PurchaseTest extends TestCase
@@ -33,6 +35,27 @@ class PurchaseTest extends TestCase
         ]
     ];
 
+    public function testPurchaseReturnsConflictIfRequestAlreadyReceived()
+    {
+        // Envia a requisição pela primeira vez
+        $response = $this->json('POST', '/api/v1/tax-domicile/purchase', $this->body);
+
+        // dd($response);
+        // Verifica se a primeira requisição foi bem sucedida
+        $response->assertStatus(Response::HTTP_CREATED);
+
+        // Envia a mesma requisição novamente
+        $response = $this->json('POST', '/api/v1/tax-domicile/purchase', $this->body);
+
+        // Verifica se a segunda requisição retorna um status de conflito
+        $response->assertStatus(Response::HTTP_CONFLICT)
+            ->assertJson([
+                'success' => true,
+                'message' => 'Você já enviou uma requisição com esses dados. Aguarde o processamento da sua requisição.',
+            ]);
+    }
+
+    // clear && ./artisan cache:clear && ./artisan test
     public function test_purchase_blank()
     {
         $response = $this->json('POST', '/api/v1/tax-domicile/purchase', []);
