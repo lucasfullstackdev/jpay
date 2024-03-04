@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Exceptions\CreateException;
 use App\Models\Document;
 use App\Models\DocumentSigner;
 use App\Models\Signer;
@@ -47,9 +48,8 @@ class CreateSignerJob implements ShouldQueue
             DB::beginTransaction();
             $signer = Signer::create($response);
             DB::commit();
-
         } catch (\Throwable $th) {
-            dd($th->getMessage());
+            throw new CreateException('Erro ao salvar signatário no Banco de Dados', $th->getMessage());
         }
 
         // Após criar o signatário, dispara o job para adicionar o signatário ao documento
