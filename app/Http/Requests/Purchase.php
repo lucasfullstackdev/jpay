@@ -14,10 +14,10 @@ class Purchase extends BaseRequest
     public function rules(): array
     {
         return [
-            'name'                 => 'required|string|',
+            'name'                 => 'required|string',
             'email'                => 'required|string|email:rfc,dns',
-            'phone'                => 'required|string|min:11|max:11',
-            'document'             => 'required|string|max:20',
+            'document'             => 'required|string|min:11|max:11',
+            'phone'                => 'required|string|max:20',
 
             # Endereco do cliente
             'street'               => 'required|string',
