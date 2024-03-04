@@ -41,9 +41,9 @@ class CreateDocumentJob implements ShouldQueue
         }
 
         /** Se encontrar documento, barrar */
-        // if ($this->hasDocument()) {
-        //     return;
-        // }
+        if ($this->hasDocument()) {
+            return;
+        }
 
         // Envia o documento para a ClickSign
         $document = $this->sendDocument();

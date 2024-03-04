@@ -37,14 +37,14 @@ class CreateSignerJob implements ShouldQueue
          * se o customer já tiver signatário mapeado, não pode permitir criar outro
          * no momento não iremos permitir que um customer assine mais de um documento
          */
-        // if ($this->hasSigner()) {
-        //     return;
-        // }
+        if ($this->hasSigner()) {
+            return;
+        }
 
         $response = $this->sendSigner();
         try {
-            DB::beginTransaction();
             /** Criando o signatário */
+            DB::beginTransaction();
             $signer = Signer::create($response);
             DB::commit();
 
