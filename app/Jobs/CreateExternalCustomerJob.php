@@ -71,7 +71,6 @@ class CreateExternalCustomerJob implements ShouldQueue
 
     private function sendCustomer($purchase): object
     {
-        die;
         return $this->bankingService->createCustomer(
             new AsaasCustomer((object) $purchase)
         );
