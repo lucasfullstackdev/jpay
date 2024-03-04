@@ -3,6 +3,7 @@
 namespace App\Jobs;
 
 use App\Dtos\Document\DocumentSigner;
+use App\Exceptions\CreateException;
 use App\Models\Document;
 use App\Models\DocumentSigner as ModelsDocumentSigner;
 use App\Models\OfficeSigner;
@@ -34,32 +35,34 @@ class AddSignerToDocumentJob implements ShouldQueue
      */
     public function handle(): void
     {
-        try {
-            $documentSignerOshi = $this->sendSigner();
+        // Adicionando o signatário ao documento
+        $documentSignerOshi = $this->addSignerToDocument();
 
+        // Criando o DocumentSigner no banco de dados
+        try {
             DB::beginTransaction();
             ModelsDocumentSigner::create($documentSignerOshi);
             DB::commit();
-
-            /** 
-             * como conseguimos atribuir o cliente ao documento, agora iremos adicionar os demais signatários
-             * Um job para cada signatário para que possamos paralelizar a adição dos signatários
-             * 
-             * só pegaremos os signatários que possuem secret, pois são os que conseguem assinar automaticamente
-             */
-            $officeSigners = OfficeSigner::whereNotNull('secret')->get();
-            foreach ($officeSigners as $officeSigner) {
-                AddOfficeSignersToDocumentJob::dispatch($this->document, $officeSigner);
-            }
-
-            /* Agora que todos os signatários foram adicionados, podemos enviar o documento para assinatura */
-            SendSubscriptionNotificationToCustomerJob::dispatch($this->document);
         } catch (\Throwable $th) {
-            //throw $th;
+            throw new CreateException('Erro ao salvar DocumentSigner no Banco de Dados', $th->getMessage());
         }
+
+        /** 
+         * como conseguimos atribuir o cliente ao documento, agora iremos adicionar os demais signatários
+         * Um job para cada signatário para que possamos paralelizar a adição dos signatários
+         * 
+         * só pegaremos os signatários que possuem secret, pois são os que conseguem assinar automaticamente
+         */
+        $officeSigners = OfficeSigner::whereNotNull('secret')->get();
+        foreach ($officeSigners as $officeSigner) {
+            AddOfficeSignersToDocumentJob::dispatch($this->document, $officeSigner);
+        }
+
+        /* Agora que todos os signatários foram adicionados, podemos enviar o documento para assinatura */
+        SendSubscriptionNotificationToCustomerJob::dispatch($this->document);
     }
 
-    private function sendSigner(): array
+    private function addSignerToDocument(): array
     {
         return (array) $this->signatureService->addSignerToDocument(
             new DocumentSigner($this->document, $this->signer)

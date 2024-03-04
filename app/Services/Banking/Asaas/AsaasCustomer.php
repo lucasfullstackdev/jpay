@@ -2,6 +2,7 @@
 
 namespace App\Services\Banking\Asaas;
 
+use App\Exceptions\CustomerException;
 use App\Services\Banking\CustomerInterface;
 use Illuminate\Support\Facades\Log;
 
@@ -21,17 +22,21 @@ class AsaasCustomer implements CustomerInterface
 
   public function __construct(object $customer)
   {
-    $this->name        = $customer->name;
-    $this->cpfCnpj     = $customer->document ?? $customer->cpfCnpj;
-    $this->email       = $customer->email;
-    $this->phone       = $customer->phone;
-    $this->mobilePhone = $customer->phone;
-    $this->sku         = $customer->id ?? null;
+    try {
+      $this->name        = $customer->name;
+      $this->cpfCnpj     = $customer->document ?? $customer->cpfCnpj;
+      $this->email       = $customer->email;
+      $this->phone       = $customer->phone;
+      $this->mobilePhone = $customer->phone;
+      $this->sku         = $customer->id ?? null;
 
-    # Dados da emprea
-    $this->company       = $customer->company['name'];
-    $this->document      = $customer->company['document'];
-    $this->addressNumber = $customer->company['number'];
-    $this->postalCode    = $customer->company['postal_code'];
+      # Dados da emprea
+      $this->company       = $customer->company['name'];
+      $this->document      = $customer->company['document'];
+      $this->addressNumber = $customer->company['number'];
+      $this->postalCode    = $customer->company['postal_code'];
+    } catch (\Throwable $th) {
+      throw new CustomerException('Erro ao criar a estrutura de dados para enviar o Cliente para o ASAAS',  $th->getMessage());
+    }
   }
 }

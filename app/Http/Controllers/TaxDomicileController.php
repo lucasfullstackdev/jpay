@@ -3,6 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Enums\AsaasEvent;
+use App\Exceptions\Company\CompanyException;
+use App\Exceptions\Customer\CustomerCreateException;
+use App\Exceptions\CustomerException;
+use App\Exceptions\RequestException;
 use App\Http\Requests\Purchase;
 use App\Http\Requests\Webhook\Asaas;
 use App\Http\Requests\Webhook\ClickSign;
@@ -27,12 +31,12 @@ class TaxDomicileController extends Controller
     {
         /** Aplicando o hash para garantir que a requisição já não foi recebida antes */
         $identifier = hash('sha256', json_encode($request->all()));
-        if ($this->purcharRequestHasAlreadyBeenReceived($identifier)) {
-            return response()->json([
-                'success' => true,
-                'message' => 'Você já enviou uma requisição com esses dados. Aguarde o processamento da sua requisição.',
-            ], Response::HTTP_CONFLICT);
-        }
+        // if ($this->purcharRequestHasAlreadyBeenReceived($identifier)) {
+        //     return response()->json([
+        //         'success' => true,
+        //         'message' => 'Você já enviou uma requisição com esses dados. Aguarde o processamento da sua requisição.',
+        //     ], Response::HTTP_CONFLICT);
+        // }
 
         /**
          * Aqui eu estou usando o Cache para garantir que a requisição não seja processada 
@@ -58,9 +62,9 @@ class TaxDomicileController extends Controller
     {
         /** Aplicando o hash_hmac para garantir que a requisição já não foi recebida antes */
         $identifier = hash_hmac('sha256', $request->payment['id'], $request->event);
-        if ($this->asaasRequestHasAlreadyBeenReceived($identifier)) {
-            return response()->json([], Response::HTTP_OK);
-        }
+        // if ($this->asaasRequestHasAlreadyBeenReceived($identifier)) {
+        //     return response()->json([], Response::HTTP_OK);
+        // }
 
         AsaasWebhookJob::dispatch($request->only(['event', 'payment']), $identifier);
         if ($request->event == AsaasEvent::PAYMENT_RECEIVED->value) {

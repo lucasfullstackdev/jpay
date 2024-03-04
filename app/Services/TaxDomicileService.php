@@ -19,10 +19,14 @@ class TaxDomicileService extends Service
       );
     }
 
-    /* Se Cliente nao existir, criar */
-    return CreateExternalCustomerJob::dispatch(
-      $purchase->only(['name', 'email', 'phone', 'document', 'street', 'number', 'neighborhood', 'city', 'state', 'country', 'postal_code', 'complement', 'company'])
-    );
+    try {
+      /* Se Cliente nao existir, criar */
+      CreateExternalCustomerJob::dispatch(
+        $purchase->only(['name', 'email', 'phone', 'document', 'street', 'number', 'neighborhood', 'city', 'state', 'country', 'postal_code', 'complement', 'company'])
+      );
+    } catch (\Throwable $th) {
+      dd($th->getMessage());
+    }
   }
 
   public function getCustomer(string $document): ?Customer

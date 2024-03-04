@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Enums\SignerAs;
 use App\Models\Document;
 use App\Models\DocumentSigner;
 use App\Services\Signature\ClickSign\ClickSignNotification;
@@ -42,12 +43,12 @@ class SendSubscriptionNotificationToCustomerJob implements ShouldQueue
         $this->sendNotification();
     }
 
-    private function getSigners(): ?DocumentSigner
+    private function getSigners()
     {
-        return DocumentSigner::where('document', $this->document->document_id)
-            ->whereNotIn('signer', function ($query) {
-                $query->select('signer_id')->from('office_signers');
-            })->first() ?? null;
+        return DocumentSigner::where([
+            'document' => $this->document->document_id,
+            'sign_as' => SignerAs::SIGN->value,
+        ])->join('signers', 'document_signers.signer', '=', 'signers.signer_id')->first();
     }
 
     private function sendNotification(): array

@@ -33,7 +33,10 @@ class CreateSignerJob implements ShouldQueue
      */
     public function handle(): void
     {
-        /** se o customer já tiver signatário mapeado, não pode permitir criar outro */
+        /** 
+         * se o customer já tiver signatário mapeado, não pode permitir criar outro
+         * no momento não iremos permitir que um customer assine mais de um documento
+         */
         // if ($this->hasSigner()) {
         //     return;
         // }
@@ -45,10 +48,12 @@ class CreateSignerJob implements ShouldQueue
             $signer = Signer::create($response);
             DB::commit();
 
-            AddSignerToDocumentJob::dispatch($this->document, $signer);
         } catch (\Throwable $th) {
             dd($th->getMessage());
         }
+
+        // Após criar o signatário, dispara o job para adicionar o signatário ao documento
+        AddSignerToDocumentJob::dispatch($this->document, $signer);
     }
 
     private function sendSigner(): array

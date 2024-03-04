@@ -3,15 +3,11 @@
 namespace App\Services\Banking;
 
 use App\Dtos\Billing\BillingOshi;
-use App\Dtos\Customer\CustomerAsaas;
 use App\Dtos\Customer\CustomerOshi;
-use App\Exceptions\Customer\CustomerCreate;
-use App\Exceptions\Customer\CustomerCreateException;
+use App\Exceptions\RequestException;
 use App\Services\Banking\Asaas\AsaasBilling;
 use App\Services\Banking\Asaas\AsaasCustomer;
-use Exception;
 use GuzzleHttp\Client;
-use Illuminate\Support\Facades\Log;
 
 class BankingService
 {
@@ -30,20 +26,13 @@ class BankingService
       $statusCode = $response->getStatusCode();
 
       if ($statusCode === 200) {
-        $response = json_decode($response->getBody()->getContents(), true );
+        $response = json_decode($response->getBody()->getContents(), true);
         $response['document'] = $customer->document;
 
         return new CustomerOshi((object) $response);
       }
-
-      /**
-       * TODO: Adicionar CustomException do nicho de Customers
-       */
-      throw new CustomerCreateException('asdfasdf');
     } catch (\GuzzleHttp\Exception\RequestException $e) {
-      dd($e->getMessage());
-      // Handle request exception
-      // Log or return error response
+      throw new RequestException('Erro ao criar o Customer no ASAAS', $e->getMessage(), $customer);
     }
   }
 
@@ -66,17 +55,8 @@ class BankingService
           (object) json_decode($response->getBody()->getContents(), true)
         );
       }
-
-      dd($statusCode, json_decode($response->getBody()->getContents(), true));
-
-      /**
-       * TODO: Adicionar CustomException do nicho de Customers
-       */
-      throw new CustomerCreateException('asdfasdf');
     } catch (\GuzzleHttp\Exception\RequestException $e) {
-      dd($e->getMessage());
-      // Handle request exception
-      // Log or return error response
+      throw new RequestException('Erro ao criar cobrança no ASAAS', $e->getMessage(), $billing);
     }
   }
 }

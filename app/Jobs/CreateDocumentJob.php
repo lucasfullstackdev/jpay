@@ -2,7 +2,7 @@
 
 namespace App\Jobs;
 
-use App\Models\BillingSending;
+use App\Exceptions\CreateException;
 use App\Models\Customer;
 use App\Models\Document;
 use App\Services\Signature\ClickSign\ClickSignDocument;
@@ -45,17 +45,20 @@ class CreateDocumentJob implements ShouldQueue
         //     return;
         // }
 
-        try {
-            $document = $this->sendDocument();
+        // Envia o documento para a ClickSign
+        $document = $this->sendDocument();
 
+        // Cria o documento no banco de dados
+        try {
             DB::beginTransaction();
             $document = Document::create($document);
             DB::commit();
-
-            CreateSignerJob::dispatch($document);
         } catch (\Throwable $th) {
-            dd($th->getMessage());
+            throw new CreateException('Erro ao salvar Documento no Banco de Dados', $th->getMessage());
         }
+
+        // Após criar o documento, dispara o job para criar o signer
+        CreateSignerJob::dispatch($document);
     }
 
     private function getCustomer()

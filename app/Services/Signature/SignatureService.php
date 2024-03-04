@@ -6,6 +6,7 @@ use App\Dtos\Document\DocumentOshi;
 use App\Dtos\Document\DocumentSigner;
 use App\Dtos\Document\DocumentSignerOshi;
 use App\Dtos\Signer\SignerOshi;
+use App\Exceptions\RequestException;
 use App\Services\Signature\ClickSign\ClickSignApiSign;
 use App\Services\Signature\ClickSign\ClickSignDocument;
 use App\Services\Signature\ClickSign\ClickSignNotification;
@@ -34,17 +35,17 @@ class SignatureService
       $response = $client->post("$this->host/v2/templates/$this->template/documents?access_token=$this->token", [
         'json' => ['document' => $clickSignDocument->document]
       ]);
-
-      $statusCode = $response->getStatusCode();
-
-      if ($statusCode === Response::HTTP_CREATED) {
-        $response = json_decode($response->getBody()->getContents(), true);
-        $response['customer'] = $clickSignDocument->customer->sku;
-
-        return new DocumentOshi((object) $response);
-      }
     } catch (\Throwable $th) {
-      dd($th->getMessage());
+      throw new RequestException('Erro ao criar o Documento na ClickSign', $th->getMessage(), $clickSignDocument->document);
+    }
+
+    // Se o status code for 201, retorna o documento no formato para ser salvado no banco de dados
+    $statusCode = $response->getStatusCode();
+    if ($statusCode === Response::HTTP_CREATED) {
+      $response = json_decode($response->getBody()->getContents(), true);
+      $response['customer'] = $clickSignDocument->customer->sku;
+
+      return new DocumentOshi((object) $response);
     }
   }
 
@@ -52,22 +53,21 @@ class SignatureService
   {
     $client = new Client();
 
-    // dd($clickSignSigner->signer);
     try {
       $response = $client->post("$this->host/v1/signers?access_token=$this->token", [
         'json' => ['signer' => $clickSignSigner->signer]
       ]);
-
-      $statusCode = $response->getStatusCode();
-
-      if ($statusCode === Response::HTTP_CREATED) {
-        $response = json_decode($response->getBody()->getContents(), true);
-        $response['customer'] = $clickSignSigner->customer;
-
-        return new SignerOshi((object) $response);
-      }
     } catch (\Throwable $th) {
-      dd($th->getMessage());
+      throw new RequestException('Erro ao criar o Signer na ClickSign', $th->getMessage(), $clickSignSigner->signer);
+    }
+
+    // Se o status code for 201, retorna o signer no formato para ser salvado no banco de dados
+    $statusCode = $response->getStatusCode();
+    if ($statusCode === Response::HTTP_CREATED) {
+      $response = json_decode($response->getBody()->getContents(), true);
+      $response['customer'] = $clickSignSigner->customer;
+
+      return new SignerOshi((object) $response);
     }
   }
 
@@ -79,18 +79,15 @@ class SignatureService
       $response = $client->post("$this->host/v1/lists?access_token=$this->token", [
         'json' => ['list' => $documentSigner->list]
       ]);
-
-      $statusCode = $response->getStatusCode();
-
-      if ($statusCode === Response::HTTP_CREATED) {
-        $response = json_decode($response->getBody()->getContents(), true);
-
-        return new DocumentSignerOshi((object) $response);
-      }
-
-      dd($statusCode, $response);
     } catch (\Throwable $th) {
-      dd($th->getMessage());
+      throw new RequestException('Erro ao adicionar o Signer ao Documento na ClickSign', $th->getMessage(), $documentSigner->list);
+    }
+
+    // Se o status code for 201, retorna o DocumentSigner no formato para ser salvo no banco de dados
+    $statusCode = $response->getStatusCode();
+    if ($statusCode === Response::HTTP_CREATED) {
+      $response = json_decode($response->getBody()->getContents(), true);
+      return new DocumentSignerOshi((object) $response);
     }
   }
 
@@ -99,20 +96,11 @@ class SignatureService
     $client = new Client();
 
     try {
-      $response = $client->post("$this->host/v1/notifications?access_token=$this->token", [
+      $client->post("$this->host/v1/notifications?access_token=$this->token", [
         'json' => $documentSigner
       ]);
-
-      $statusCode = $response->getStatusCode();
-
-      if ($statusCode === Response::HTTP_CREATED) {
-        $response = json_decode($response->getBody()->getContents(), true);
-        // return new DocumentSignerOshi((object) $response);
-      }
-
-      dd($statusCode, $response);
     } catch (\Throwable $th) {
-      dd($th->getMessage());
+      throw new RequestException('Erro ao enviar a notificação para o Signer na ClickSign', $th->getMessage(), $documentSigner);
     }
   }
 
@@ -121,16 +109,11 @@ class SignatureService
     $client = new Client();
 
     try {
-      $response = $client->post("$this->host/v1/sign?access_token=$this->token", [
+      $client->post("$this->host/v1/sign?access_token=$this->token", [
         'json' => $clickSignApiSign
       ]);
-
-      $statusCode = $response->getStatusCode();
-      if ($statusCode === Response::HTTP_CREATED) {
-        $response = json_decode($response->getBody()->getContents(), true);
-      }
     } catch (\Throwable $th) {
-      dd($th->getMessage());
+      throw new RequestException('Erro ao assinar o documento na ClickSign', $th->getMessage(), $clickSignApiSign);
     }
   }
 }

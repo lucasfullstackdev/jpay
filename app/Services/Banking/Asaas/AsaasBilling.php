@@ -2,6 +2,7 @@
 
 namespace App\Services\Banking\Asaas;
 
+use App\Exceptions\BillingException;
 use App\Services\Banking\CustomerInterface;
 use Carbon\Carbon;
 
@@ -22,7 +23,11 @@ class AsaasBilling implements CustomerInterface
 
   public function __construct(object $customer)
   {
-    $this->customer = $customer->sku;
-    $this->dueDate  = Carbon::now()->addDays($this->days);
+    try {
+      $this->customer = $customer->sku;
+      $this->dueDate  = Carbon::now()->addDays($this->days);
+    } catch (\Throwable $th) {
+      throw new BillingException('Erro ao criar estrutura de Cobrança que será utilizada no ASAAS', $th->getMessage());
+    }
   }
 }

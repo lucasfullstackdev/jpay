@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Exceptions\CreateException;
 use App\Models\DocumentMonitoring;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -25,11 +26,15 @@ class ClickSignWebhookJob implements ShouldQueue
      */
     public function handle(): void
     {
-        DocumentMonitoring::create([
-            'identifier' => $this->identifier,
-            'document' => $this->request['document']['key'],
-            'event_name' => $this->request['event']['name'],
-            'event' => json_encode($this->request['event']),
-        ]);
+        try {
+            DocumentMonitoring::create([
+                'identifier' => $this->identifier,
+                'document' => $this->request['document']['key'],
+                'event_name' => $this->request['event']['name'],
+                'event' => json_encode($this->request['event']),
+            ]);
+        } catch (\Throwable $th) {
+            throw new CreateException('Erro ao salvar Webhook da ClickSign no Banco de Dados', $th->getMessage());
+        }
     }
 }

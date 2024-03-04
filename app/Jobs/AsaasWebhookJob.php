@@ -2,11 +2,11 @@
 
 namespace App\Jobs;
 
+use App\Exceptions\CreateException;
 use App\Models\BillingMonitoring;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
-use Illuminate\Http\Request;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 
@@ -26,11 +26,15 @@ class AsaasWebhookJob implements ShouldQueue
      */
     public function handle(): void
     {
-        BillingMonitoring::create([
-            'identifier' => $this->identifier,
-            'event' => $this->request['event'],
-            'payment_id' => $this->request['payment']['id'],
-            'payment' => json_encode($this->request['payment'])
-        ]);
+        try {
+            BillingMonitoring::create([
+                'identifier' => $this->identifier,
+                'event' => $this->request['event'],
+                'payment_id' => $this->request['payment']['id'],
+                'payment' => json_encode($this->request['payment'])
+            ]);
+        } catch (\Throwable $th) {
+            throw new CreateException('Erro ao salvar Webhook do ASAAS no Banco de Dados', $th->getMessage());
+        }
     }
 }

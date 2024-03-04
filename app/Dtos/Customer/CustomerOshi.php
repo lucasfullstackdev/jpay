@@ -3,6 +3,7 @@
 namespace App\Dtos\Customer;
 
 use App\Dtos\CompanyOshi;
+use App\Exceptions\CustomerException;
 
 class CustomerOshi
 {
@@ -25,23 +26,28 @@ class CustomerOshi
 
   public function __construct(object $customer)
   {
-    $this->name         = $customer->name;
-    $this->document     = $customer->document ?? $customer->cpfCnpj;
-    $this->email        = $customer->email;
-    $this->phone        = $customer->phone;
-    $this->sku          = $customer->id ?? null;
+    try {
+      $this->name         = $customer->name;
+      $this->document     = $customer->document ?? $customer->cpfCnpj;
+      $this->email        = $customer->email;
+      $this->phone        = $customer->phone;
+      $this->sku          = $customer->id ?? null;
 
-    # Endereco do cliente
-    $this->street       = $customer->street ?? $customer->address;
-    $this->number       = $customer->number ?? $customer->addressNumber;
-    $this->neighborhood = $customer->neighborhood ?? $customer->province;
-    $this->city         = $customer->city;
-    $this->state        = $customer->state;
-    $this->country      = $customer->country ?? 'Brasil';
-    $this->postal_code  = $customer->postal_code ?? $customer->postalCode;
-    $this->complement   = $customer->complement ?? null;
+      # Endereco do cliente
+      $this->street       = $customer->street ?? $customer->address;
+      $this->number       = $customer->number ?? $customer->addressNumber;
+      $this->neighborhood = $customer->neighborhood ?? $customer->province;
+      $this->city         = $customer->city;
+      $this->state        = $customer->state;
+      $this->country      = $customer->country ?? 'Brasil';
+      $this->postal_code  = $customer->postal_code ?? $customer->postalCode;
+      $this->complement   = $customer->complement ?? null;
+    } catch (\Throwable $th) {
+      throw new CustomerException('Erro ao criar a estrutura de dados para salvar a o Customer no banco de dados',  $th->getMessage());
+    }
 
     # Empresa do cliente
+    /** A Class CompanyOshi terá sua própria tratativa de Excessões */
     $this->company = new CompanyOshi($customer);
   }
 }

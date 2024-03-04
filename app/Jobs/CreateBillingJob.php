@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Exceptions\CreateException;
 use App\Models\BillingSending;
 use App\Services\Banking\Asaas\AsaasBilling;
 use App\Services\Banking\BankingService;
@@ -11,7 +12,6 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Facades\Log;
 
 class CreateBillingJob implements ShouldQueue
 {
@@ -37,9 +37,14 @@ class CreateBillingJob implements ShouldQueue
             return;
         }
 
-        BillingSending::create(
-            $this->sendBilling()
-        );
+        // Enviar cobranca para ser salva no ASAAS
+        $billing = $this->sendBilling();
+
+        try {
+            BillingSending::create($billing);
+        } catch (\Throwable $th) {
+            throw new CreateException('Erro ao salvar cobrança no Banco de Dados', $th->getMessage());
+        }
     }
 
     /**

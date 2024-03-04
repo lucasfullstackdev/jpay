@@ -3,6 +3,7 @@
 namespace App\Jobs;
 
 use App\Dtos\Document\DocumentSigner;
+use App\Exceptions\CreateException;
 use App\Models\Document;
 use App\Models\DocumentSigner as ModelsDocumentSigner;
 use App\Models\OfficeSigner;
@@ -33,21 +34,23 @@ class AddOfficeSignersToDocumentJob implements ShouldQueue
      */
     public function handle(): void
     {
-        $documentSignerOshi = $this->sendSigner();
+        // Estamos adicionando o signatário que pertence ao escritório ao documento
+        $documentSignerOshi = $this->addSignerToDocument();
 
+        // Criando o DocumentSigner no banco de dados
         try {
             DB::beginTransaction();
             ModelsDocumentSigner::create($documentSignerOshi);
             DB::commit();
-
-            /* Após adicionar o signatário, podemos assinar o documento */
-            OfficeSignerAutomaticallySignViaApiJob::dispatch($this->document, $this->officeSigner);
         } catch (\Throwable $th) {
-            dd($th->getMessage());
+            throw new CreateException('Erro ao salvar DocumentSigner no Banco de Dados', $th->getMessage());
         }
+
+        /* Após adicionar o signatário, podemos assinar o documento */
+        OfficeSignerAutomaticallySignViaApiJob::dispatch($this->document, $this->officeSigner);
     }
 
-    private function sendSigner(): ?array
+    private function addSignerToDocument(): ?array
     {
         return (array) $this->signatureService->addSignerToDocument(
             new DocumentSigner($this->document, $this->officeSigner)

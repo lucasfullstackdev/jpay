@@ -4,6 +4,8 @@ namespace App\Jobs;
 
 use App\Dtos\CompanyOshi;
 use App\Dtos\Customer\CustomerOshi;
+use App\Exceptions\CreateException;
+use App\Exceptions\UpdateException;
 use App\Http\Requests\Purchase;
 use App\Models\Company;
 use App\Models\Customer;
@@ -42,9 +44,9 @@ class CreateExternalCustomerJob implements ShouldQueue
          * - Antes de enviar para o ASAAS precisamos garantir que do nosso lado está salvo direitinho
          * - Se o ASAAS não conseguir salvar, então executar o rollback
          */
-        try {
-            $customerOshi = new CustomerOshi((object) $this->purchase);
+        $customerOshi = new CustomerOshi((object) $this->purchase);
 
+        try {
             /**
              * Inserindo customer e company com os valores base,
              * após enviar para o ASAAS iremos atualizar com informações complementares
@@ -54,22 +56,26 @@ class CreateExternalCustomerJob implements ShouldQueue
             $customerOshi->company->owner_id = $customer->id;
             Company::create((array) $customerOshi->company);
             DB::commit();
+        } catch (\Throwable $th) {
+            throw new CreateException('Erro ao criar o cliente', $th->getMessage());
+        }
 
-            /** Enviando o cliente para o ASAAS */
-            $customerToUpdate = $this->sendCustomer($this->purchase);
+        /** Enviando o cliente para o ASAAS */
+        $customerToUpdate = $this->sendCustomer($this->purchase);
 
+        try {
             /** Atualizando com os dados retornados pelo ASAAS */
             DB::beginTransaction();
             $customer->sku = $customerToUpdate->sku;
             $customer->save();
             DB::commit();
-
-            CreateBillingJob::dispatch(
-                new AsaasBilling($customer)
-            );
         } catch (\Throwable $th) {
-            dd($th->getMessage());
+            throw new UpdateException("Erro ao atualizar o identificador do ASAAS no Customer: $customer->id", $th->getMessage());
         }
+
+        CreateBillingJob::dispatch(
+            new AsaasBilling($customer)
+        );
     }
 
     private function sendCustomer($purchase): object
