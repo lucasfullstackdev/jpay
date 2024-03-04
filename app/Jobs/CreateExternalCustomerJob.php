@@ -39,38 +39,29 @@ class CreateExternalCustomerJob implements ShouldQueue
      */
     public function handle(): void
     {
-        /**
-         * Aqui devemos seguir a seguinte linha de raciocínio:
-         * - Antes de enviar para o ASAAS precisamos garantir que do nosso lado está salvo direitinho
-         * - Se o ASAAS não conseguir salvar, então executar o rollback
-         */
-        $customerOshi = new CustomerOshi((object) $this->purchase);
-
-        try {
-            /**
-             * Inserindo customer e company com os valores base,
-             * após enviar para o ASAAS iremos atualizar com informações complementares
-             */
-            DB::beginTransaction();
-            $customer = Customer::create((array) $customerOshi);
-            $customerOshi->company->owner_id = $customer->id;
-            Company::create((array) $customerOshi->company);
-            DB::commit();
-        } catch (\Throwable $th) {
-            throw new CreateException('Erro ao criar o cliente', $th->getMessage());
-        }
-
         /** Enviando o cliente para o ASAAS */
         $customerToUpdate = $this->sendCustomer($this->purchase);
 
+        /**
+         * Só cadastrar o cliente e a empresa se conseguirmos enviar o cliente para o ASAAS
+         */
         try {
-            /** Atualizando com os dados retornados pelo ASAAS */
             DB::beginTransaction();
-            $customer->sku = $customerToUpdate->sku;
-            $customer->save();
+
+            $customerOshi = new CustomerOshi((object) $this->purchase);
+
+            // Cadastro do cliente
+            $customerOshi->sku = $customerToUpdate->sku;
+            $customer = Customer::create((array) $customerOshi);
+
+            // Cadastrando a empresa
+            $customerOshi->company->owner_id = $customer->id;
+            Company::create((array) $customerOshi->company);
+
             DB::commit();
         } catch (\Throwable $th) {
-            throw new UpdateException("Erro ao atualizar o identificador do ASAAS no Customer: $customer->id", $th->getMessage());
+            DB::rollBack();
+            throw new CreateException('Erro ao criar o cliente', $th->getMessage());
         }
 
         CreateBillingJob::dispatch(
@@ -80,6 +71,7 @@ class CreateExternalCustomerJob implements ShouldQueue
 
     private function sendCustomer($purchase): object
     {
+        die;
         return $this->bankingService->createCustomer(
             new AsaasCustomer((object) $purchase)
         );
