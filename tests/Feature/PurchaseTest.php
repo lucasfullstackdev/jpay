@@ -14,7 +14,7 @@ class PurchaseTest extends TestCase
         "name" =>  "Nome do biscoito",
         "email" => "biscoito@jellycode.com.br",
         "phone" => "87999794136",
-        "document" => "000999333221",
+        "document" => "00999333221",
         'street' => 'Rua de teste',
         'number' => '32',
         'neighborhood' => 'bairro',
@@ -66,8 +66,8 @@ class PurchaseTest extends TestCase
         $this->assertEquals([
             "name",
             "email",
-            "phone",
             "document",
+            "phone",
             "street",
             "number",
             "neighborhood",
