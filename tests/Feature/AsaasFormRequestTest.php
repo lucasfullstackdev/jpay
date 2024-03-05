@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature\Webhook;
+namespace Tests\Feature;
 
 use App\Http\Requests\Webhook\Asaas;
 use Illuminate\Foundation\Testing\RefreshDatabase;
