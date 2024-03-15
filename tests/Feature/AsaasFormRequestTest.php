@@ -3,13 +3,13 @@
 namespace Tests\Feature;
 
 use App\Http\Requests\Webhook\Asaas;
-use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Facades\Validator;
 use Tests\TestCase;
 
 class AsaasFormRequestTest extends TestCase
 {
-    use RefreshDatabase;
+    use DatabaseTransactions;
 
     public function test_it_authorizes_with_correct_secret()
     {
