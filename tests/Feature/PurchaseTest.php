@@ -2,9 +2,7 @@
 
 namespace Tests\Feature;
 
-use App\Models\Customer;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Support\Facades\Cache;
 use Symfony\Component\HttpFoundation\Response;
 use Tests\TestCase;
 
@@ -37,13 +35,15 @@ class PurchaseTest extends TestCase
 
     public function testPurchaseReturnsConflictIfRequestAlreadyReceived()
     {
+        // Limpa o cache antes de fazer a solicitação
+        Cache::flush();
+
         // Envia a requisição pela primeira vez
         $response = $this->json('POST', '/api/v1/tax-domicile/purchase', $this->body);
 
-        // dd($response);
         // Verifica se a primeira requisição foi bem sucedida
         $response->assertStatus(Response::HTTP_CREATED);
-
+        
         // Envia a mesma requisição novamente
         $response = $this->json('POST', '/api/v1/tax-domicile/purchase', $this->body);
 
