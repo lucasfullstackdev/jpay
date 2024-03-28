@@ -67,7 +67,7 @@ class TaxDomicileController extends Controller
         }
 
         AsaasWebhookJob::dispatch($request->only(['event', 'payment']), $identifier);
-        if ($request->event == AsaasEvent::PAYMENT_RECEIVED->value) {
+        if ($request->event == AsaasEvent::PAYMENT_CONFIRMED->value) {
             CreateDocumentJob::dispatch((object) $request->payment);
         }
 
