@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Log;
 
 class CustomException extends Exception
 {
-  public function __construct(protected $message = '', protected string $internalMessage = '')
+  public function __construct(protected $message = '', protected string $internalMessage = '', protected array $payload = [])
   {
   }
 
@@ -23,7 +23,7 @@ class CustomException extends Exception
 
     // Todo erro mapeado será enviado para o Discord
     SendErrorToDiscordJob::dispatch(
-      new DiscordMessage($this->message, $this->internalMessage)
+      new DiscordMessage($this->message, $this->internalMessage, $this->payload)
     );
   }
 }

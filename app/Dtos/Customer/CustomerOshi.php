@@ -43,7 +43,7 @@ class CustomerOshi
       $this->postal_code  = $customer->postal_code ?? $customer->postalCode;
       $this->complement   = $customer->complement ?? null;
     } catch (\Throwable $th) {
-      throw new CustomerException('Erro ao criar a estrutura de dados para salvar a o Customer no banco de dados',  $th->getMessage());
+      throw new CustomerException('Erro ao criar a estrutura de dados para salvar a o Customer no banco de dados',  $th->getMessage(), (array) $customer);
     }
 
     # Empresa do cliente
