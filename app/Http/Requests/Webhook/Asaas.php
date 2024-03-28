@@ -3,6 +3,8 @@
 namespace App\Http\Requests\Webhook;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Http\Exceptions\HttpResponseException;
 
 class Asaas extends FormRequest
 {
@@ -37,5 +39,14 @@ class Asaas extends FormRequest
             'payment.id' => 'required|exists:billing_sending,sku',
             'payment.customer' => 'required|exists:customers,sku'
         ];
+    }
+
+    protected function failedValidation(Validator $validator)
+    {
+        throw new HttpResponseException(response()->json([
+            'success' => false,
+            'errors'  => $validator->errors(),
+            'data'    => []
+        ], 200));
     }
 }
