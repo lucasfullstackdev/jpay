@@ -44,9 +44,9 @@ class Asaas extends FormRequest
 
     protected function failedValidation(Validator $validator)
     {
-        return response()->json([
+        return new JsonResponse([
             'success' => false,
-            'errors'  => $validator->errors(),
+            'errors'  => ['Unauthorized.'],
             'data'    => []
         ], 200);
     }
