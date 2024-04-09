@@ -2,6 +2,8 @@
 
 namespace App\Http\Requests;
 
+use App\Dtos\DiscordMessage;
+use App\Jobs\SendErrorToDiscordJob;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
@@ -19,6 +21,15 @@ class BaseRequest extends FormRequest
 
   protected function failedValidation(Validator $validator)
   {
+
+    // Envia o erro para o Discord
+    SendErrorToDiscordJob::dispatch(
+      new DiscordMessage('Erro nos dados recebidos pela Landing Page', Response::HTTP_BAD_REQUEST, [
+        'payload' => $this->all(),
+        'errors'  => $validator->errors()
+      ])
+    );
+
     throw new HttpResponseException(response()->json([
       'success' => false,
       'errors'  => $validator->errors(),
