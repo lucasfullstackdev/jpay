@@ -48,7 +48,7 @@ class TaxDomicileController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Requisição recebida com sucesso',
-        ], Response::HTTP_CREATED);
+        ], Response::HTTP_OK);
     }
 
     /**
