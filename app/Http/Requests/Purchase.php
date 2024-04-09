@@ -26,7 +26,7 @@ class Purchase extends BaseRequest
             'city'                 => 'required|string',
             'state'                => 'required|string',
             'country'              => 'required|string',
-            'postal_code'          => 'required|string',
+            'postal_code'          => 'required|string|min:8|max:8',
             'complement'           => 'nullable|string',
 
             # Dados da empresa
@@ -38,7 +38,7 @@ class Purchase extends BaseRequest
             'company.city'         => 'required|string',
             'company.state'        => 'required|string',
             'company.country'      => 'required|string',
-            'company.postal_code'  => 'required|string',
+            'company.postal_code'  => 'required|string|min:8|max:8',
             'company.complement'   => 'nullable|string',
         ];
     }
