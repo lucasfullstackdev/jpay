@@ -155,6 +155,9 @@ return [
         'attribute-name' => [
             'rule-name' => 'custom-message',
         ],
+        'name' => [
+            'regex' => 'O campo :attribute deve conter apenas letras e espaços.',
+        ]
     ],
 
     /*
@@ -193,7 +196,7 @@ return [
 
         'postal_code' => 'cep',
         'document'    => 'documento',
-        
+
 
         # Dados da empresa
         'company.document'     => 'CNPJ da empresa',

@@ -14,7 +14,7 @@ class Purchase extends BaseRequest
     public function rules(): array
     {
         return [
-            'name'                 => 'required|string',
+            'name'                 => 'required|string|regex:/^\w+(\s+\w+)+$/',
             'email'                => 'required|string|email:rfc,dns',
             'document'             => 'required|string|min:11|max:11',
             'phone'                => 'required|string|max:20',
