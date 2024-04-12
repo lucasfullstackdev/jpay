@@ -19,9 +19,9 @@ class SendErrorToDiscordJob implements ShouldQueue
     /**
      * Create a new job instance.
      */
-    public function __construct(public DiscordMessage $discordMessage)
+    public function __construct(public DiscordMessage $discordMessage, private string $channel = '')
     {
-        $this->discordService = new DiscordService();
+        $this->discordService = new DiscordService($this->channel);
     }
 
     /**

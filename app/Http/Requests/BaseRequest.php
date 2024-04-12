@@ -21,13 +21,13 @@ class BaseRequest extends FormRequest
 
   protected function failedValidation(Validator $validator)
   {
-
     // Envia o erro para o Discord
     SendErrorToDiscordJob::dispatch(
       new DiscordMessage('Erro nos dados recebidos pela Landing Page', Response::HTTP_BAD_REQUEST, [
         'payload' => $this->all(),
         'errors'  => $validator->errors()
-      ])
+      ]),
+      env('DISCORD_WEBHOOK_URL_LANDING_PAGE_ERRORS')
     );
 
     throw new HttpResponseException(response()->json([
