@@ -32,7 +32,7 @@ class BankingService
         return new CustomerOshi((object) $response);
       }
     } catch (\GuzzleHttp\Exception\RequestException $e) {
-      throw new RequestException('Erro ao criar o Customer no ASAAS', $e->getMessage(), $customer);
+      throw new RequestException('Erro ao criar o Customer no ASAAS', $e->getMessage(), (array) $customer);
     }
   }
 
@@ -56,7 +56,7 @@ class BankingService
         );
       }
     } catch (\GuzzleHttp\Exception\RequestException $e) {
-      throw new RequestException('Erro ao criar cobrança no ASAAS', $e->getMessage(), $billing);
+      throw new RequestException('Erro ao criar cobrança no ASAAS', $e->getMessage(), (array) $billing);
     }
   }
 }
