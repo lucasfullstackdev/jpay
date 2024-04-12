@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -22,4 +23,11 @@ class BillingSending extends Model
         'invoice_url',
         'invoice_number'
     ];
+
+    public function wasMadeInLessThanAYear(): bool
+    {
+        return $this->where('customer', $this->customer)
+            ->where('created_at', '>=', Carbon::now()->subYear())
+            ->exists();
+    }
 }
