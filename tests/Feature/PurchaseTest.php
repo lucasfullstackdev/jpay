@@ -42,7 +42,7 @@ class PurchaseTest extends TestCase
         $response = $this->json('POST', '/api/v1/tax-domicile/purchase', $this->body);
 
         // Verifica se a primeira requisição foi bem sucedida
-        $response->assertStatus(Response::HTTP_CREATED);
+        $response->assertStatus(Response::HTTP_OK);
         
         // Envia a mesma requisição novamente
         $response = $this->json('POST', '/api/v1/tax-domicile/purchase', $this->body);
