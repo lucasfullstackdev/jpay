@@ -36,7 +36,7 @@ class SignatureService
         'json' => ['document' => $clickSignDocument->document]
       ]);
     } catch (\Throwable $th) {
-      throw new RequestException('Erro ao criar o Documento na ClickSign', $th->getMessage(), $clickSignDocument->document);
+      throw new RequestException('Erro ao criar o Documento na ClickSign', $th->getMessage(), (array) $clickSignDocument->document);
     }
 
     // Se o status code for 201, retorna o documento no formato para ser salvado no banco de dados
@@ -58,7 +58,7 @@ class SignatureService
         'json' => ['signer' => $clickSignSigner->signer]
       ]);
     } catch (\Throwable $th) {
-      throw new RequestException('Erro ao criar o Signer na ClickSign', $th->getMessage(), $clickSignSigner->signer);
+      throw new RequestException('Erro ao criar o Signer na ClickSign', $th->getMessage(), (array) $clickSignSigner->signer);
     }
 
     // Se o status code for 201, retorna o signer no formato para ser salvado no banco de dados
@@ -80,7 +80,7 @@ class SignatureService
         'json' => ['list' => $documentSigner->list]
       ]);
     } catch (\Throwable $th) {
-      throw new RequestException('Erro ao adicionar o Signer ao Documento na ClickSign', $th->getMessage(), $documentSigner->list);
+      throw new RequestException('Erro ao adicionar o Signer ao Documento na ClickSign', $th->getMessage(), (array) $documentSigner->list);
     }
 
     // Se o status code for 201, retorna o DocumentSigner no formato para ser salvo no banco de dados
@@ -100,7 +100,7 @@ class SignatureService
         'json' => $documentSigner
       ]);
     } catch (\Throwable $th) {
-      throw new RequestException('Erro ao enviar a notificação para o Signer na ClickSign', $th->getMessage(), $documentSigner);
+      throw new RequestException('Erro ao enviar a notificação para o Signer na ClickSign', $th->getMessage(), (array) $documentSigner);
     }
   }
 
@@ -113,7 +113,7 @@ class SignatureService
         'json' => $clickSignApiSign
       ]);
     } catch (\Throwable $th) {
-      throw new RequestException('Erro ao assinar o documento na ClickSign', $th->getMessage(), $clickSignApiSign);
+      throw new RequestException('Erro ao assinar o documento na ClickSign', $th->getMessage(), (array)$clickSignApiSign);
     }
   }
 }
