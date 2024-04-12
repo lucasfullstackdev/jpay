@@ -24,9 +24,9 @@ class DocumentService
     }
 
     /** Se encontrar documento, barrar */
-    // if ($this->hasDocument($customer)) {
-    //   return;
-    // }
+    if ($this->hasDocument($customer)) {
+      return;
+    }
 
     // Envia o documento para a ClickSign
     $document = $this->sendDocument($customer);

@@ -29,7 +29,6 @@ class BillingService
     try {
       BillingSending::create($billing);
     } catch (\Throwable $th) {
-      dd($th->getMessage());
       throw new CreateException('Erro ao salvar cobrança no Banco de Dados', $th->getMessage());
     }
   }
