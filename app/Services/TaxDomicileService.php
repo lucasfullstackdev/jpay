@@ -3,8 +3,7 @@
 namespace App\Services;
 
 use App\Http\Requests\Purchase;
-use App\Jobs\CreateBillingJob;
-use App\Jobs\CreateExternalCustomerJob;
+use App\Jobs\{CreateBillingJob, CreateExternalCustomerJob};
 use App\Models\Customer;
 use App\Services\Banking\Asaas\AsaasBilling;
 

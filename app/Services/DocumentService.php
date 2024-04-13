@@ -3,8 +3,7 @@
 namespace App\Services;
 
 use App\Exceptions\CreateException;
-use App\Models\Customer;
-use App\Models\Document;
+use App\Models\{Customer, Document};
 use App\Services\Signature\ClickSign\ClickSignDocument;
 use App\Services\Signature\SignatureService;
 use Illuminate\Support\Facades\DB;

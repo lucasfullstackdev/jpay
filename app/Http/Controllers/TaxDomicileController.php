@@ -3,22 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Enums\AsaasEvent;
-use App\Exceptions\Company\CompanyException;
-use App\Exceptions\Customer\CustomerCreateException;
-use App\Exceptions\CustomerException;
-use App\Exceptions\RequestException;
 use App\Http\Requests\Purchase;
-use App\Http\Requests\Webhook\Asaas;
-use App\Http\Requests\Webhook\ClickSign;
-use App\Jobs\AsaasWebhookJob;
-use App\Jobs\ClickSignWebhookJob;
-use App\Jobs\CreateDocumentJob;
-use App\Models\BillingMonitoring;
-use App\Models\DocumentMonitoring;
+use App\Http\Requests\Webhook\{Asaas, ClickSign};
+use App\Jobs\{AsaasWebhookJob, ClickSignWebhookJob, CreateDocumentJob};
+use App\Models\{BillingMonitoring, DocumentMonitoring};
 use App\Services\TaxDomicileService;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Hash;
 use Symfony\Component\HttpFoundation\Response;
 
 class TaxDomicileController extends Controller

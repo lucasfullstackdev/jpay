@@ -4,7 +4,6 @@ namespace App\Services\Banking\Asaas;
 
 use App\Exceptions\CustomerException;
 use App\Services\Banking\CustomerInterface;
-use Illuminate\Support\Facades\Log;
 
 class AsaasCustomer implements CustomerInterface
 {

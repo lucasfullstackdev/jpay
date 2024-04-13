@@ -4,7 +4,6 @@ namespace App\Http\Requests\Webhook;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
-use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\JsonResponse;
 
 class Asaas extends FormRequest

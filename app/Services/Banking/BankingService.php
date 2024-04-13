@@ -5,8 +5,7 @@ namespace App\Services\Banking;
 use App\Dtos\Billing\BillingOshi;
 use App\Dtos\Customer\CustomerOshi;
 use App\Exceptions\RequestException;
-use App\Services\Banking\Asaas\AsaasBilling;
-use App\Services\Banking\Asaas\AsaasCustomer;
+use App\Services\Banking\Asaas\{AsaasBilling, AsaasCustomer};
 use GuzzleHttp\Client;
 
 class BankingService

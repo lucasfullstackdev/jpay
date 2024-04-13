@@ -4,8 +4,7 @@ namespace App\Services;
 
 use App\Dtos\Customer\CustomerOshi;
 use App\Exceptions\CreateException;
-use App\Models\Company;
-use App\Models\Customer;
+use App\Models\{Company, Customer};
 use App\Services\Banking\Asaas\AsaasCustomer;
 use App\Services\Banking\BankingService;
 use Illuminate\Support\Facades\DB;
