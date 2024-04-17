@@ -16,6 +16,7 @@ class AsaasBilling implements CustomerInterface
    *   é fazer a api rodar e só depois melhorar
    */
   public string $billingType = "UNDEFINED";
+  public string $description;
   public float $value = 1200;
   public string $customer;
   public string $dueDate;
@@ -26,6 +27,9 @@ class AsaasBilling implements CustomerInterface
     try {
       $this->customer = $customer->sku;
       $this->dueDate  = Carbon::now()->addDays($this->days);
+
+      $this->description = "Aquisição de domicílio fiscal/escritório virtual "  . Carbon::now()->format('Y') .  ".
+      Evite cobranças, qualquer problema entre em contato imediatamente com um de nossos atendentes.";
     } catch (\Throwable $th) {
       throw new BillingException('Erro ao criar estrutura de Cobrança que será utilizada no ASAAS', $th->getMessage());
     }
