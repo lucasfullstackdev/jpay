@@ -4,6 +4,22 @@ namespace App\Http\Requests;
 
 class Purchase extends BaseRequest
 {
+
+    public function authorize(): bool
+    {
+        /** Se não tiver o segredo, abortar */
+        if (empty($this->secret)) {
+            return false;
+        }
+
+        /** Se o segredo for diferente do esperado, abortar */
+        if ($this->secret != env('LANDING_PAGE_SECRET')) {
+            return false;
+        }
+
+        return true;
+    }
+
     /**
      * Get the validation rules that apply to the request.
      *
