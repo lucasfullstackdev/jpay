@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Dtos\Customer\CustomerOshi;
+use App\Enums\Person;
 use App\Exceptions\CreateException;
 use App\Models\{Company, Customer};
 use App\Services\Banking\Asaas\AsaasCustomer;
@@ -32,9 +33,11 @@ class CustomerService
       $customerOshi->sku = $customerToUpdate->sku;
       $customer = Customer::create((array) $customerOshi);
 
-      // Cadastrando a empresa
-      $customerOshi->company->owner_id = $customer->id;
-      Company::create((array) $customerOshi->company);
+      // Se for PJ, cadastrar a empresa
+      if (isset($purchase->customer['person']) && $purchase->customer['person'] === Person::PJ->value) {
+        $customerOshi->company->owner_id = $customer->id;
+        Company::create((array) $customerOshi->company);
+      }
 
       DB::commit();
 

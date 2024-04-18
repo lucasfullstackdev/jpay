@@ -2,6 +2,7 @@
 
 namespace App\Services\Banking\Asaas;
 
+use App\Enums\Person;
 use App\Exceptions\CustomerException;
 use App\Services\Banking\CustomerInterface;
 
@@ -29,11 +30,19 @@ class AsaasCustomer implements CustomerInterface
       $this->mobilePhone = $purchase->customer['phone'];
       $this->sku         = $purchase->customer['id'] ?? null;
 
+      /* Se o person for PF, entao nao temos os dados da empresa, mas sim do cliente */
+      if (isset($purchase->customer['person']) && $purchase->customer['person'] === Person::PF->value) {
+        $this->addressNumber = $purchase->customer['number'];
+        $this->postalCode = $purchase->customer['postal_code'];
+      }
+
       # Dados da emprea
-      $this->company       = $purchase->company['name'];
-      $this->document      = $purchase->company['document'];
-      $this->addressNumber = $purchase->company['number'];
-      $this->postalCode    = $purchase->company['postal_code'];
+      if (isset($purchase->customer['person']) && $purchase->customer['person'] === Person::PJ->value) {
+        $this->company       = $purchase->company['name'];
+        $this->document      = $purchase->company['document'];
+        $this->addressNumber = $purchase->company['number'];
+        $this->postalCode    = $purchase->company['postal_code'];
+      }
     } catch (\Throwable $th) {
       throw new CustomerException('Erro ao criar a estrutura de dados para enviar o Cliente para o ASAAS',  $th->getMessage());
     }

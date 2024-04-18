@@ -26,8 +26,6 @@ class BankingService
 
       if ($statusCode === 200) {
         $response = json_decode($response->getBody()->getContents(), true);
-        $response['document'] = $customer->document;
-
         return new CustomerOshi((object) $response);
       }
     } catch (\GuzzleHttp\Exception\RequestException $e) {

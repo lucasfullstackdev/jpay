@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Enums\Person;
 use App\Http\Requests\Purchase;
 use App\Jobs\{CreateBillingJob, CreateExternalCustomerJob};
 use App\Models\Customer;
@@ -13,15 +14,16 @@ class TaxDomicileService extends Service
   {
     $customer = $this->getCustomer($purchase->customer);
 
-    if (!empty($customer)) {
-      return CreateBillingJob::dispatch(
-        new AsaasBilling($customer)
-      );
+
+    /** Se a Landing Page informar que é empresa, então utilizar os dados da empresa */
+    $extractDataFromRequest = ['customer'];
+    if ($purchase->customer['person'] === Person::PJ->value) {
+      $extractDataFromRequest[] = 'company';
     }
 
     /* Se Cliente nao existir, criar */
     CreateExternalCustomerJob::dispatch(
-      $purchase->only(['customer', 'company'])
+      $purchase->only($extractDataFromRequest)
     );
   }
 
