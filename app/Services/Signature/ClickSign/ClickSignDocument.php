@@ -2,6 +2,7 @@
 
 namespace App\Services\Signature\ClickSign;
 
+use App\Enums\Person;
 use App\Enums\SignerAs;
 use App\Exceptions\DocumentException;
 use App\Models\Customer;
@@ -21,16 +22,15 @@ class ClickSignDocument
       $witnessess = $this->getWitnessess();
       $this->document['template'] = [
         'data' => [
-          'company_name'            => $customer->company->name,
-          'company_document'        => $customer->company->documentFormatted,
-          'company_address'         => $customer->company->address,
+          'contractor'              => $this->getContractor(),
+
           'customer_name'           => $customer->name,
           'customer_document'       => $customer->documentFormatted,
-          'customer_address'        => $customer->address,
+
           'first_witness_name'      => $witnessess[0]['name'],
           'first_witness_document'  => $witnessess[0]['document'],
           'second_witness_name'     => $witnessess[1]['name'],
-          'second_witness_document' => $witnessess[1]['document']
+          'second_witness_document' => $witnessess[1]['document'],
         ]
       ];
     } catch (\Throwable $th) {
@@ -44,5 +44,24 @@ class ClickSignDocument
       'name'     => $witness->name,
       'document' => $witness->documentFormatted,
     ])->toArray();
+  }
+
+  private function getContractor(): string
+  {
+    if ($this->customer->person == Person::PF->value) {
+      return $this->getContractorPhysicalPerson();
+    }
+
+    return $this->getContractorLegalPerson();
+  }
+
+  private function getContractorPhysicalPerson(): string
+  {
+    return "{$this->customer->name}, brasileiro(a), portador do CPF de número {$this->customer->documentFormatted}, residente e domiciliado na {$this->customer->address}.";
+  }
+
+  private function getContractorLegalPerson(): string
+  {
+    return "{$this->customer->company->name}, pessoa Jurídica de direito privado, inscrita no CNPJ sob o número {$this->customer->company->documentFormatted}, com sede na {$this->customer->company->address} neste ato representado por {$this->customer->name}, brasileiro(a), portador do CPF de número {$this->customer->documentFormatted}.";
   }
 }
