@@ -19,21 +19,21 @@ class AsaasCustomer implements CustomerInterface
   public ?string $addressNumber;
   public ?string $postalCode;
 
-  public function __construct(object $customer)
+  public function __construct(object $purchase)
   {
     try {
-      $this->name        = $customer->name;
-      $this->cpfCnpj     = $customer->document ?? $customer->cpfCnpj;
-      $this->email       = $customer->email;
-      $this->phone       = $customer->phone;
-      $this->mobilePhone = $customer->phone;
-      $this->sku         = $customer->id ?? null;
+      $this->name        = $purchase->customer['name'];
+      $this->cpfCnpj     = $purchase->customer['document'] ?? $purchase->cpfCnpj;
+      $this->email       = $purchase->customer['email'];
+      $this->phone       = $purchase->customer['phone'];
+      $this->mobilePhone = $purchase->customer['phone'];
+      $this->sku         = $purchase->customer['id'] ?? null;
 
       # Dados da emprea
-      $this->company       = $customer->company['name'];
-      $this->document      = $customer->company['document'];
-      $this->addressNumber = $customer->company['number'];
-      $this->postalCode    = $customer->company['postal_code'];
+      $this->company       = $purchase->company['name'];
+      $this->document      = $purchase->company['document'];
+      $this->addressNumber = $purchase->company['number'];
+      $this->postalCode    = $purchase->company['postal_code'];
     } catch (\Throwable $th) {
       throw new CustomerException('Erro ao criar a estrutura de dados para enviar o Cliente para o ASAAS',  $th->getMessage());
     }

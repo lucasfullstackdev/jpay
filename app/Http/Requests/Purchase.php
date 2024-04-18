@@ -28,20 +28,21 @@ class Purchase extends BaseRequest
     public function rules(): array
     {
         return [
-            'name'                 => 'required|string|regex:/^\w+(\s+\w+)+$/',
-            'email'                => 'required|string|email:rfc,dns',
-            'document'             => 'required|string|min:11|max:11',
-            'phone'                => 'required|string|max:20',
+            'customer.name'     => 'required|string|regex:/^\w+(\s+\w+)+$/',
+            'customer.email'    => 'required|string|email:rfc,dns',
+            'customer.document' => 'required|string|min:11|max:11',
+            'customer.phone'    => 'required|string|max:20',
 
             # Endereco do cliente
-            'street'               => 'required|string',
-            'number'               => 'required|string',
-            'neighborhood'         => 'required|string',
-            'city'                 => 'required|string',
-            'state'                => 'required|string',
-            'country'              => 'required|string',
-            'postal_code'          => 'required|string|min:8|max:8',
-            'complement'           => 'nullable|string',
+            'customer.street'       => 'required|string',
+            'customer.number'       => 'required|string',
+            'customer.neighborhood' => 'required|string',
+            'customer.city'         => 'required|string',
+            'customer.state'        => 'required|string',
+            'customer.country'      => 'required|string',
+            'customer.postal_code'  => 'required|string|min:8|max:8',
+            'customer.complement'   => 'nullable|string',
+            'customer.person'       => 'required|string|in:PF,PJ',
 
             # Dados da empresa
             'company.document'     => 'required|string',

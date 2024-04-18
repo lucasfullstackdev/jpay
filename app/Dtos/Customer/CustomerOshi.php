@@ -24,30 +24,30 @@ class CustomerOshi
 
   public CompanyOshi $company;
 
-  public function __construct(object $customer)
+  public function __construct(object $purchase)
   {
     try {
-      $this->name         = $customer->name;
-      $this->document     = $customer->document ?? $customer->cpfCnpj;
-      $this->email        = $customer->email;
-      $this->phone        = $customer->phone;
-      $this->sku          = $customer->id ?? null;
+      $this->name         = $purchase->customer['name']     ?? $purchase->name;
+      $this->document     = $purchase->customer['document'] ?? $purchase->cpfCnpj;
+      $this->email        = $purchase->customer['email']    ?? $purchase->email;
+      $this->phone        = $purchase->customer['phone']    ?? $purchase->phone;
+      $this->sku          = $purchase->customer['id']       ?? $purchase->id ?? null;
 
       # Endereco do cliente
-      $this->street       = $customer->street ?? $customer->address;
-      $this->number       = $customer->number ?? $customer->addressNumber;
-      $this->neighborhood = $customer->neighborhood ?? $customer->province;
-      $this->city         = $customer->city;
-      $this->state        = $customer->state;
-      $this->country      = $customer->country ?? 'Brasil';
-      $this->postal_code  = $customer->postal_code ?? $customer->postalCode;
-      $this->complement   = $customer->complement ?? null;
+      $this->street       = $purchase->customer['street']       ?? $purchase->address;
+      $this->number       = $purchase->customer['number']       ?? $purchase->addressNumber;
+      $this->neighborhood = $purchase->customer['neighborhood'] ?? $purchase->province;
+      $this->city         = $purchase->customer['city']         ?? $purchase->cityName;
+      $this->state        = $purchase->customer['state']        ?? $purchase->state;
+      $this->country      = $purchase->customer['country']      ?? $purchase->country ?? 'Brasil';
+      $this->postal_code  = $purchase->customer['postal_code']  ?? $purchase->postalCode;
+      $this->complement   = $purchase->customer['complement']   ?? null;
     } catch (\Throwable $th) {
-      throw new CustomerException('Erro ao criar a estrutura de dados para salvar a o Customer no banco de dados',  $th->getMessage(), (array) $customer);
+      throw new CustomerException('Erro ao criar a estrutura de dados para salvar a o Customer no banco de dados',  $th->getMessage(), (array) $purchase);
     }
 
     # Empresa do cliente
     /** A Class CompanyOshi terá sua própria tratativa de Excessões */
-    $this->company = new CompanyOshi($customer);
+    $this->company = new CompanyOshi($purchase);
   }
 }

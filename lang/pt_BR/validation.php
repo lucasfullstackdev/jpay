@@ -196,7 +196,7 @@ return [
 
         'postal_code' => 'cep',
         'document'    => 'documento',
-
+        'person'      => 'Tipo de Pessoa',
 
         # Dados da empresa
         'company.document'     => 'CNPJ da empresa',

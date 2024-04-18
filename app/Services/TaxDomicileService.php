@@ -11,7 +11,8 @@ class TaxDomicileService extends Service
 {
   public function purchase(Purchase $purchase)
   {
-    $customer = $this->getCustomer($purchase->document);
+    $customer = $this->getCustomer($purchase->customer);
+
     if (!empty($customer)) {
       return CreateBillingJob::dispatch(
         new AsaasBilling($customer)
@@ -20,12 +21,12 @@ class TaxDomicileService extends Service
 
     /* Se Cliente nao existir, criar */
     CreateExternalCustomerJob::dispatch(
-      $purchase->only(['name', 'email', 'phone', 'document', 'street', 'number', 'neighborhood', 'city', 'state', 'country', 'postal_code', 'complement', 'company'])
+      $purchase->only(['customer', 'company'])
     );
   }
 
-  public function getCustomer(string $document): ?Customer
+  public function getCustomer(array $customer): ?Customer
   {
-    return Customer::where('document', $document)->first() ?? null;
+    return Customer::where('document', $customer['document'])->first() ?? null;
   }
 }
