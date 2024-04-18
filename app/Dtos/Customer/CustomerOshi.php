@@ -8,6 +8,7 @@ use App\Exceptions\CustomerException;
 class CustomerOshi
 {
   public string $name;
+  public ?string $person;
   public string $document;
   public string $email;
   public string $phone;
@@ -28,6 +29,7 @@ class CustomerOshi
   {
     try {
       $this->name         = $purchase->customer['name']     ?? $purchase->name;
+      $this->person       = $purchase->customer['person']   ?? null;
       $this->document     = $purchase->customer['document'] ?? $purchase->cpfCnpj;
       $this->email        = $purchase->customer['email']    ?? $purchase->email;
       $this->phone        = $purchase->customer['phone']    ?? $purchase->phone;

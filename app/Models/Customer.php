@@ -15,6 +15,7 @@ class Customer extends Model
         'name',
         'email',
         'phone',
+        'person',
         'document',
         'sku',
         'street',

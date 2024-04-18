@@ -34,7 +34,7 @@ class CustomerService
       $customer = Customer::create((array) $customerOshi);
 
       // Se for PJ, cadastrar a empresa
-      if (isset($purchase->customer['person']) && $purchase->customer['person'] === Person::PJ->value) {
+      if (isset($purchase['customer']['person']) && $purchase['customer']['person'] == Person::PJ->value) {
         $customerOshi->company->owner_id = $customer->id;
         Company::create((array) $customerOshi->company);
       }
