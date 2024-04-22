@@ -33,6 +33,12 @@ return new class extends Migration
                 'sign_as' => SignerAs::WITNESS->value,
                 'auth' => SignerAuth::API->value
             ],
+            [
+                'name' => 'Josué Leite de Lima Junior',
+                'document' => '00500711577',
+                'sign_as' => SignerAs::PARTY->value,
+                'auth' => SignerAuth::API->value
+            ],
         ];
 
         foreach ($witnesses as $witness) {
