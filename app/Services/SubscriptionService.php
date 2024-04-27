@@ -3,15 +3,12 @@
 namespace App\Services;
 
 use App\Exceptions\CreateException;
-use App\Models\BillingSending;
 use App\Models\Subscription;
 use App\Services\Banking\Asaas\AsaasSubscription;
 use App\Services\Banking\BankingService;
 
 class SubscriptionService
 {
-  // private AsaasBilling $subscription;
-
   public function __construct(public BankingService $bankingService, public AsaasSubscription $subscription)
   {
   }
@@ -19,11 +16,11 @@ class SubscriptionService
   public function createSubscription(): void
   {
     // So devemos permitir caso o cliente nao tenha comprado no ultimo ano
-    // if ($this->hasBillingActive()) {
-    //   return;
-    // }
+    if ($this->hasActiveSubscription()) {
+      return;
+    }
 
-    // Enviar cobranca para ser salva no ASAAS
+    // Enviar assinatura para ser salva no ASAAS
     $subscription = $this->sendSubscription();
 
     try {
@@ -34,38 +31,20 @@ class SubscriptionService
   }
 
   /**
-   * Regra que deve ser implementada para evitar multiplas cobrancas:
+   * Regra que deve ser implementada para evitar multiplas assinaturas para o mesmo cliente:
    * 
-   * se cliente nunca comprou -> enviar cobranca
-   * se cliente possui uma compra feita em menos de 12 meses -> bloquear
-   * se cliente nao possui uma compra feita em menos de 12 meses -> enviar cobranca
+   * se cliente nunca comprou -> enviar assinatura
+   * se cliente comprou -> nao enviar assinatura
    */
-  // private function hasBillingActive(): bool
-  // {
-  //   $subscription = $this->getBilling();
+  private function hasActiveSubscription(): bool
+  {
+    return !empty($this->getSubscription());
+  }
 
-  //   // Se nao tiver cobranca, permitir que possa criar uma nova cobranca
-  //   if (empty($subscription)) {
-  //     return false;
-  //   }
-
-  //   // Se o domicílio fiscal tiver menos de 1 ano, não premitir criar nova cobranca
-  //   if ($this->billingMadeInLessThanAYear($subscription)) {
-  //     return true;
-  //   }
-
-  //   return false;
-  // }
-
-  // public function billingMadeInLessThanAYear(BillingSending $subscription): bool
-  // {
-  //   return $subscription->wasMadeInLessThanAYear();
-  // }
-
-  // private function getBilling(): ?BillingSending
-  // {
-  //   return BillingSending::where('customer', $this->billing->customer)->orderBy('created_at', 'desc')->first() ?? null;
-  // }
+  private function getSubscription(): ?Subscription
+  {
+    return Subscription::where('customer', $this->subscription->customer)->orderBy('created_at', 'desc')->first() ?? null;
+  }
 
   private function sendSubscription()
   {

@@ -77,7 +77,7 @@ class BankingService
         );
       }
     } catch (\GuzzleHttp\Exception\RequestException $e) {
-      throw new RequestException('Erro ao criar cobrança no ASAAS', $e->getMessage(), (array) $subscription);
+      throw new RequestException('Erro ao criar assinatura no ASAAS', $e->getMessage(), (array) $subscription);
     }
   }
 }
