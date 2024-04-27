@@ -2,6 +2,11 @@
 
 namespace App\Http\Requests;
 
+use App\Enums\Payment\PaymentCycle;
+use App\Enums\Payment\PaymentMethod;
+use App\Enums\Payment\PaymentType;
+use Illuminate\Validation\Rule;
+
 class Purchase extends BaseRequest
 {
 
@@ -28,12 +33,11 @@ class Purchase extends BaseRequest
     public function rules(): array
     {
         return [
-            'customer.name'     => 'required|string|regex:/^\w+(\s+\w+)+$/',
-            'customer.email'    => 'required|string|email:rfc,dns',
-            'customer.document' => 'required|string|min:11|max:11',
-            'customer.phone'    => 'required|string|max:20',
-
-            # Endereco do cliente
+            # Dados do cliente
+            'customer.name'         => 'required|string|regex:/^\w+(\s+\w+)+$/',
+            'customer.email'        => 'required|string|email:rfc,dns',
+            'customer.document'     => 'required|string|min:11|max:11',
+            'customer.phone'        => 'required|string|max:20',
             'customer.street'       => 'required|string',
             'customer.number'       => 'required|string',
             'customer.neighborhood' => 'required|string',
@@ -55,6 +59,29 @@ class Purchase extends BaseRequest
             'company.country'      => 'required|string',
             'company.postal_code'  => 'required|string|min:8|max:8',
             'company.complement'   => 'nullable|string',
+
+            # Dados da Cobrança
+            'payment.method' => [
+                'required',
+                'string',
+                Rule::in(PaymentMethod::getValues()),
+                function ($attribute, $value, $fail) {
+                    if ($value == PaymentMethod::BOLETO->value && $this->input('payment.cycle') != PaymentCycle::YEARLY->value) {
+                        $fail('Boleto só pode ser gerado para pagamento anual');
+                    }
+                },
+                function ($attribute, $value, $fail) {
+                    if ($value == PaymentMethod::CREDIT_CARD->value && $this->input('payment.cycle') != PaymentCycle::YEARLY->value) {
+                        $fail('Cartão de crédito não pode ser usado para pagamento anual');
+                    }
+                },
+                function ($attribute, $value, $fail) {
+                    if ($value == PaymentMethod::UNDEFINED->value && $this->input('payment.cycle') != PaymentCycle::MONTHLY->value) {
+                        $fail('Método de pagamento indefinido só pode ser usado para pagamento mensal');
+                    }
+                },
+            ],
+            'payment.cycle'  => ['required', 'string', Rule::in(PaymentCycle::getValues())],
         ];
     }
 }
