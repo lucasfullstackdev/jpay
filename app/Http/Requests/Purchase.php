@@ -71,7 +71,7 @@ class Purchase extends BaseRequest
                     }
                 },
                 function ($attribute, $value, $fail) {
-                    if ($value == PaymentMethod::UNDEFINED->value && !in_array($this->input('payment.cycle'), [PaymentCycle::YEARLY->value, PaymentCycle::SEMIANNUALLY->value])) {
+                    if ($value == PaymentMethod::UNDEFINED->value && !in_array($this->input('payment.cycle'), [PaymentCycle::SEMIANNUALLY->value, PaymentCycle::MONTHLY->value])) {
                         $fail('Para método de pagamento indefinido, o ciclo de pagamento deve ser anual ou semestral');
                     }
                 },
