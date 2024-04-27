@@ -2,6 +2,7 @@
 
 namespace App\Dtos\Billing;
 
+use App\Exceptions\BillingException;
 use App\Services\Banking\CustomerInterface;
 
 class BillingOshi implements CustomerInterface
@@ -17,13 +18,17 @@ class BillingOshi implements CustomerInterface
 
   public function __construct(object $billing)
   {
-    $this->sku = $billing->id;
-    $this->customer = $billing->customer;
-    $this->value = $billing->value;
-    $this->net_value = $billing->netValue;
-    $this->billing_type = $billing->billingType;
-    $this->due_date = $billing->dueDate;
-    $this->invoice_url = $billing->invoiceUrl;
-    $this->invoice_number = $billing->invoiceNumber;
+    try {
+      $this->sku = $billing->id;
+      $this->customer = $billing->customer;
+      $this->value = $billing->value;
+      $this->net_value = $billing->netValue;
+      $this->billing_type = $billing->billingType;
+      $this->due_date = $billing->dueDate;
+      $this->invoice_url = $billing->invoiceUrl;
+      $this->invoice_number = $billing->invoiceNumber;
+    } catch (\Throwable $th) {
+      throw new BillingException('Erro ao criar a estrutura de dados para salvar a Billing no banco de dados',  $th->getMessage(), (array) $billing);
+    }
   }
 }
