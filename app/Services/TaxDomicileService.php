@@ -4,19 +4,24 @@ namespace App\Services;
 
 use App\Enums\Person;
 use App\Http\Requests\Purchase;
-use App\Jobs\{CreateBillingJob, CreateExternalCustomerJob};
+use App\Jobs\{CreateExternalCustomerJob, CreateSubscriptionJob};
 use App\Models\Customer;
-use App\Services\Banking\Asaas\AsaasBilling;
+use App\Services\Banking\Asaas\AsaasSubscription;
 
 class TaxDomicileService extends Service
 {
   public function purchase(Purchase $purchase)
   {
     $customer = $this->getCustomer($purchase->customer);
-
+    /** Se o cliente já existir, criar a cobrança */
+    if (!empty($customer)) {
+      return CreateSubscriptionJob::dispatch(
+        new AsaasSubscription($customer, $purchase->payment)
+      );
+    }
 
     /** Se a Landing Page informar que é empresa, então utilizar os dados da empresa */
-    $extractDataFromRequest = ['customer'];
+    $extractDataFromRequest = ['customer', 'payment'];
     if ($purchase->customer['person'] === Person::PJ->value) {
       $extractDataFromRequest[] = 'company';
     }

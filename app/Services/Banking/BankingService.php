@@ -4,8 +4,9 @@ namespace App\Services\Banking;
 
 use App\Dtos\Billing\BillingOshi;
 use App\Dtos\Customer\CustomerOshi;
+use App\Dtos\Subscription\SubscriptionOshi;
 use App\Exceptions\RequestException;
-use App\Services\Banking\Asaas\{AsaasBilling, AsaasCustomer};
+use App\Services\Banking\Asaas\{AsaasBilling, AsaasCustomer, AsaasSubscription};
 use GuzzleHttp\Client;
 
 class BankingService
@@ -54,6 +55,29 @@ class BankingService
       }
     } catch (\GuzzleHttp\Exception\RequestException $e) {
       throw new RequestException('Erro ao criar cobrança no ASAAS', $e->getMessage(), (array) $billing);
+    }
+  }
+
+  public function createSubscription(AsaasSubscription $subscription)
+  {
+    $client = new Client();
+    try {
+      $response = $client->post(env('ASAAS_URL') . '/subscriptions', [
+        'headers' => [
+          'access_token' => env('ASAAS_TOKEN')
+        ],
+        'body' => json_encode($subscription)
+      ]);
+
+      $statusCode = $response->getStatusCode();
+
+      if ($statusCode === 200) {
+        return new SubscriptionOshi(
+          (object) json_decode($response->getBody()->getContents(), true)
+        );
+      }
+    } catch (\GuzzleHttp\Exception\RequestException $e) {
+      throw new RequestException('Erro ao criar cobrança no ASAAS', $e->getMessage(), (array) $subscription);
     }
   }
 }
