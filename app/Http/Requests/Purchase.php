@@ -71,13 +71,8 @@ class Purchase extends BaseRequest
                     }
                 },
                 function ($attribute, $value, $fail) {
-                    if ($value == PaymentMethod::CREDIT_CARD->value && $this->input('payment.cycle') != PaymentCycle::YEARLY->value) {
-                        $fail('Cartão de crédito não pode ser usado para pagamento anual');
-                    }
-                },
-                function ($attribute, $value, $fail) {
-                    if ($value == PaymentMethod::UNDEFINED->value && $this->input('payment.cycle') != PaymentCycle::MONTHLY->value) {
-                        $fail('Método de pagamento indefinido só pode ser usado para pagamento mensal');
+                    if ($value == PaymentMethod::UNDEFINED->value && !in_array($this->input('payment.cycle'), [PaymentCycle::YEARLY->value, PaymentCycle::SEMIANNUALLY->value])) {
+                        $fail('Para método de pagamento indefinido, o ciclo de pagamento deve ser anual ou semestral');
                     }
                 },
             ],

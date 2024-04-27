@@ -9,6 +9,5 @@ enum PaymentMethod: string
   use hasSerialize;
 
   case BOLETO = 'BOLETO';
-  case CREDIT_CARD = 'CREDIT_CARD';
   case UNDEFINED = 'UNDEFINED';
 }
