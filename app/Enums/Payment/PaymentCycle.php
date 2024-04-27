@@ -8,7 +8,7 @@ enum PaymentCycle: string
 {
   use hasSerialize;
 
-  case MONTHLY = 'MONTHLY';
-  case SEMIANNUALLY = 'SEMIANNUALLY';
   case YEARLY = 'YEARLY';
+  case SEMIANNUALLY = 'SEMIANNUALLY';
+  case MONTHLY = 'MONTHLY';
 }
