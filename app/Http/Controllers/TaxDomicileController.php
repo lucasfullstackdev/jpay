@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Enums\AsaasEvent;
 use App\Http\Requests\Purchase;
 use App\Http\Requests\Webhook\{Asaas, ClickSign};
 use App\Jobs\{AsaasWebhookJob, ClickSignWebhookJob, CreateDocumentJob};
