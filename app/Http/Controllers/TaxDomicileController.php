@@ -55,7 +55,6 @@ class TaxDomicileController extends Controller
             return response()->json([], Response::HTTP_OK);
         }
 
-        AsaasWebhookJob::dispatch($request->only(['event', 'payment']), $identifier);
         CreateDocumentJob::dispatch((object) $request->only(['event', 'payment']));
 
         return response()->json([], Response::HTTP_OK);
