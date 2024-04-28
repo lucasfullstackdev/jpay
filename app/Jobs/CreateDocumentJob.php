@@ -44,8 +44,6 @@ class CreateDocumentJob implements ShouldQueue
             return;
         }
 
-        AsaasWebhookJob::dispatch($this->request, hash_hmac('sha256', $this->request->payment['id'], $this->request->event));
-
         /**
          * O status precisa ser:
          * 

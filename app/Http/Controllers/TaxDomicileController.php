@@ -55,7 +55,13 @@ class TaxDomicileController extends Controller
             return response()->json([], Response::HTTP_OK);
         }
 
+        /**
+         * Aqui eu disparei dois jobs, um para criar o documento e outro para salvar o webhook, 
+         * pois entendo que são processos distintos e que não precisam ser executados em sequência
+         * ou com dependência entre eles
+         */
         CreateDocumentJob::dispatch((object) $request->only(['event', 'payment']));
+        AsaasWebhookJob::dispatch($request, $identifier);
 
         return response()->json([], Response::HTTP_OK);
     }
