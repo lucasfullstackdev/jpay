@@ -22,23 +22,6 @@ class CreateDocumentJob implements ShouldQueue
      */
     public function __construct(public object $request)
     {
-        /**
-         * Verifica se o evento é PAYMENT_RECEIVED
-         * Se não for, não faz nada
-         */
-        if ($request->event != AsaasEvent::PAYMENT_RECEIVED->value) {
-            return;
-        }
-
-        /**
-         * Verifica se já existe confirmação de pagamento para essa assinatura
-         * Se já existir, não faz nada, assim evitamos a criação de documento para 
-         * cada pagamento recebido da mesma assinatura
-         */
-        if ($this->thereIsAlreadyPaymentConfirmationForThisSubscription($request->payment['subscription'])) {
-            return;
-        }
-
         $this->documentService = app(DocumentService::class);
     }
 
@@ -47,6 +30,23 @@ class CreateDocumentJob implements ShouldQueue
      */
     public function handle(): void
     {
+        /**
+         * Verifica se o evento é PAYMENT_RECEIVED
+         * Se não for, não faz nada
+         */
+        // if ($this->request->event != AsaasEvent::PAYMENT_RECEIVED->value) {
+        //     return;
+        // }
+
+        /**
+         * Verifica se já existe confirmação de pagamento para essa assinatura
+         * Se já existir, não faz nada, assim evitamos a criação de documento para 
+         * cada pagamento recebido da mesma assinatura
+         */
+        // if ($this->thereIsAlreadyPaymentConfirmationForThisSubscription($this->request->payment['subscription'])) {
+        //     return;
+        // }
+
         // Após criar o documento, dispara o job para criar o signer
         $document = $this->documentService->createDocument((object) $this->request->payment);
         if (empty($document)) {
