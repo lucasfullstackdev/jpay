@@ -17,6 +17,7 @@ class Subscription extends Model
         'customer',
         'value',
         'cycle',
+        'billing_type',
         'description',
         'subscription'
     ];

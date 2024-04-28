@@ -11,6 +11,7 @@ class SubscriptionOshi implements CustomerInterface
   public string $customer;
   public float $value;
   public string $cycle;
+  public string $billing_type;
   public ?string $description;
   public string $subscription;
 
@@ -21,6 +22,7 @@ class SubscriptionOshi implements CustomerInterface
       $this->customer = $subscription->customer;
       $this->value = $subscription->value;
       $this->cycle = $subscription->cycle;
+      $this->billing_type = $subscription->billingType;
       $this->description = $subscription->description;
       $this->subscription = json_encode($subscription);
     } catch (\Throwable $th) {
