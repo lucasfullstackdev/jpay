@@ -36,6 +36,17 @@ class CreateDocumentJob implements ShouldQueue
     public function handle(): void
     {
         /**
+         * Verifica se já existe confirmação de pagamento para essa assinatura
+         * Se já existir, não faz nada, assim evitamos a criação de documento para 
+         * cada pagamento recebido da mesma assinatura
+         */
+        if ($this->thereIsAlreadyPaymentConfirmationForThisSubscription($this->request->payment['subscription'])) {
+            return;
+        }
+
+        AsaasWebhookJob::dispatch($this->request, hash_hmac('sha256', $this->request->payment['id'], $this->request->event));
+
+        /**
          * O status precisa ser:
          * 
          * - RECEIVED (Pagamento Recebido) -> para Boleto e pix
@@ -45,22 +56,12 @@ class CreateDocumentJob implements ShouldQueue
             return;
         }
 
-        /**
-         * Verifica se já existe confirmação de pagamento para essa assinatura
-         * Se já existir, não faz nada, assim evitamos a criação de documento para 
-         * cada pagamento recebido da mesma assinatura
-         */
-        if ($this->thereIsAlreadyPaymentConfirmationForThisSubscription($this->request->payment['subscription'])) {
-            return;
-        }
-
         // Após criar o documento, dispara o job para criar o signer
         $document = $this->documentService->createDocument((object) $this->request->payment);
         if (empty($document)) {
             return;
         }
 
-        AsaasWebhookJob::dispatch($this->request, hash_hmac('sha256', $this->request->payment['id'], $this->request->event));
         CreateSignerJob::dispatch($document);
     }
 
