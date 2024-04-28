@@ -31,6 +31,8 @@ class AsaasWebhookJob implements ShouldQueue
                 'identifier' => $this->identifier,
                 'event' => $this->request['event'],
                 'payment_id' => $this->request['payment']['id'],
+                'customer_id' => $this->request['payment']['customer'],
+                'subscription_id' => $this->request['payment']['subscription'] ?? '',
                 'payment' => json_encode($this->request['payment'])
             ]);
         } catch (\Throwable $th) {
