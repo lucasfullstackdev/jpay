@@ -40,9 +40,9 @@ class CreateDocumentJob implements ShouldQueue
          * Se já existir, não faz nada, assim evitamos a criação de documento para 
          * cada pagamento recebido da mesma assinatura
          */
-        if ($this->thereIsAlreadyPaymentConfirmationForThisSubscription($this->request->payment['subscription'])) {
-            return;
-        }
+        // if ($this->thereIsAlreadyPaymentConfirmationForThisSubscription($this->request->payment['subscription'])) {
+        //     return;
+        // }
 
         AsaasWebhookJob::dispatch($this->request, hash_hmac('sha256', $this->request->payment['id'], $this->request->event));
 
