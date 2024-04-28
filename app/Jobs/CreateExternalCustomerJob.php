@@ -3,6 +3,7 @@
 namespace App\Jobs;
 
 use App\Services\Banking\Asaas\AsaasBilling;
+use App\Services\Banking\Asaas\AsaasSubscription;
 use App\Services\CustomerService;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -31,8 +32,8 @@ class CreateExternalCustomerJob implements ShouldQueue
         /** Enviando o cliente para o ASAAS */
         $customer = $this->customerService->createExternalCustomer($this->purchase);
 
-        CreateBillingJob::dispatch(
-            new AsaasBilling($customer)
+        CreateSubscriptionJob::dispatch(
+            new AsaasSubscription($customer, $this->purchase['payment'])
         );
     }
 }
