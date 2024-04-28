@@ -36,7 +36,7 @@ class Asaas extends FormRequest
         return [
             'event' => 'required|string|exists:asaas_events,event',
             'payment' => 'required',
-            'payment.id' => 'required|exists:billing_sending,sku',
+            'payment.id' => 'required',
             'payment.customer' => 'required|exists:customers,sku'
         ];
     }
