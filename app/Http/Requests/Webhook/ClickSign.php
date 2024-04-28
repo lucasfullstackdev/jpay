@@ -20,7 +20,7 @@ class ClickSign extends FormRequest
         if ($this->secret !== env('CLICKSIGN_WEBHOOK_SECRET')) {
             return false;
         }
-        
+
         /* Validar se o evento está presente */
         if (empty($this->event)) {
             return false;
@@ -35,7 +35,7 @@ class ClickSign extends FormRequest
         if ($this->validateHmac()) {
             return true;
         }
-        
+
         return false;
     }
 

@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\ClickSignEvent as EnumsClickSignEvent;
 use App\Http\Requests\Purchase;
 use App\Http\Requests\Webhook\{Asaas, ClickSign};
-use App\Jobs\{AsaasWebhookJob, ClickSignWebhookJob, CreateDocumentJob};
+use App\Jobs\{ActivateUserInCorrespondenceManagementSystemJob, AsaasWebhookJob, ClickSignWebhookJob, CreateDocumentJob};
 use App\Models\{BillingMonitoring, DocumentMonitoring};
 use App\Services\TaxDomicileService;
 use Illuminate\Support\Facades\Cache;
@@ -74,6 +75,15 @@ class TaxDomicileController extends Controller
         }
 
         ClickSignWebhookJob::dispatch($request->all(), $identifier);
+
+        /**
+         * O evento auto_close é disparado quando o documento é fechado quando todas as partes assinam
+         * o documento. Nesse caso, eu disparei um job para ativar o usuário no sistema de gestão de
+         * correspondência, pois entendi que é uma ação que deve ser executada após o fechamento do documento
+         */
+        if ($request->event['name'] == EnumsClickSignEvent::AUTO_CLOSE->value) {
+            ActivateUserInCorrespondenceManagementSystemJob::dispatch($request->document['key']);
+        }
 
         return response()->json([], Response::HTTP_OK);
     }
