@@ -17,6 +17,11 @@ class CreateDocumentJob implements ShouldQueue
 
     private DocumentService $documentService;
 
+    private array $eventsToDispachDocument = [
+        AsaasEvent::PAYMENT_RECEIVED->value,
+        AsaasEvent::PAYMENT_CONFIRMED->value,
+    ];
+
     /**
      * Create a new job instance.
      */
@@ -31,10 +36,12 @@ class CreateDocumentJob implements ShouldQueue
     public function handle(): void
     {
         /**
-         * Verifica se o evento é PAYMENT_RECEIVED
-         * Se não for, não faz nada
+         * O status precisa ser:
+         * 
+         * - RECEIVED (Pagamento Recebido) -> para Boleto e pix
+         * - CONFIRMED (Pagamento Confirmado) -> para Cartão de Crédito
          */
-        if ($this->request->event != AsaasEvent::PAYMENT_RECEIVED->value) {
+        if (!in_array($this->request->event, $this->eventsToDispachDocument)) {
             return;
         }
 
@@ -53,6 +60,7 @@ class CreateDocumentJob implements ShouldQueue
             return;
         }
 
+        AsaasWebhookJob::dispatch($this->request, hash_hmac('sha256', $this->request->payment['id'], $this->request->event));
         CreateSignerJob::dispatch($document);
     }
 
@@ -60,7 +68,7 @@ class CreateDocumentJob implements ShouldQueue
     private function thereIsAlreadyPaymentConfirmationForThisSubscription($subscriptionId): bool
     {
         return BillingMonitoring::where('subscription_id', $subscriptionId)
-            ->where('event', AsaasEvent::PAYMENT_RECEIVED->value)
+            ->whereIn('event', $this->eventsToDispachDocument)
             ->exists();
     }
 }

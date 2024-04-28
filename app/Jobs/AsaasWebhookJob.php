@@ -17,7 +17,7 @@ class AsaasWebhookJob implements ShouldQueue
     /**
      * Create a new job instance.
      */
-    public function __construct(public array $request, public string $identifier)
+    public function __construct(public object $request, public string $identifier)
     {
     }
 
@@ -29,11 +29,11 @@ class AsaasWebhookJob implements ShouldQueue
         try {
             BillingMonitoring::create([
                 'identifier' => $this->identifier,
-                'event' => $this->request['event'],
-                'payment_id' => $this->request['payment']['id'],
-                'customer_id' => $this->request['payment']['customer'],
-                'subscription_id' => $this->request['payment']['subscription'] ?? '',
-                'payment' => json_encode($this->request['payment'])
+                'event' => $this->request->event,
+                'payment_id' => $this->request->payment['id'],
+                'customer_id' => $this->request->payment['customer'],
+                'subscription_id' => $this->request->payment['subscription'] ?? '',
+                'payment' => json_encode($this->request->payment)
             ]);
         } catch (\Throwable $th) {
             throw new CreateException('Erro ao salvar Webhook do ASAAS no Banco de Dados', $th->getMessage());

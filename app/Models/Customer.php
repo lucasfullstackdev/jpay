@@ -30,7 +30,7 @@ class Customer extends Model
 
     public function subscription()
     {
-        return $this->hasOne(Subscription::class, 'customer', 'sku')->latest()->first();
+        return $this->hasOne(Subscription::class, 'customer', 'sku');
     }
 
     public function company()
