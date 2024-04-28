@@ -2,7 +2,6 @@
 
 namespace App\Jobs;
 
-use App\Services\Banking\Asaas\AsaasBilling;
 use App\Services\Banking\Asaas\AsaasSubscription;
 use App\Services\CustomerService;
 use Illuminate\Bus\Queueable;
