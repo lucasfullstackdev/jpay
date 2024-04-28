@@ -28,6 +28,11 @@ class Customer extends Model
         'complement'
     ];
 
+    public function subscription()
+    {
+        return $this->hasOne(Subscription::class, 'customer', 'sku');
+    }
+
     public function company()
     {
         return $this->hasOne(Company::class, 'owner_id', 'id');

@@ -44,7 +44,7 @@ class DocumentService
 
   private function getCustomer(object $payment)
   {
-    return Customer::with('company')->where('sku', $payment->customer)->first();
+    return Customer::with('company', 'subscription')->where('sku', $payment->customer)->first();
   }
 
   private function hasDocument(Customer $customer): bool

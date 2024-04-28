@@ -2,6 +2,7 @@
 
 namespace App\Services\Signature\ClickSign;
 
+use App\Enums\Payment\PaymentCycle;
 use App\Enums\Person;
 use App\Enums\SignerAs;
 use App\Exceptions\DocumentException;
@@ -24,6 +25,10 @@ class ClickSignDocument
         'data' => [
           'contractor'              => $this->getContractor(),
 
+          'payment.cycle' => $this->getPaymentCycle(),
+          'payment.value' => $this->getPaymentValue(),
+          'payment.cycleDescription' => $this->getPaymentCycleDescription(),
+
           'customer_name'           => $customer->name,
           'customer_document'       => $customer->documentFormatted,
 
@@ -35,6 +40,37 @@ class ClickSignDocument
       ];
     } catch (\Throwable $th) {
       throw new DocumentException('Erro ao criar estrutura que será utilizada para criar documento na ClickSign', $th->getMessage());
+    }
+  }
+
+  private function getPaymentCycle()
+  {
+    $ciclos = [
+      PaymentCycle::MONTHLY->value => 'mensal',
+      PaymentCycle::SEMIANNUALLY->value => 'semestral',
+      PaymentCycle::YEARLY->value => 'anual',
+    ];
+
+    return $ciclos[$this->customer->subscription->cycle];
+  }
+
+  private function getPaymentValue()
+  {
+    return number_format($this->customer->subscription->value, 2, ',', '.');
+  }
+
+  private function getPaymentCycleDescription()
+  {
+    if ($this->customer->subscription->cycle == PaymentCycle::MONTHLY->value) {
+      return 'todo dia ' . Carbon::now()->format('d') . ' de cada mês';
+    }
+
+    if ($this->customer->subscription->cycle == PaymentCycle::YEARLY->value) {
+      return 'todo dia ' . Carbon::now()->format('d/m') . ' de cada ano';
+    }
+
+    if ($this->customer->subscription->cycle == PaymentCycle::SEMIANNUALLY->value) {
+      return 'a cada 6 meses, tomando como base o dia ' . Carbon::now()->format('d/m/Y');
     }
   }
 
