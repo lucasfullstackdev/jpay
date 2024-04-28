@@ -62,7 +62,7 @@ class TaxDomicileController extends Controller
          * ou com dependência entre eles
          */
         CreateDocumentJob::dispatch((object) $request->only(['event', 'payment']));
-        AsaasWebhookJob::dispatch($request, $identifier);
+        AsaasWebhookJob::dispatch((object) $request->all(), $identifier);
 
         return response()->json([], Response::HTTP_OK);
     }
@@ -76,7 +76,7 @@ class TaxDomicileController extends Controller
 
         ClickSignWebhookJob::dispatch($request->all(), $identifier);
 
-        /**
+        /**p
          * O evento auto_close é disparado quando o documento é fechado quando todas as partes assinam
          * o documento. Nesse caso, eu disparei um job para ativar o usuário no sistema de gestão de
          * correspondência, pois entendi que é uma ação que deve ser executada após o fechamento do documento
