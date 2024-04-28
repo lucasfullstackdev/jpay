@@ -34,7 +34,7 @@ class Purchase extends BaseRequest
     {
         return [
             # Dados do cliente
-            'customer.name'         => 'required|string|regex:/^\w+(\s+\w+)+$/',
+            'customer.name'         => 'required|string|regex:/^\pL+(\s+\pL+)+$/u',
             'customer.email'        => 'required|string|email:rfc,dns',
             'customer.document'     => 'required|string|min:11|max:11',
             'customer.phone'        => 'required|string|max:20',
