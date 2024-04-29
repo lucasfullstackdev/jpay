@@ -31,8 +31,7 @@ class ClickSign extends FormRequest
             return false;
         }
 
-        return true;
-        // return $this->validateHmac();
+        return $this->validateHmac();
     }
 
     public function rules(): array
