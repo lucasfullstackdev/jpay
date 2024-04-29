@@ -18,4 +18,9 @@ class Voucher extends Model
         'type_id',
         'percentage'
     ];
+
+    public function type()
+    {
+        return $this->belongsTo(VoucherType::class, 'type_id');
+    }
 }
