@@ -3,14 +3,10 @@
 namespace App\Models\CMS;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 
-class CMSUser extends Model
+class CMSUser extends CMSModel
 {
     use HasFactory;
-
-    protected $connection = 'correspondence_management_system';
-    public $timestamps = false;
 
     protected $table = 'users';
     protected $fillable = [
