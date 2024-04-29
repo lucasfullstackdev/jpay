@@ -72,9 +72,12 @@ class BankingService
       $statusCode = $response->getStatusCode();
 
       if ($statusCode === 200) {
-        return new SubscriptionOshi(
-          (object) json_decode($response->getBody()->getContents(), true)
-        );
+        $response = json_decode($response->getBody()->getContents(), true);
+
+        $response['valueWithoutDiscount'] = $subscription->valueWithoutDiscount ?? null;
+        $response['voucher'] = $subscription->voucher ?? null;
+
+        return new SubscriptionOshi((object) $response);
       }
     } catch (\GuzzleHttp\Exception\RequestException $e) {
       throw new RequestException('Erro ao criar assinatura no ASAAS', $e->getMessage(), (array) $subscription);

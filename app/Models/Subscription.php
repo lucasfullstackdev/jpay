@@ -16,6 +16,8 @@ class Subscription extends Model
         'sku',
         'customer',
         'value',
+        'value_without_discount',
+        'voucher',
         'cycle',
         'billing_type',
         'description',
