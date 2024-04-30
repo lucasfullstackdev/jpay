@@ -4,6 +4,7 @@ namespace App\Jobs\CMS;
 
 use App\Enums\CMS\CMSPostStatus;
 use App\Enums\CMS\CMSPostType;
+use App\Exceptions\CMS\PublishUserPostException;
 use App\Models\CMS\CMSPost;
 
 class PublishUserPostJob extends CMSJob
@@ -27,7 +28,7 @@ class PublishUserPostJob extends CMSJob
             ])->limit(1)
                 ->update(['post_status' => CMSPostStatus::PUBLISH->value]);
         } catch (\Throwable $th) {
-            dd($th->getMessage());
+            throw new PublishUserPostException('Erro ao public POST do usuário no CMS.', '$th->getMessage()', ['email' => $customer->email]);
         }
     }
 }
