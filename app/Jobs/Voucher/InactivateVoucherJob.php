@@ -3,6 +3,7 @@
 namespace App\Jobs\Voucher;
 
 use App\Enums\Payment\VoucherType;
+use App\Exceptions\Voucher\InactivateVoucherException;
 use App\Models\Voucher;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -36,6 +37,7 @@ class InactivateVoucherJob implements ShouldQueue
                 $voucher->delete();
             }
         } catch (\Throwable $th) {
+            throw new InactivateVoucherException('Erro ao inativar voucher.', $th->getMessage(), ['voucher' => $this->voucher->code]);
         }
     }
 }
