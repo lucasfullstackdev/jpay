@@ -28,7 +28,7 @@ class PublishUserPostJob extends CMSJob
             ])->limit(1)
                 ->update(['post_status' => CMSPostStatus::PUBLISH->value]);
         } catch (\Throwable $th) {
-            throw new PublishUserPostException('Erro ao public POST do usuário no CMS.', '$th->getMessage()', ['email' => $customer->email]);
+            throw new PublishUserPostException('Erro ao public POST do usuário no CMS.', $th->getMessage(), ['email' => $customer->email]);
         }
     }
 }
