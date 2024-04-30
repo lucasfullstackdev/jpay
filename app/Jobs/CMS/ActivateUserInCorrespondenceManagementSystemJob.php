@@ -2,6 +2,7 @@
 
 namespace App\Jobs\CMS;
 
+use App\Exceptions\CMS\ActiveUserException;
 use App\Models\CMS\CMSUser;
 
 class ActivateUserInCorrespondenceManagementSystemJob extends CMSJob
@@ -21,6 +22,7 @@ class ActivateUserInCorrespondenceManagementSystemJob extends CMSJob
             CMSUser::where('user_login', $customer->document)->limit(1)
                 ->update(['user_url' => 'https://activate.oshi']);
         } catch (\Throwable $th) {
+            throw new ActiveUserException('Erro ao ativar o usuário no CMS.', $th->getMessage(), ['document' => $customer->document]);
         }
     }
 }
