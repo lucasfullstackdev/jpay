@@ -11,4 +11,8 @@ enum PaymentCycle: string
   case YEARLY = 'YEARLY';
   case SEMIANNUALLY = 'SEMIANNUALLY';
   case MONTHLY = 'MONTHLY';
+
+  case MENSAL = 'mensal';
+  case ANUAL = 'anual';
+  case SEMESTRAL = 'semestral';
 }

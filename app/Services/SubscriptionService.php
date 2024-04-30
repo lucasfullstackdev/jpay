@@ -27,8 +27,10 @@ class SubscriptionService
     try {
       Subscription::create($subscription);
 
-      // Inativar voucher se for do tipo ONE_TIME
-      InactivateVoucherJob::dispatch(json_decode($subscription['voucher']));
+      // Inativar voucher se for do tipo ONE_TIME, caso exista
+      if (!empty($subscription['voucher'])) {
+        InactivateVoucherJob::dispatch(json_decode($subscription['voucher']));
+      }
     } catch (\Throwable $th) {
       throw new CreateException('Erro ao salvar assinatura no Banco de Dados', $th->getMessage());
     }

@@ -10,4 +10,7 @@ enum PaymentMethod: string
 
   case BOLETO = 'BOLETO';
   case UNDEFINED = 'UNDEFINED';
+
+  case boleto = 'boleto';
+  case undefined = 'undefined';
 }

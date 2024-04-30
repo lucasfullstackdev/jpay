@@ -65,16 +65,16 @@ class Purchase extends BaseRequest
                 'required',
                 'string',
                 Rule::in(PaymentMethod::getValues()),
-                function ($attribute, $value, $fail) {
-                    if ($value == PaymentMethod::BOLETO->value && $this->input('payment.cycle') != PaymentCycle::YEARLY->value) {
-                        $fail('Boleto só pode ser gerado para pagamento anual');
-                    }
-                },
-                function ($attribute, $value, $fail) {
-                    if ($value == PaymentMethod::UNDEFINED->value && !in_array($this->input('payment.cycle'), [PaymentCycle::SEMIANNUALLY->value, PaymentCycle::MONTHLY->value])) {
-                        $fail('Para método de pagamento indefinido, o ciclo de pagamento deve ser anual ou semestral');
-                    }
-                },
+                // function ($attribute, $value, $fail) {
+                //     if ($value == PaymentMethod::BOLETO->value && $this->input('payment.cycle') != PaymentCycle::YEARLY->value) {
+                //         $fail('Boleto só pode ser gerado para pagamento anual');
+                //     }
+                // },
+                // function ($attribute, $value, $fail) {
+                //     if ($value == PaymentMethod::UNDEFINED->value && !in_array($this->input('payment.cycle'), [PaymentCycle::SEMIANNUALLY->value, PaymentCycle::MONTHLY->value])) {
+                //         $fail('Para método de pagamento indefinido, o ciclo de pagamento deve ser anual ou semestral');
+                //     }
+                // },
             ],
             'payment.cycle'  => ['required', 'string', Rule::in(PaymentCycle::getValues())],
         ];

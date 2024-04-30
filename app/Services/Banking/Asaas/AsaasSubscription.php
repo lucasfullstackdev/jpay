@@ -2,6 +2,8 @@
 
 namespace App\Services\Banking\Asaas;
 
+use App\Enums\Payment\PaymentCycle;
+use App\Enums\Payment\PaymentMethod;
 use App\Enums\Payment\PaymentValue;
 use App\Exceptions\SubscriptionException;
 use App\Models\Voucher;
@@ -21,11 +23,27 @@ class AsaasSubscription implements CustomerInterface
   public float $valueWithoutDiscount;
   public array $voucher;
 
+  private array $methods = [
+    PaymentMethod::boleto->value => PaymentMethod::BOLETO->value,
+    PaymentMethod::undefined->value => PaymentMethod::UNDEFINED->value,
+    PaymentMethod::BOLETO->value => PaymentMethod::BOLETO->value,
+    PaymentMethod::UNDEFINED->value => PaymentMethod::UNDEFINED->value,
+  ];
+
+  private array $cycles = [
+    PaymentCycle::ANUAL->value => PaymentCycle::YEARLY->value,
+    PaymentCycle::SEMESTRAL->value => PaymentCycle::SEMIANNUALLY->value,
+    PaymentCycle::MENSAL->value => PaymentCycle::MONTHLY->value,
+    PaymentCycle::YEARLY->value => PaymentCycle::YEARLY->value,
+    PaymentCycle::SEMIANNUALLY->value => PaymentCycle::SEMIANNUALLY->value,
+    PaymentCycle::MONTHLY->value => PaymentCycle::MONTHLY->value,
+  ];
+
   public function __construct(object $customer, array $payment)
   {
     try {
-      $this->billingType = $payment['method'];
-      $this->cycle       = $payment['cycle'];
+      $this->billingType = $this->methods[$payment['method']] ?? PaymentMethod::UNDEFINED->value;
+      $this->cycle       = $this->cycles[$payment['cycle']] ?? null;
       $this->customer    = $customer->sku;
       $this->value       = PaymentValue::getValue($this->cycle);
 
