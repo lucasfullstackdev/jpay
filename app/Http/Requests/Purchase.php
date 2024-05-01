@@ -5,6 +5,7 @@ namespace App\Http\Requests;
 use App\Enums\Payment\PaymentCycle;
 use App\Enums\Payment\PaymentMethod;
 use App\Enums\Payment\PaymentType;
+use App\Enums\Person;
 use Illuminate\Validation\Rule;
 
 class Purchase extends BaseRequest
@@ -46,7 +47,11 @@ class Purchase extends BaseRequest
             'customer.country'      => 'required|string',
             'customer.postal_code'  => 'required|string|min:8|max:8',
             'customer.complement'   => 'nullable|string',
-            'customer.person'       => 'required|string|in:PF,PJ',
+            'customer.person'       => [
+                'required',
+                'string',
+                Rule::in(Person::getValues()),
+            ],
 
             # Dados da empresa
             'company.document'     => 'required|string',
