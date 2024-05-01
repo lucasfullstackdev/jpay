@@ -54,15 +54,15 @@ class Purchase extends BaseRequest
             ],
 
             # Dados da empresa
-            'company.document'     => 'required|string',
-            'company.name'         => 'required|string',
-            'company.street'       => 'required|string',
-            'company.number'       => 'required|string',
-            'company.neighborhood' => 'required|string',
-            'company.city'         => 'required|string',
-            'company.state'        => 'required|string',
-            'company.country'      => 'required|string',
-            'company.postal_code'  => 'required|string|min:8|max:8',
+            'company.document'     => 'nullable|required_if:customer.person,PJ|string',
+            'company.name'         => 'nullable|required_if:customer.person,PJ|string',
+            'company.street'       => 'nullable|required_if:customer.person,PJ|string',
+            'company.number'       => 'nullable|required_if:customer.person,PJ|string',
+            'company.neighborhood' => 'nullable|required_if:customer.person,PJ|string',
+            'company.city'         => 'nullable|required_if:customer.person,PJ|string',
+            'company.state'        => 'nullable|required_if:customer.person,PJ|string',
+            'company.country'      => 'nullable|required_if:customer.person,PJ|string',
+            'company.postal_code'  => 'nullable|required_if:customer.person,PJ|string|min:8|max:8',
             'company.complement'   => 'nullable|string',
 
             # Dados da Cobrança
