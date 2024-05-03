@@ -10,6 +10,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Log;
 
 class CreateDocumentJob implements ShouldQueue
 {
@@ -40,6 +41,7 @@ class CreateDocumentJob implements ShouldQueue
          * Se já existir, não faz nada, assim evitamos a criação de documento para 
          * cada pagamento recebido da mesma assinatura
          */
+        Log::info(json_encode($this->request->payment));
         if ($this->thereIsAlreadyPaymentConfirmationForThisSubscription($this->request->payment['subscription'])) {
             return;
         }
