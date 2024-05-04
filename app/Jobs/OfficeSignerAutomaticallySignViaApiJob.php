@@ -26,9 +26,15 @@ class OfficeSignerAutomaticallySignViaApiJob implements ShouldQueue
     public function __construct(public Document $document, public OfficeSigner $officeSigner)
     {
         $this->signatureService = new SignatureService();
+    }
 
-        $this->documentSigner = DocumentSigner::where('document', $document->document_id)
-            ->where('signer', $officeSigner->signer_id)
+    /**
+     * Execute the job.
+     */
+    public function handle(): void
+    {
+        $this->documentSigner = DocumentSigner::where('document', $this->document->document_id)
+            ->where('signer', $this->officeSigner->signer_id)
             ->first();
 
         /* Se não encontrar o signatário no documento, não pode assinar automaticamente */
@@ -40,13 +46,7 @@ class OfficeSignerAutomaticallySignViaApiJob implements ShouldQueue
         if (empty($this->officeSigner->secret)) {
             return;
         }
-    }
 
-    /**
-     * Execute the job.
-     */
-    public function handle(): void
-    {
         $this->signDocument();
     }
 
