@@ -39,7 +39,7 @@ class Handler extends ExceptionHandler
                     'file' => $exception->getFile(),
                     'line' => $exception->getLine(),
                     'previous' => $exception->getPrevious(),
-                    'trace' => substr($exception->getTraceAsString(), 0, 500) . '...'
+                    'trace' => substr($exception->getTraceAsString(), 0, 700) . '...'
                 ])
             );
         }
