@@ -32,8 +32,11 @@ class CustomerOshi
       $this->person       = $purchase->customer['person']   ?? null;
       $this->document     = $purchase->customer['document'] ?? $purchase->cpfCnpj;
       $this->email        = $purchase->customer['email']    ?? $purchase->email;
-      $this->phone        = $purchase->customer['phone']    ?? $purchase->phone;
       $this->sku          = $purchase->customer['id']       ?? $purchase->id ?? null;
+      
+      // Pegando só os números do telefone
+      $this->phone        = $purchase->customer['phone']    ?? $purchase->phone;
+      $this->phone        = preg_replace('/\D/', '', $this->phone);
 
       # Endereco do cliente
       $this->street       = $purchase->customer['street']       ?? $purchase->address;
