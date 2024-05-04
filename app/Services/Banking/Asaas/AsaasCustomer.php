@@ -26,8 +26,8 @@ class AsaasCustomer implements CustomerInterface
       $this->name        = $purchase->customer['name'];
       $this->cpfCnpj     = $purchase->customer['document'] ?? $purchase->cpfCnpj;
       $this->email       = $purchase->customer['email'];
-      $this->phone       = $purchase->customer['phone'];
-      $this->mobilePhone = $purchase->customer['phone'];
+      $this->phone       = preg_replace('/\D/', '', $purchase->customer['phone']);
+      $this->mobilePhone = preg_replace('/\D/', '', $purchase->customer['phone']);
       $this->sku         = $purchase->customer['id'] ?? null;
 
       /* Se o person for PF, entao nao temos os dados da empresa, mas sim do cliente */
