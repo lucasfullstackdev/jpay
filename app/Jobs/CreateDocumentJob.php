@@ -42,7 +42,7 @@ class CreateDocumentJob implements ShouldQueue
          * cada pagamento recebido da mesma assinatura
          */
         Log::info(json_encode($this->request->payment));
-        if ($this->thereIsAlreadyPaymentConfirmationForThisSubscription($this->request->payment['subscription'])) {
+        if ($this->thereIsAlreadyPaymentConfirmationForThisSubscription($this->request->payment['subscription'] ?? null)) {
             return;
         }
 
@@ -66,8 +66,12 @@ class CreateDocumentJob implements ShouldQueue
     }
 
     // private function There is already payment confirmation for this subscription
-    private function thereIsAlreadyPaymentConfirmationForThisSubscription($subscriptionId): bool
+    private function thereIsAlreadyPaymentConfirmationForThisSubscription(?string $subscriptionId): bool
     {
+        if (empty($subscriptionId)) {
+            return false;
+        }
+
         return BillingMonitoring::where('subscription_id', $subscriptionId)
             ->whereIn('event', $this->eventsToDispachDocument)
             ->exists();
