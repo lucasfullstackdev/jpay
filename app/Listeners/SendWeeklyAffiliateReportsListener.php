@@ -3,7 +3,6 @@
 namespace App\Listeners;
 
 use App\Jobs\SendAffiliateSalesReportByEmailJob;
-use App\Models\Subscription;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 
@@ -22,6 +21,7 @@ class SendWeeklyAffiliateReportsListener
      */
     public function handle(object $event): void
     {
+        // Disparando o envio do email para cada afiliado, assim diminui a carga de processamento
         $event->affiliateSales->each(fn ($affiliate) => SendAffiliateSalesReportByEmailJob::dispatch($affiliate));
     }
 }

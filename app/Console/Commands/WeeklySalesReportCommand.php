@@ -43,10 +43,16 @@ class WeeklySalesReportCommand extends Command
                 continue;
             }
 
+            $affiliateSales[$subscription->affiliateModel->email]['report'] = [
+                'initial_date' => now()->subWeek()->format('d/m/Y'),
+                'final_date' => now()->format('d/m/Y'),
+            ];
+
             // Agrupando as vendas por afiliado
             $affiliateSales[$subscription->affiliateModel->email]['affiliate'] = [
                 'email' => $subscription->affiliateModel->email,
                 'code' => $subscription->affiliateModel->slug,
+                'name' => $subscription->affiliateModel->name,
             ];
 
             $affiliateSales[$subscription->affiliateModel->email]['subscriptions'][] = [
@@ -63,11 +69,12 @@ class WeeklySalesReportCommand extends Command
         // Calculando o total de vendas, comissões e quantidade de vendas por afiliado
         $affiliateSales = collect($affiliateSales)->map(function ($item, $key) {
             $item['total_value'] = collect($item['subscriptions'])->sum('value');
-            $item['total_commission'] = collect($item['subscriptions'])->sum('affiliate.commission');
+            $item['total_commission'] = collect($item['subscriptions'])->sum('voucher.commission');
             $item['quantity'] = count($item['subscriptions']);
             return $item;
         });
 
+        // Disparando o evento de geração de relatório semanal
         event(
             new WeeklyEvent($affiliateSales)
         );
@@ -90,7 +97,8 @@ class WeeklySalesReportCommand extends Command
                 'subscriptions.*',
                 'vouchers.percentage',
                 'vouchers.affiliate_percentage',
-                'affiliates.email'
+                'affiliates.email',
+                'affiliates.name',
             )
             ->get();
     }

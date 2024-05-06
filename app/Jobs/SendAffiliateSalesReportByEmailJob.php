@@ -2,11 +2,13 @@
 
 namespace App\Jobs;
 
+use App\Mail\AffiliateSalesReportMail;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Mail;
 
 class SendAffiliateSalesReportByEmailJob implements ShouldQueue
 {
@@ -15,9 +17,8 @@ class SendAffiliateSalesReportByEmailJob implements ShouldQueue
     /**
      * Create a new job instance.
      */
-    public function __construct(public array $affiliate)
+    public function __construct(public array $affiliateSales)
     {
-        dd($affiliate);
     }
 
     /**
@@ -25,6 +26,8 @@ class SendAffiliateSalesReportByEmailJob implements ShouldQueue
      */
     public function handle(): void
     {
-        //
+        Mail::to($this->affiliateSales['affiliate']['email'])->send(
+            new AffiliateSalesReportMail($this->affiliateSales)
+        );
     }
 }
