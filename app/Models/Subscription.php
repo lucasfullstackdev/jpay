@@ -31,12 +31,12 @@ class Subscription extends Model
         return $this->belongsTo(Customer::class, 'customer', 'sku');
     }
 
-    public function voucher()
+    public function voucherModel()
     {
         return $this->belongsTo(Voucher::class, 'voucher_code', 'code');
     }
 
-    public function affiliate()
+    public function affiliateModel()
     {
         return $this->belongsTo(Affiliate::class, 'affiliate_code', 'slug');
     }

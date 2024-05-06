@@ -16,7 +16,8 @@ class Voucher extends Model
     protected $fillable = [
         'code',
         'type_id',
-        'percentage'
+        'percentage',
+        'affiliate_percentage'
     ];
 
     public function type()
