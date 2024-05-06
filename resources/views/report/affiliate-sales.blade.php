@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 
 <head>
   <meta charset="UTF-8">
@@ -64,16 +64,12 @@
       font-size: 12px;
       color: #999;
     }
-
-    .text-center {
-      text-align: center;
-    }
   </style>
 </head>
 
 <body>
   <div class="container">
-    <h2>Relatório Semanal de Vendas</h2>
+    <h2>Relatório de Vendas</h2>
 
     <p>Olá {{ $affiliateSales['affiliate']['name'] }},</p>
 
@@ -85,8 +81,8 @@
           <th>Data</th>
           <th>Valor</th>
           <th>Voucher</th>
-          <th class="text-center">Percentual do Afiliado</th>
-          <th class="text-center">Comissão</th>
+          <th>Percentual do Afiliado</th>
+          <th>Comissão</th>
         </tr>
       </thead>
       <tbody>
@@ -95,8 +91,8 @@
           <td>{{ $subscription['date'] }}</td>
           <td>R$ {{ number_format($subscription['value'], 2, ',', '.') }}</td>
           <td>{{ $subscription['voucher']['code'] }}</td>
-          <td class="text-center">{{ $subscription['voucher']['affiliate_percentage'] }} %</td>
-          <td class="text-center">R$ {{ number_format($subscription['voucher']['commission'], 2, ',', '.') }}</td>
+          <td style="text-align: center;">{{ $subscription['voucher']['affiliate_percentage'] }} %</td>
+          <td style="text-align: center;">R$ {{ number_format($subscription['voucher']['commission'], 2, ',', '.') }}</td>
         </tr>
         @endforeach
       </tbody>
@@ -108,12 +104,12 @@
       <p>Comissão Total: R$ {{ number_format($affiliateSales['total_commission'], 2, ',', '.') }}</p>
     </div>
 
-    <p>Este relatório é uma representação estatística das suas vendas durante o período de {{ $affiliateSales['report']['initial_date'] }} a {{ $affiliateSales['report']['final_date'] }} e está sujeito a possíveis variações e inconsistências. Apenas são considerados os vouchers válidos e atrelados ao seu perfil de afiliado.</p>
+    <p><strong>Este relatório é uma representação estatística das suas vendas durante o período de {{ $affiliateSales['report']['initial_date'] }} a {{ $affiliateSales['report']['final_date'] }} e está sujeito a possíveis variações e inconsistências. Apenas são considerados os vouchers válidos e atrelados ao seu perfil de afiliado.</strong></p>
 
     <p>Obrigado por ser um afiliado conosco!</p>
 
     <div class="footer">
-      <p>Este e-mail foi enviado automaticamente. Por favor, não responda.</p>
+      <p>Este e-mail foi enviado automaticamente. Por favor, não responda. Esta funcionalidade está em fase de testes.</p>
     </div>
   </div>
 </body>
