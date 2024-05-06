@@ -18,6 +18,8 @@ class Subscription extends Model
         'value',
         'value_without_discount',
         'voucher',
+        'voucher_code',
+        'affiliate_code',
         'cycle',
         'billing_type',
         'description',
