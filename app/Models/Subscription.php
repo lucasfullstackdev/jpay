@@ -25,4 +25,19 @@ class Subscription extends Model
         'description',
         'subscription'
     ];
+
+    public function customer()
+    {
+        return $this->belongsTo(Customer::class, 'customer', 'sku');
+    }
+
+    public function voucher()
+    {
+        return $this->belongsTo(Voucher::class, 'voucher_code', 'code');
+    }
+
+    public function affiliate()
+    {
+        return $this->belongsTo(Affiliate::class, 'affiliate_code', 'slug');
+    }
 }
