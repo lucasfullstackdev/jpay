@@ -54,7 +54,7 @@ class AsaasSubscription implements CustomerInterface
           'code' => $voucher->code,
           'percentage' => $voucher->percentage,
           'affiliate_percentage' => $voucher->affiliate_percentage ?? null,
-          'affiliate_code' => $payment['nm'] ?? null
+          'affiliate_code' => $payment['mn'] ?? null
         ];
 
         $this->valueWithoutDiscount = $this->value;
