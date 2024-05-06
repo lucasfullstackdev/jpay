@@ -13,8 +13,6 @@ return new class extends Migration
     {
         Schema::table('subscriptions', function (Blueprint $table) {
             $table->string('voucher_code')->nullable()->after('voucher');
-            $table->foreign('voucher_code')->references('code')->on('vouchers');
-
             $table->string('affiliate_code')->nullable()->after('voucher_code');
         });
     }
