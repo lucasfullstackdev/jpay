@@ -18,6 +18,8 @@ class SubscriptionOshi implements CustomerInterface
   // Caso seja aplicado desconto através de voucher
   public ?float $value_without_discount;
   public ?string $voucher = null;
+  public ?string $voucher_code = null;
+  public ?string $affiliate_code = null;
 
   public function __construct(object $subscription)
   {
@@ -33,6 +35,9 @@ class SubscriptionOshi implements CustomerInterface
       $this->value_without_discount = $subscription->valueWithoutDiscount ?? null;
       if (!empty($subscription->voucher)) {
         $this->voucher = json_encode($subscription->voucher);
+
+        $this->voucher_code = $subscription->voucher['code'] ?? null;
+        $this->affiliate_code = $subscription->voucher['affiliate_code'] ?? null;
       }
     } catch (\Throwable $th) {
       throw new SubscriptionException('Erro ao criar a estrutura de dados para salvar a Subscription no banco de dados',  $th->getMessage(), (array) $subscription);
