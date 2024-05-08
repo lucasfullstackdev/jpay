@@ -14,7 +14,7 @@ class Kernel extends ConsoleKernel
     {
         // $schedule->command('inspire')->hourly();
 
-        $schedule->command('app:weekly-sales-report-command')->weekly()->fridays()->at('19:00');
+        // $schedule->command('app:weekly-sales-report-command')->weekly()->fridays()->at('19:00');
     }
 
     /**
