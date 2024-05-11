@@ -11,7 +11,8 @@ return new class extends Migration
     public function up(): void
     {
         DB::statement("create view vw_affiliate_subscriptions as
-        SELECT JSON_OBJECT(
+                SELECT result.affiliate_email,
+                JSON_OBJECT(
                     'code', result.affiliate_code,
                     'name', result.affiliate_name,
                     'email', result.affiliate_email
