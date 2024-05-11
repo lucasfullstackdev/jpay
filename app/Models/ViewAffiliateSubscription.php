@@ -9,7 +9,7 @@ class ViewAffiliateSubscription extends Model
     protected $table = 'vw_affiliate_subscriptions';
 
     protected $casts = [
-        'affiliate' => 'array',
-        'billings' => 'array',
+        'affiliate' => 'object',
+        'billings' => 'object',
     ];
 }
