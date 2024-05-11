@@ -8,14 +8,14 @@ use App\Models\ViewAffiliateSubscription;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Validator;
 
-class WeeklySalesReportCommand extends Command
+class MonthlySalesReportCommand extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'app:weekly-sales-report-command';
+    protected $signature = 'app:monthly-sales-report-command';
 
     /**
      * The console command description.

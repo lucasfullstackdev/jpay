@@ -17,7 +17,7 @@ class Kernel extends ConsoleKernel
         // ###############################################################
         // ############ Agendamentos para o último dia do mês ############
         // ###############################################################
-        $schedule->command('app:weekly-sales-report-command')->lastDayOfMonth('23:59');
+        $schedule->command('app:monthly-sales-report-command')->lastDayOfMonth('23:59');
     }
 
     /**

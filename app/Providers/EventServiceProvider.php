@@ -3,8 +3,7 @@
 namespace App\Providers;
 
 use App\Events\WeeklyEvent;
-use App\Listeners\SendWeeklyAdminReportListener;
-use App\Listeners\SendWeeklyAffiliateReportsListener;
+use App\Listeners\SendMonthlyAffiliateReportsListener;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
@@ -22,8 +21,7 @@ class EventServiceProvider extends ServiceProvider
             SendEmailVerificationNotification::class,
         ],
         WeeklyEvent::class => [
-            // SendWeeklyAdminReportListener::class,
-            SendWeeklyAffiliateReportsListener::class
+            SendMonthlyAffiliateReportsListener::class
         ],
     ];
 
