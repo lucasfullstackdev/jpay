@@ -33,6 +33,7 @@ class AsaasWebhookJob implements ShouldQueue
                 'payment_id' => $this->request->payment['id'],
                 'customer_id' => $this->request->payment['customer'],
                 'subscription_id' => $this->request->payment['subscription'] ?? '',
+                'value' => $this->request->payment['value'],
                 'payment' => json_encode($this->request->payment)
             ]);
         } catch (\Throwable $th) {
