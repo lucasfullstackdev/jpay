@@ -16,6 +16,7 @@ class BillingMonitoring extends Model
         'payment_id',
         'customer_id',
         'subscription_id',
+        'value',
         'payment'
     ];
 }

@@ -4,16 +4,18 @@ namespace App\Console\Commands;
 
 use App\Events\WeeklyEvent;
 use App\Models\Subscription;
+use App\Models\ViewAffiliateSubscription;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Validator;
 
-class WeeklySalesReportCommand extends Command
+class MonthlySalesReportCommand extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'app:weekly-sales-report-command';
+    protected $signature = 'app:monthly-sales-report-command';
 
     /**
      * The console command description.
@@ -27,52 +29,18 @@ class WeeklySalesReportCommand extends Command
      */
     public function handle()
     {
-        $subscriptions = $this->getSubscriptions();
-        if ($subscriptions->isEmpty()) {
+        $affiliateSales = $this->getAffiliateSales();
+
+        if ($affiliateSales->isEmpty()) {
             return;
         }
 
-        foreach ($subscriptions as $subscription) {
-            // Não é possivel enviar o relatório sem o voucher ou afiliado existentes e validos
-            if (empty($subscription->voucherModel) || empty($subscription->affiliateModel)) {
-                continue;
-            }
+        // Filtrando os afiliados com e-mails validos
+        $affiliateSales = $affiliateSales->filter(fn ($subscription) => $this->emailIsValid($subscription->affiliate->email));
 
-            // Não é possivel enviar o relatório sem o email do afiliado
-            if (empty($subscription->affiliateModel->email)) {
-                continue;
-            }
-
-            $affiliateSales[$subscription->affiliateModel->email]['report'] = [
-                'initial_date' => now()->subWeek()->format('d/m/Y'),
-                'final_date' => now()->format('d/m/Y'),
-            ];
-
-            // Agrupando as vendas por afiliado
-            $affiliateSales[$subscription->affiliateModel->email]['affiliate'] = [
-                'email' => $subscription->affiliateModel->email,
-                'code' => $subscription->affiliateModel->slug,
-                'name' => $subscription->affiliateModel->name,
-            ];
-
-            $affiliateSales[$subscription->affiliateModel->email]['subscriptions'][] = [
-                'date' => $subscription->created_at->format('d/m/Y'),
-                'value' => $subscription->value,
-                'voucher' => [
-                    'code' => $subscription->voucher_code,
-                    'affiliate_percentage' => $subscription->voucherModel->affiliate_percentage,
-                    'commission' => $subscription->value * ($subscription->voucherModel->affiliate_percentage / 100)
-                ]
-            ];
+        foreach ($affiliateSales as $affiliateSale) {
+            // dd($affiliateSale->toArray());
         }
-
-        // Calculando o total de vendas, comissões e quantidade de vendas por afiliado
-        $affiliateSales = collect($affiliateSales)->map(function ($item, $key) {
-            $item['total_value'] = collect($item['subscriptions'])->sum('value');
-            $item['total_commission'] = collect($item['subscriptions'])->sum('voucher.commission');
-            $item['quantity'] = count($item['subscriptions']);
-            return $item;
-        });
 
         // Disparando o evento de geração de relatório semanal
         event(
@@ -80,26 +48,17 @@ class WeeklySalesReportCommand extends Command
         );
     }
 
-    private function getSubscriptions()
+    private function getAffiliateSales(): \Illuminate\Database\Eloquent\Collection
     {
-        return Subscription::with('voucherModel', 'affiliateModel')->where([
-            ['subscriptions.created_at', '>=', now()->subWeek()],
-            ['subscriptions.created_at', '<=', now()],
-            ['subscriptions.voucher_code', '!=', ''],
-            ['subscriptions.affiliate_code', '!=', '']
-        ])->join('vouchers', 'subscriptions.voucher_code', '=', 'vouchers.code')
-            ->join('affiliates', 'subscriptions.affiliate_code', '=', 'affiliates.slug')
-            ->join('affiliate_vouchers', function ($join) {
-                $join->on('vouchers.code', '=', 'affiliate_vouchers.voucher')
-                    ->on('affiliates.id', '=', 'affiliate_vouchers.affiliate_id');
-            })
-            ->select(
-                'subscriptions.*',
-                'vouchers.percentage',
-                'vouchers.affiliate_percentage',
-                'affiliates.email',
-                'affiliates.name',
-            )
-            ->get();
+        return ViewAffiliateSubscription::all();
+    }
+
+    private function emailIsValid(string $email): bool
+    {
+        $validator = Validator::make(['email' => $email], [
+            'email' => 'email:rfc,dns'
+        ]);
+
+        return !$validator->fails();
     }
 }

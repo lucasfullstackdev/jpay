@@ -2,6 +2,7 @@
 
 namespace App\Mail;
 
+use App\Models\ViewAffiliateSubscription;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
@@ -16,7 +17,7 @@ class AffiliateSalesReportMail extends Mailable
     /**
      * Create a new message instance.
      */
-    public function __construct(public array $affiliateSales)
+    public function __construct(public ViewAffiliateSubscription $affiliateSales)
     {
     }
 
@@ -26,7 +27,7 @@ class AffiliateSalesReportMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Relatório Semanal de Vendas',
+            subject: 'Relatório Mensal de Vendas',
         );
     }
 

@@ -64,6 +64,12 @@
       font-size: 12px;
       color: #999;
     }
+
+    /* Style for unpaid rows */
+    .unpaid {
+      background-color: #ffcccc;
+      /* Light red */
+    }
   </style>
 </head>
 
@@ -71,40 +77,40 @@
   <div class="container">
     <h2>Relatório de Vendas</h2>
 
-    <p>Olá {{ $affiliateSales['affiliate']['name'] }},</p>
+    <p>Olá <strong>{{ $affiliateSales->affiliate->name }}</strong>,</p>
 
-    <p>Aqui está o resumo das suas vendas durante o período de {{ $affiliateSales['report']['initial_date'] }} a {{ $affiliateSales['report']['final_date'] }}:</p>
+    <p>Aqui está o resumo das suas vendas:</p>
 
     <table>
       <thead>
         <tr>
-          <th>Data</th>
           <th>Valor</th>
           <th>Voucher</th>
           <th>Percentual do Afiliado</th>
           <th>Comissão</th>
+          <th>Pagamento Reconhecido?</th>
         </tr>
       </thead>
       <tbody>
-        @foreach($affiliateSales['subscriptions'] as $subscription)
-        <tr>
-          <td>{{ $subscription['date'] }}</td>
-          <td>R$ {{ number_format($subscription['value'], 2, ',', '.') }}</td>
-          <td>{{ $subscription['voucher']['code'] }}</td>
-          <td style="text-align: center;">{{ $subscription['voucher']['affiliate_percentage'] }} %</td>
-          <td style="text-align: center;">R$ {{ number_format($subscription['voucher']['commission'], 2, ',', '.') }}</td>
+        @foreach($affiliateSales->billings as $billing)
+        <tr class="{{ $billing->payment->paid ? '' : 'unpaid' }}">
+          <td>R$ {{ number_format($billing->payment->value, 2, ',', '.') }}</td>
+          <td>{{ $billing->payment->voucher }}</td>
+          <td style="text-align: center;">{{ $billing->payment->commission->percentage }}%</td>
+          <td style="text-align: center;">R$ {{ number_format($billing->payment->commission->value, 2, ',', '.') }}</td>
+          <td style="text-align: center;">{{ $billing->payment->paid ? 'Sim' : 'Não' }}</td>
         </tr>
         @endforeach
       </tbody>
     </table>
 
     <div class="summary">
-      <p>Total de Vendas: {{ $affiliateSales['quantity'] }}</p>
-      <p>Valor Total: R$ {{ number_format($affiliateSales['total_value'], 2, ',', '.') }}</p>
-      <p>Comissão Total: R$ {{ number_format($affiliateSales['total_commission'], 2, ',', '.') }}</p>
+      <p><strong>Total de Vendas:</strong> {{ $affiliateSales->quantity_of_billings }}</p>
+      <p><strong>Valor Total:</strong> R$ {{ number_format($affiliateSales->total_sales, 2, ',', '.') }}</p>
+      <p><strong>Comissão Total:</strong> R$ {{ number_format($affiliateSales->total_commission, 2, ',', '.') }}</p>
     </div>
 
-    <p><strong>Este relatório é uma representação estatística das suas vendas durante o período de {{ $affiliateSales['report']['initial_date'] }} a {{ $affiliateSales['report']['final_date'] }} e está sujeito a possíveis variações e inconsistências. Apenas são considerados os vouchers válidos e atrelados ao seu perfil de afiliado.</strong></p>
+    <p><strong>Este relatório é uma representação estatística das suas vendas e está sujeito a possíveis variações e inconsistências. Apenas são considerados os vouchers válidos e atrelados ao seu perfil de afiliado.</strong></p>
 
     <p>Obrigado por ser um afiliado conosco!</p>
 
