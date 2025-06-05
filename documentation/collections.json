@@ -1,0 +1,1459 @@
+{
+	"info": {
+		"_postman_id": "f867122a-790c-4f75-9f94-1a22ea69bc38",
+		"name": "API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "31462441"
+	},
+	"item": [
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let response = pm.response.json().data;",
+									"const token = response.token;",
+									"",
+									"postman.setEnvironmentVariable(\"authToken\", token);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"usuario@email.com\",\n    \"password\": \"senha123\",\n    \"device\": \"notebook-usuario\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{api}}/auth/login",
+							"host": [
+								"{{api}}"
+							],
+							"path": [
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Me",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{authToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{api}}/auth/me",
+							"host": [
+								"{{api}}"
+							],
+							"path": [
+								"auth",
+								"me"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Logout",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{api}}/auth/logout",
+							"host": [
+								"{{api}}"
+							],
+							"path": [
+								"auth",
+								"logout"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Logout All",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{api}}/auth/logout/all",
+							"host": [
+								"{{api}}"
+							],
+							"path": [
+								"auth",
+								"logout",
+								"all"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "Bearer {{authToken}}",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Tax Domicile",
+			"item": [
+				{
+					"name": "Subscription",
+					"item": [
+						{
+							"name": "BOLETO - ANUAL",
+							"item": [
+								{
+									"name": "PJ | sem voucher",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"customer\": {\n        \"name\": \"João da Silva\",\n        \"email\": \"joao@email.com\",\n        \"phone\": \"11999999999\",\n        \"document\": \"12345678900\",\n        \"street\": \"Rua Exemplo\",\n        \"number\": \"100\",\n        \"neighborhood\": \"Centro\",\n        \"city\": \"Cidade Exemplo\",\n        \"state\": \"SP\",\n        \"postal_code\": \"01001000\",\n        \"country\": \"Brasil\",\n        \"complement\": \"Sala 1\",\n        \"person\": \"PJ\"\n    },\n    \"company\": {\n        \"document\": \"12345678000199\",\n        \"name\": \"Empresa Exemplo\",\n        \"street\": \"Avenida Principal\",\n        \"number\": \"200\",\n        \"neighborhood\": \"Bairro Exemplo\",\n        \"city\": \"Cidade Exemplo\",\n        \"state\": \"SP\",\n        \"country\": \"Brasil\",\n        \"postal_code\": \"01002000\",\n        \"complement\": \"Sala 2\"\n    },\n    \"payment\": {\n        \"method\": \"BOLETO\",\n        \"cycle\": \"YEARLY\"\n    }\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{api}}/v1/tax-domicile/purchase?secret={{landing_page_secret}}",
+											"host": [
+												"{{api}}"
+											],
+											"path": [
+												"v1",
+												"tax-domicile",
+												"purchase"
+											],
+											"query": [
+												{
+													"key": "secret",
+													"value": "{{landing_page_secret}}"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "PJ | voucher | sem afiliado",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"customer\": {\n        \"name\": \"Raissa Cavalcanti Castro\",\n        \"email\": \"contato@gmail.com\",\n        \"phone\": \"87999999999\",\n        \"document\": \"00000000000\",\n        \"street\": \"Rua Presidente João Goulart\",\n        \"number\": \"42\",\n        \"neighborhood\": \"Coab II\",\n        \"city\": \"Sobral\",\n        \"state\": \"CE\",\n        \"postal_code\": \"56328130\",\n        \"country\": \"Brasil\",\n        \"complement\": \"Sala 5\",\n        \"person\": \"PJ\"\n    },\n    \"company\": {\n        \"document\": \"70771730000171\",\n        \"name\": \"Empresa Contratante\",\n        \"street\": \"rua da empresa\",\n        \"number\": \"48\",\n        \"neighborhood\": \"bairro\",\n        \"city\": \"Camocim\",\n        \"state\": \"CE\",\n        \"country\": \"Brasil\",\n        \"postal_code\": \"56328130\",\n        \"complement\": \"Sala 5d s\"\n    },\n    \"payment\": {\n        \"method\": \"BOLETO\",\n        \"cycle\": \"YEARLY\",\n        \"voucher\": \"10offZfx749\"\n    }\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{api}}/v1/tax-domicile/purchase?secret={{landing_page_secret}}",
+											"host": [
+												"{{api}}"
+											],
+											"path": [
+												"v1",
+												"tax-domicile",
+												"purchase"
+											],
+											"query": [
+												{
+													"key": "secret",
+													"value": "{{landing_page_secret}}"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "PJ | voucher | afiliado",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"customer\": {\n        \"name\": \"Enzo Santos Pinto\",\n        \"email\": \"contato@gmail.com\",\n        \"phone\": \"87999999999\",\n        \"document\": \"42050324049\",\n        \"street\": \"Rua Presidente João Goulart\",\n        \"number\": \"42\",\n        \"neighborhood\": \"Coab II\",\n        \"city\": \"Sobral\",\n        \"state\": \"CE\",\n        \"postal_code\": \"56328130\",\n        \"country\": \"Brasil\",\n        \"complement\": \"Sala 5\",\n        \"person\": \"PJ\"\n    },\n    \"company\": {\n        \"document\": \"88893966000146\",\n        \"name\": \"Empresa Contratante\",\n        \"street\": \"rua da empresa\",\n        \"number\": \"48\",\n        \"neighborhood\": \"bairro\",\n        \"city\": \"Camocim\",\n        \"state\": \"CE\",\n        \"country\": \"Brasil\",\n        \"postal_code\": \"56328130\",\n        \"complement\": \"Sala 5d s\"\n    },\n    \"payment\": {\n        \"method\": \"BOLETO\",\n        \"cycle\": \"YEARLY\",\n        \"voucher\": \"10offZfx749\",\n        \"mn\": \"lks\"\n    }\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{api}}/v1/tax-domicile/purchase?secret={{landing_page_secret}}",
+											"host": [
+												"{{api}}"
+											],
+											"path": [
+												"v1",
+												"tax-domicile",
+												"purchase"
+											],
+											"query": [
+												{
+													"key": "secret",
+													"value": "{{landing_page_secret}}"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "PF | sem voucher",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"customer\": {\n        \"name\": \"Thiago Goncalves Barros\",\n        \"email\": \"contato@gmail.com\",\n        \"phone\": \"87999999999\",\n        \"document\": \"10202803015\",\n        \"street\": \"Rua Presidente João Goulart\",\n        \"number\": \"42\",\n        \"neighborhood\": \"Coab II\",\n        \"city\": \"Sobral\",\n        \"state\": \"CE\",\n        \"postal_code\": \"56328130\",\n        \"country\": \"Brasil\",\n        \"complement\": \"Sala 5\",\n        \"person\": \"PF\"\n    },\n    \"company\": {\n        \"document\": \"80660197000124\",\n        \"name\": \"Empresa Contratante\",\n        \"street\": \"rua da empresa\",\n        \"number\": \"48\",\n        \"neighborhood\": \"bairro\",\n        \"city\": \"Camocim\",\n        \"state\": \"CE\",\n        \"country\": \"Brasil\",\n        \"postal_code\": \"56328130\",\n        \"complement\": \"Sala 5d s\"\n    },\n    \"payment\": {\n        \"method\": \"BOLETO\",\n        \"cycle\": \"YEARLY\"\n    }\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{api}}/v1/tax-domicile/purchase?secret={{landing_page_secret}}",
+											"host": [
+												"{{api}}"
+											],
+											"path": [
+												"v1",
+												"tax-domicile",
+												"purchase"
+											],
+											"query": [
+												{
+													"key": "secret",
+													"value": "{{landing_page_secret}}"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "PF | voucher | sem afiliado",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"customer\": {\n        \"name\": \"Fábio Rodrigues Souza\",\n        \"email\": \"contato@gmail.com\",\n        \"phone\": \"87999999999\",\n        \"document\": \"41564997073\",\n        \"street\": \"Rua Presidente João Goulart\",\n        \"number\": \"42\",\n        \"neighborhood\": \"Coab II\",\n        \"city\": \"Sobral\",\n        \"state\": \"CE\",\n        \"postal_code\": \"56328130\",\n        \"country\": \"Brasil\",\n        \"complement\": \"Sala 5\",\n        \"person\": \"PF\"\n    },\n    \"company\": {\n        \"document\": \"80660197000124\",\n        \"name\": \"Empresa Contratante\",\n        \"street\": \"rua da empresa\",\n        \"number\": \"48\",\n        \"neighborhood\": \"bairro\",\n        \"city\": \"Camocim\",\n        \"state\": \"CE\",\n        \"country\": \"Brasil\",\n        \"postal_code\": \"56328130\",\n        \"complement\": \"Sala 5d s\"\n    },\n    \"payment\": {\n        \"method\": \"BOLETO\",\n        \"cycle\": \"YEARLY\",\n        \"voucher\": \"29offZsCWb\"\n    }\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{api}}/v1/tax-domicile/purchase?secret={{landing_page_secret}}",
+											"host": [
+												"{{api}}"
+											],
+											"path": [
+												"v1",
+												"tax-domicile",
+												"purchase"
+											],
+											"query": [
+												{
+													"key": "secret",
+													"value": "{{landing_page_secret}}"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "PF | voucher | afiliado",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"customer\": {\n        \"name\": \"Douglas Souza Goncalves\",\n        \"email\": \"contato@gmail.com\",\n        \"phone\": \"87999999999\",\n        \"document\": \"91836637039\",\n        \"street\": \"Rua Presidente João Goulart\",\n        \"number\": \"42\",\n        \"neighborhood\": \"Coab II\",\n        \"city\": \"Sobral\",\n        \"state\": \"CE\",\n        \"postal_code\": \"56328130\",\n        \"country\": \"Brasil\",\n        \"complement\": \"Sala 5\",\n        \"person\": \"PF\"\n    },\n    \"company\": {\n        \"document\": \"80660197000124\",\n        \"name\": \"Empresa Contratante\",\n        \"street\": \"rua da empresa\",\n        \"number\": \"48\",\n        \"neighborhood\": \"bairro\",\n        \"city\": \"Camocim\",\n        \"state\": \"CE\",\n        \"country\": \"Brasil\",\n        \"postal_code\": \"56328130\",\n        \"complement\": \"Sala 5d s\"\n    },\n    \"payment\": {\n        \"method\": \"BOLETO\",\n        \"cycle\": \"YEARLY\",\n        \"voucher\": \"k9vo70zzn5n\",\n        \"mn\": \"lks\"\n    }\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{api}}/v1/tax-domicile/purchase?secret={{landing_page_secret}}",
+											"host": [
+												"{{api}}"
+											],
+											"path": [
+												"v1",
+												"tax-domicile",
+												"purchase"
+											],
+											"query": [
+												{
+													"key": "secret",
+													"value": "{{landing_page_secret}}"
+												}
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "CLIENTE ESCOLHE - Mensal",
+							"item": [
+								{
+									"name": "PJ | sem voucher",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"customer\": {\n        \"name\": \"Bianca Lima Cardoso\",\n        \"email\": \"contato@gmail.com\",\n        \"phone\": \"87999999999\",\n        \"document\": \"83558688031\",\n        \"street\": \"Rua Presidente João Goulart\",\n        \"number\": \"42\",\n        \"neighborhood\": \"Coab II\",\n        \"city\": \"Sobral\",\n        \"state\": \"CE\",\n        \"postal_code\": \"56328130\",\n        \"country\": \"Brasil\",\n        \"complement\": \"Sala 5\",\n        \"person\": \"PJ\"\n    },\n    \"company\": {\n        \"document\": \"22377202000190\",\n        \"name\": \"Empresa Contratante\",\n        \"street\": \"rua da empresa\",\n        \"number\": \"48\",\n        \"neighborhood\": \"bairro\",\n        \"city\": \"Camocim\",\n        \"state\": \"CE\",\n        \"country\": \"Brasil\",\n        \"postal_code\": \"56328130\",\n        \"complement\": \"Sala 5d s\"\n    },\n    \"payment\": {\n        \"method\": \"undefined\",\n        \"cycle\": \"mensal\"\n    }\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{api}}/v1/tax-domicile/purchase?secret={{landing_page_secret}}",
+											"host": [
+												"{{api}}"
+											],
+											"path": [
+												"v1",
+												"tax-domicile",
+												"purchase"
+											],
+											"query": [
+												{
+													"key": "secret",
+													"value": "{{landing_page_secret}}"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "PJ | voucher | sem afiliado",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"customer\": {\n        \"name\": \"Júlia Silva Gomes\",\n        \"email\": \"contato@gmail.com\",\n        \"phone\": \"87999999999\",\n        \"document\": \"19208629007\",\n        \"street\": \"Rua Presidente João Goulart\",\n        \"number\": \"42\",\n        \"neighborhood\": \"Coab II\",\n        \"city\": \"Sobral\",\n        \"state\": \"CE\",\n        \"postal_code\": \"56328130\",\n        \"country\": \"Brasil\",\n        \"complement\": \"Sala 5\",\n        \"person\": \"PJ\"\n    },\n    \"company\": {\n        \"document\": \"39176308000128\",\n        \"name\": \"Empresa Contratante\",\n        \"street\": \"rua da empresa\",\n        \"number\": \"48\",\n        \"neighborhood\": \"bairro\",\n        \"city\": \"Camocim\",\n        \"state\": \"CE\",\n        \"country\": \"Brasil\",\n        \"postal_code\": \"56328130\",\n        \"complement\": \"Sala 5d s\"\n    },\n    \"payment\": {\n        \"method\": \"undefined\",\n        \"cycle\": \"mensal\",\n        \"voucher\": \"29offZsCWb\"\n    }\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{api}}/v1/tax-domicile/purchase?secret={{landing_page_secret}}",
+											"host": [
+												"{{api}}"
+											],
+											"path": [
+												"v1",
+												"tax-domicile",
+												"purchase"
+											],
+											"query": [
+												{
+													"key": "secret",
+													"value": "{{landing_page_secret}}"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "PJ | voucher | afiliado",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"customer\": {\n        \"name\": \"Rebeca Martins Souza\",\n        \"email\": \"contato@gmail.com\",\n        \"phone\": \"87999999999\",\n        \"document\": \"71631906038\",\n        \"street\": \"Rua Presidente João Goulart\",\n        \"number\": \"42\",\n        \"neighborhood\": \"Coab II\",\n        \"city\": \"Sobral\",\n        \"state\": \"CE\",\n        \"postal_code\": \"56328130\",\n        \"country\": \"Brasil\",\n        \"complement\": \"Sala 5\",\n        \"person\": \"PJ\"\n    },\n    \"company\": {\n        \"document\": \"14352499000100\",\n        \"name\": \"Empresa Contratante\",\n        \"street\": \"rua da empresa\",\n        \"number\": \"48\",\n        \"neighborhood\": \"bairro\",\n        \"city\": \"Camocim\",\n        \"state\": \"CE\",\n        \"country\": \"Brasil\",\n        \"postal_code\": \"56328130\",\n        \"complement\": \"Sala 5d s\"\n    },\n    \"payment\": {\n        \"method\": \"undefined\",\n        \"cycle\": \"mensal\",\n        \"voucher\": \"29offZsCWb\",\n        \"mn\": \"lks\"\n    }\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{api}}/v1/tax-domicile/purchase?secret={{landing_page_secret}}",
+											"host": [
+												"{{api}}"
+											],
+											"path": [
+												"v1",
+												"tax-domicile",
+												"purchase"
+											],
+											"query": [
+												{
+													"key": "secret",
+													"value": "{{landing_page_secret}}"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "PF | sem voucher",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"customer\": {\n        \"name\": \"Luiza Goncalves Melo\",\n        \"email\": \"contato@gmail.com\",\n        \"phone\": \"87999999999\",\n        \"document\": \"58204215070\",\n        \"street\": \"Rua Presidente João Goulart\",\n        \"number\": \"42\",\n        \"neighborhood\": \"Coab II\",\n        \"city\": \"Sobral\",\n        \"state\": \"CE\",\n        \"postal_code\": \"56328130\",\n        \"country\": \"Brasil\",\n        \"complement\": \"Sala 5\",\n        \"person\": \"PF\"\n    },\n    \"company\": {\n        \"document\": \"80660197000124\",\n        \"name\": \"Empresa Contratante\",\n        \"street\": \"rua da empresa\",\n        \"number\": \"48\",\n        \"neighborhood\": \"bairro\",\n        \"city\": \"Camocim\",\n        \"state\": \"CE\",\n        \"country\": \"Brasil\",\n        \"postal_code\": \"56328130\",\n        \"complement\": \"Sala 5d s\"\n    },\n    \"payment\": {\n        \"method\": \"undefined\",\n        \"cycle\": \"mensal\"\n    }\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{api}}/v1/tax-domicile/purchase?secret={{landing_page_secret}}",
+											"host": [
+												"{{api}}"
+											],
+											"path": [
+												"v1",
+												"tax-domicile",
+												"purchase"
+											],
+											"query": [
+												{
+													"key": "secret",
+													"value": "{{landing_page_secret}}"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "PF | voucher | sem afiliado",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"customer\": {\n        \"name\": \"Amanda Costa Cavalcanti\",\n        \"email\": \"contato@gmail.com\",\n        \"phone\": \"87999999999\",\n        \"document\": \"28892887068\",\n        \"street\": \"Rua Presidente João Goulart\",\n        \"number\": \"42\",\n        \"neighborhood\": \"Coab II\",\n        \"city\": \"Sobral\",\n        \"state\": \"CE\",\n        \"postal_code\": \"56328130\",\n        \"country\": \"Brasil\",\n        \"complement\": \"Sala 5\",\n        \"person\": \"PF\"\n    },\n    \"company\": {\n        \"document\": \"80660197000124\",\n        \"name\": \"Empresa Contratante\",\n        \"street\": \"rua da empresa\",\n        \"number\": \"48\",\n        \"neighborhood\": \"bairro\",\n        \"city\": \"Camocim\",\n        \"state\": \"CE\",\n        \"country\": \"Brasil\",\n        \"postal_code\": \"56328130\",\n        \"complement\": \"Sala 5d s\"\n    },\n    \"payment\": {\n        \"method\": \"undefined\",\n        \"cycle\": \"mensal\"\n    }\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{api}}/v1/tax-domicile/purchase?secret={{landing_page_secret}}",
+											"host": [
+												"{{api}}"
+											],
+											"path": [
+												"v1",
+												"tax-domicile",
+												"purchase"
+											],
+											"query": [
+												{
+													"key": "secret",
+													"value": "{{landing_page_secret}}"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "PF | voucher | afiliado",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"customer\": {\n        \"name\": \"João Alves Rocha\",\n        \"email\": \"contato@gmail.com\",\n        \"phone\": \"87999999999\",\n        \"document\": \"00000000000\",\n        \"street\": \"Rua Presidente João Goulart\",\n        \"number\": \"42\",\n        \"neighborhood\": \"Coab II\",\n        \"city\": \"Sobral\",\n        \"state\": \"CE\",\n        \"postal_code\": \"56328130\",\n        \"country\": \"Brasil\",\n        \"complement\": \"Sala 5\",\n        \"person\": \"PF\"\n    },\n    \"company\": {\n        \"document\": \"86833749000135\",\n        \"name\": \"Empresa Contratante\",\n        \"street\": \"rua da empresa\",\n        \"number\": \"48\",\n        \"neighborhood\": \"bairro\",\n        \"city\": \"Camocim\",\n        \"state\": \"CE\",\n        \"country\": \"Brasil\",\n        \"postal_code\": \"56328130\",\n        \"complement\": \"Sala 5d s\"\n    },\n    \"payment\": {\n        \"method\": \"undefined\",\n        \"cycle\": \"mensal\"\n    }\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{api}}/v1/tax-domicile/purchase?secret={{landing_page_secret}}",
+											"host": [
+												"{{api}}"
+											],
+											"path": [
+												"v1",
+												"tax-domicile",
+												"purchase"
+											],
+											"query": [
+												{
+													"key": "secret",
+													"value": "{{landing_page_secret}}"
+												}
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "CLIENTE ESCOLHE - Semestral",
+							"item": [
+								{
+									"name": "PJ | sem voucher",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"customer\": {\n        \"name\": \"Renan Dias Melo\",\n        \"email\": \"contato@gmail.com\",\n        \"phone\": \"87999999999\",\n        \"document\": \"48404472092\",\n        \"street\": \"Rua Presidente João Goulart\",\n        \"number\": \"42\",\n        \"neighborhood\": \"Coab II\",\n        \"city\": \"Sobral\",\n        \"state\": \"CE\",\n        \"postal_code\": \"56328130\",\n        \"country\": \"Brasil\",\n        \"complement\": \"Sala 5\",\n        \"person\": \"PJ\"\n    },\n    \"company\": {\n        \"document\": \"02977901000163\",\n        \"name\": \"Empresa Contratante\",\n        \"street\": \"rua da empresa\",\n        \"number\": \"48\",\n        \"neighborhood\": \"bairro\",\n        \"city\": \"Camocim\",\n        \"state\": \"CE\",\n        \"country\": \"Brasil\",\n        \"postal_code\": \"56328130\",\n        \"complement\": \"Sala 5d s\"\n    },\n    \"payment\": {\n        \"method\": \"undefined\",\n        \"cycle\": \"semestral\"\n    }\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{api}}/v1/tax-domicile/purchase?secret={{landing_page_secret}}",
+											"host": [
+												"{{api}}"
+											],
+											"path": [
+												"v1",
+												"tax-domicile",
+												"purchase"
+											],
+											"query": [
+												{
+													"key": "secret",
+													"value": "{{landing_page_secret}}"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "PJ | voucher | sem afiliado",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"customer\": {\n        \"name\": \"Clara Rocha Pereira\",\n        \"email\": \"contato@gmail.com\",\n        \"phone\": \"87999999999\",\n        \"document\": \"71311852050\",\n        \"street\": \"Rua Presidente João Goulart\",\n        \"number\": \"42\",\n        \"neighborhood\": \"Coab II\",\n        \"city\": \"Sobral\",\n        \"state\": \"CE\",\n        \"postal_code\": \"56328130\",\n        \"country\": \"Brasil\",\n        \"complement\": \"Sala 5\",\n        \"person\": \"PJ\"\n    },\n    \"company\": {\n        \"document\": \"66031138000166\",\n        \"name\": \"Empresa Contratante\",\n        \"street\": \"rua da empresa\",\n        \"number\": \"48\",\n        \"neighborhood\": \"bairro\",\n        \"city\": \"Camocim\",\n        \"state\": \"CE\",\n        \"country\": \"Brasil\",\n        \"postal_code\": \"56328130\",\n        \"complement\": \"Sala 5d s\"\n    },\n    \"payment\": {\n        \"method\": \"undefined\",\n        \"cycle\": \"semestral\",\n        \"voucher\": \"g1rt60r20ox\"\n    }\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{api}}/v1/tax-domicile/purchase?secret={{landing_page_secret}}",
+											"host": [
+												"{{api}}"
+											],
+											"path": [
+												"v1",
+												"tax-domicile",
+												"purchase"
+											],
+											"query": [
+												{
+													"key": "secret",
+													"value": "{{landing_page_secret}}"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "PJ | voucher | afiliado",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"customer\": {\n        \"name\": \"Igor Ferreira Almeida\",\n        \"email\": \"contato@gmail.com\",\n        \"phone\": \"87999999999\",\n        \"document\": \"31440649049\",\n        \"street\": \"Rua Presidente João Goulart\",\n        \"number\": \"42\",\n        \"neighborhood\": \"Coab II\",\n        \"city\": \"Sobral\",\n        \"state\": \"CE\",\n        \"postal_code\": \"56328130\",\n        \"country\": \"Brasil\",\n        \"complement\": \"Sala 5\",\n        \"person\": \"PJ\"\n    },\n    \"company\": {\n        \"document\": \"64099488000139\",\n        \"name\": \"Empresa Contratante\",\n        \"street\": \"rua da empresa\",\n        \"number\": \"48\",\n        \"neighborhood\": \"bairro\",\n        \"city\": \"Camocim\",\n        \"state\": \"CE\",\n        \"country\": \"Brasil\",\n        \"postal_code\": \"56328130\",\n        \"complement\": \"Sala 5d s\"\n    },\n    \"payment\": {\n        \"method\": \"undefined\",\n        \"cycle\": \"semestral\",\n        \"voucher\": \"g1rt60r20ox\",\n        \"mn\": \"lks\"\n    }\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{api}}/v1/tax-domicile/purchase?secret={{landing_page_secret}}",
+											"host": [
+												"{{api}}"
+											],
+											"path": [
+												"v1",
+												"tax-domicile",
+												"purchase"
+											],
+											"query": [
+												{
+													"key": "secret",
+													"value": "{{landing_page_secret}}"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "PF | sem voucher",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"customer\": {\n        \"name\": \"Carla Lima Barbosa\",\n        \"email\": \"contato@gmail.com\",\n        \"phone\": \"87999999999\",\n        \"document\": \"32627273000\",\n        \"street\": \"Rua Presidente João Goulart\",\n        \"number\": \"42\",\n        \"neighborhood\": \"Coab II\",\n        \"city\": \"Sobral\",\n        \"state\": \"CE\",\n        \"postal_code\": \"56328130\",\n        \"country\": \"Brasil\",\n        \"complement\": \"Sala 5\",\n        \"person\": \"PF\"\n    },\n    \"company\": {\n        \"document\": \"80660197000124\",\n        \"name\": \"Empresa Contratante\",\n        \"street\": \"rua da empresa\",\n        \"number\": \"48\",\n        \"neighborhood\": \"bairro\",\n        \"city\": \"Camocim\",\n        \"state\": \"CE\",\n        \"country\": \"Brasil\",\n        \"postal_code\": \"56328130\",\n        \"complement\": \"Sala 5d s\"\n    },\n    \"payment\": {\n        \"method\": \"undefined\",\n        \"cycle\": \"semestral\"\n    }\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{api}}/v1/tax-domicile/purchase?secret={{landing_page_secret}}",
+											"host": [
+												"{{api}}"
+											],
+											"path": [
+												"v1",
+												"tax-domicile",
+												"purchase"
+											],
+											"query": [
+												{
+													"key": "secret",
+													"value": "{{landing_page_secret}}"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "PF | voucher | sem afiliado",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"customer\": {\n        \"name\": \"Anna Santos Barros\",\n        \"email\": \"contato@gmail.com\",\n        \"phone\": \"87999999999\",\n        \"document\": \"38302252026\",\n        \"street\": \"Rua Presidente João Goulart\",\n        \"number\": \"42\",\n        \"neighborhood\": \"Coab II\",\n        \"city\": \"Sobral\",\n        \"state\": \"CE\",\n        \"postal_code\": \"56328130\",\n        \"country\": \"Brasil\",\n        \"complement\": \"Sala 5\",\n        \"person\": \"PF\"\n    },\n    \"company\": {\n        \"document\": \"80660197000124\",\n        \"name\": \"Empresa Contratante\",\n        \"street\": \"rua da empresa\",\n        \"number\": \"48\",\n        \"neighborhood\": \"bairro\",\n        \"city\": \"Camocim\",\n        \"state\": \"CE\",\n        \"country\": \"Brasil\",\n        \"postal_code\": \"56328130\",\n        \"complement\": \"Sala 5d s\"\n    },\n    \"payment\": {\n        \"method\": \"undefined\",\n        \"cycle\": \"semestral\",\n        \"voucher\": \"g1rt60r20ox\"\n    }\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{api}}/v1/tax-domicile/purchase?secret={{landing_page_secret}}",
+											"host": [
+												"{{api}}"
+											],
+											"path": [
+												"v1",
+												"tax-domicile",
+												"purchase"
+											],
+											"query": [
+												{
+													"key": "secret",
+													"value": "{{landing_page_secret}}"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "PF | voucher | afiliado",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"customer\": {\n        \"name\": \"Letícia Correia Silva\",\n        \"email\": \"contato@gmail.com\",\n        \"phone\": \"87999999999\",\n        \"document\": \"27901520043\",\n        \"street\": \"Rua Presidente João Goulart\",\n        \"number\": \"42\",\n        \"neighborhood\": \"Coab II\",\n        \"city\": \"Sobral\",\n        \"state\": \"CE\",\n        \"postal_code\": \"56328130\",\n        \"country\": \"Brasil\",\n        \"complement\": \"Sala 5\",\n        \"person\": \"PF\"\n    },\n    \"company\": {\n        \"document\": \"80660197000124\",\n        \"name\": \"Empresa Contratante\",\n        \"street\": \"rua da empresa\",\n        \"number\": \"48\",\n        \"neighborhood\": \"bairro\",\n        \"city\": \"Camocim\",\n        \"state\": \"CE\",\n        \"country\": \"Brasil\",\n        \"postal_code\": \"56328130\",\n        \"complement\": \"Sala 5d s\"\n    },\n    \"payment\": {\n        \"method\": \"undefined\",\n        \"cycle\": \"semestral\",\n        \"voucher\": \"g1rt60r20ox\",\n        \"mn\": \"lks\"\n    }\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{api}}/v1/tax-domicile/purchase?secret={{landing_page_secret}}",
+											"host": [
+												"{{api}}"
+											],
+											"path": [
+												"v1",
+												"tax-domicile",
+												"purchase"
+											],
+											"query": [
+												{
+													"key": "secret",
+													"value": "{{landing_page_secret}}"
+												}
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "Webhook",
+					"item": [
+						{
+							"name": "ASAAS [Billing]",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"event\": \"PAYMENT_CONFIRMED\",\n    \"payment\": {\n        \"object\": \"payment\",\n        \"id\": \"pay_n7cfkdw7ihv06rf7\",\n        \"customer\": \"cus_000005977534\",\n        \"dateCreated\": \"2024-02-07\",\n        \"paymentLink\": null,\n        \"value\": 1200,\n        \"netValue\": 1175.63,\n        \"originalValue\": null,\n        \"interestValue\": null,\n        \"description\": null,\n        \"billingType\": \" dCREDIT_CARD\",\n        \"confirmedDate\": \"2024-02-07\",\n        \"creditCard\": {\n            \"creditCardNumber\": \"2769\",\n            \"creditCardBrand\": \"UNKNOWN\",\n            \"creditCardToken\": \"d5ca270f-7d1d-4303-b8a3-97396e21af2a\"\n        },\n        \"pixTransaction\": null,\n        \"status\": \"CONFIRMED\",\n        \"dueDate\": \"2024-03-03\",\n        \"originalDueDate\": \"2024-03-03\",\n        \"paymentDate\": null,\n        \"clientPaymentDate\": \"2024-02-07\",\n        \"installmentNumber\": null,\n        \"invoiceUrl\": \"https://sandbox.asaas.com/i/k5uq3h9nccka6du4\",\n        \"invoiceNumber\": \"05047626\",\n        \"externalReference\": null,\n        \"deleted\": false,\n        \"anticipated\": false,\n        \"anticipable\": true,\n        \"creditDate\": \"2024-03-11\",\n        \"estimatedCreditDate\": \"2024-03-11\",\n        \"transactionReceiptUrl\": \"https://sandbox.asaas.com/comprovantes/1839119035772564\",\n        \"nossoNumero\": \"1445644\",\n        \"bankSlipUrl\": null,\n        \"lastInvoiceViewedDate\": null,\n        \"lastBankSlipViewedDate\": null,\n        \"discount\": {\n            \"value\": 0,\n            \"limitDate\": null,\n            \"dueDateLimitDays\": 0,\n            \"type\": \"FIXED\"\n        },\n        \"fine\": {\n            \"value\": 0,\n            \"type\": \"FIXED\"\n        },\n        \"interest\": {\n            \"value\": 0,\n            \"type\": \"PERCENTAGE\"\n        },\n        \"postalService\": false,\n        \"custody\": null,\n        \"refunds\": null\n    }\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{api}}/v1/tax-domicile/purchase/webhook?secret={{asaas_secret_webhook}}",
+									"host": [
+										"{{api}}"
+									],
+									"path": [
+										"v1",
+										"tax-domicile",
+										"purchase",
+										"webhook"
+									],
+									"query": [
+										{
+											"key": "secret",
+											"value": "{{asaas_secret_webhook}}"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "ASAAS [Subscription]",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n \"id\": \"evt_05b708f961d739ea7eba7e4db318f621&6322585\",\n \"event\": \"PAYMENT_CREATED\",\n \"payment\": {\n  \"object\": \"payment\",\n  \"id\": \"pay_j0vnnmmf3nncs7g0\",\n  \"dateCreated\": \"2024-04-28\",\n  \"customer\": \"cus_000006007709\",\n  \"subscription\": \"sub_2dvvaf2mo4hw6kwr\",\n  \"paymentLink\": null,\n  \"value\": 1100,\n  \"netValue\": 1099.01,\n  \"originalValue\": null,\n  \"interestValue\": null,\n  \"description\": \"Aquisição de domicílio fiscal/escritório virtual 2024.\\n        Evite cobranças, qualquer problema entre em contato imediatamente com um de nossos atendentes.\",\n  \"billingType\": \"BOLETO\",\n  \"canBePaidAfterDueDate\": true,\n  \"pixTransaction\": null,\n  \"status\": \"PENDING\",\n  \"dueDate\": \"2024-05-01\",\n  \"originalDueDate\": \"2024-05-01\",\n  \"paymentDate\": null,\n  \"clientPaymentDate\": null,\n  \"installmentNumber\": null,\n  \"invoiceUrl\": \"https://sandbox.asaas.com/i/j0vnnmmf3nncs7g0\",\n  \"invoiceNumber\": \"05638622\",\n  \"externalReference\": null,\n  \"deleted\": false,\n  \"anticipated\": false,\n  \"anticipable\": false,\n  \"creditDate\": null,\n  \"estimatedCreditDate\": null,\n  \"transactionReceiptUrl\": null,\n  \"nossoNumero\": \"1595312\",\n  \"bankSlipUrl\": \"https://sandbox.asaas.com/b/pdf/j0vnnmmf3nncs7g0\",\n  \"lastInvoiceViewedDate\": null,\n  \"lastBankSlipViewedDate\": null,\n  \"discount\": {\n   \"value\": 0,\n   \"limitDate\": null,\n   \"dueDateLimitDays\": 0,\n   \"type\": \"FIXED\"\n  },\n  \"fine\": {\n   \"value\": 0,\n   \"type\": \"FIXED\"\n  },\n  \"interest\": {\n   \"value\": 0,\n   \"type\": \"PERCENTAGE\"\n  },\n  \"postalService\": false,\n  \"custody\": null,\n  \"refunds\": null\n }\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{api}}/v1/tax-domicile/purchase/webhook?secret={{asaas_secret_webhook}}",
+									"host": [
+										"{{api}}"
+									],
+									"path": [
+										"v1",
+										"tax-domicile",
+										"purchase",
+										"webhook"
+									],
+									"query": [
+										{
+											"key": "secret",
+											"value": "{{asaas_secret_webhook}}"
+										}
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "Pagamento Recebido",
+									"originalRequest": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n  \"id\": \"evt_d26e303b238e509335ac9ba210e51b0f&6364884\",\n  \"event\": \"PAYMENT_RECEIVED\",\n  \"payment\": {\n    \"object\": \"payment\",\n    \"id\": \"pay_hovu781u7br2vovx\",\n    \"dateCreated\": \"2024-04-27\",\n    \"customer\": \"cus_000005876798\",\n    \"paymentLink\": null,\n    \"value\": 1200,\n    \"netValue\": 1199.01,\n    \"originalValue\": null,\n    \"interestValue\": null,\n    \"description\": null,\n    \"billingType\": \"BOLETO\",\n    \"canBePaidAfterDueDate\": true,\n    \"confirmedDate\": \"2024-05-03\",\n    \"pixTransaction\": null,\n    \"status\": \"RECEIVED\",\n    \"dueDate\": \"2025-03-03\",\n    \"originalDueDate\": \"2025-03-03\",\n    \"paymentDate\": \"2024-05-03\",\n    \"clientPaymentDate\": \"2024-05-03\",\n    \"installmentNumber\": null,\n    \"invoiceUrl\": \"https://sandbox.asaas.com/i/hovu781u7br2vovx\",\n    \"invoiceNumber\": \"05632956\",\n    \"externalReference\": null,\n    \"deleted\": false,\n    \"anticipated\": false,\n    \"anticipable\": false,\n    \"creditDate\": \"2024-05-03\",\n    \"estimatedCreditDate\": \"2024-05-03\",\n    \"transactionReceiptUrl\": \"https://sandbox.asaas.com/comprovantes/3585680232713000\",\n    \"nossoNumero\": \"1594388\",\n    \"bankSlipUrl\": \"https://sandbox.asaas.com/b/pdf/hovu781u7br2vovx\",\n    \"lastInvoiceViewedDate\": null,\n    \"lastBankSlipViewedDate\": null,\n    \"discount\": {\n      \"value\": 0.00,\n      \"limitDate\": null,\n      \"dueDateLimitDays\": 0,\n      \"type\": \"FIXED\"\n    },\n    \"fine\": {\n      \"value\": 0.00,\n      \"type\": \"FIXED\"\n    },\n    \"interest\": {\n      \"value\": 0.00,\n      \"type\": \"PERCENTAGE\"\n    },\n    \"postalService\": false,\n    \"custody\": null,\n    \"refunds\": null\n  }\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{api}}/v1/tax-domicile/purchase/webhook?secret={{asaas_secret_webhook}}",
+											"host": [
+												"{{api}}"
+											],
+											"path": [
+												"v1",
+												"tax-domicile",
+												"purchase",
+												"webhook"
+											],
+											"query": [
+												{
+													"key": "secret",
+													"value": "{{asaas_secret_webhook}}"
+												}
+											]
+										}
+									},
+									"_postman_previewlanguage": null,
+									"header": null,
+									"cookie": [],
+									"body": null
+								}
+							]
+						},
+						{
+							"name": "asdfs",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n \"id\": \"evt_d26e303b238e509335ac9ba210e51b0f&6322443\",\n \"event\": \"PAYMENT_CONFIRMED\",\n \"payment\": {\n  \"object\": \"payment\",\n  \"id\": \"pay_8ie75zu2qj0do2kf\",\n  \"dateCreated\": \"2024-04-28\",\n  \"customer\": \"cus_000005985360\",\n  \"subscription\": \"sub_h8hh8gtt7bmrmnyr\",\n  \"paymentLink\": null,\n  \"value\": 1100,\n  \"netValue\": 1099.01,\n  \"originalValue\": null,\n  \"interestValue\": null,\n  \"description\": \"Aquisição de domicílio fiscal/escritório virtual 2024.\\n        Evite cobranças, qualquer problema entre em contato imediatamente com um de nossos atendentes.\",\n  \"billingType\": \"BOLETO\",\n  \"canBePaidAfterDueDate\": true,\n  \"confirmedDate\": \"2024-04-28\",\n  \"pixTransaction\": null,\n  \"status\": \"RECEIVED\",\n  \"dueDate\": \"2024-05-01\",\n  \"originalDueDate\": \"2024-05-01\",\n  \"paymentDate\": \"2024-04-28\",\n  \"clientPaymentDate\": \"2024-04-28\",\n  \"installmentNumber\": null,\n  \"invoiceUrl\": \"https://sandbox.asaas.com/i/8ie75zu2qj0do2kf\",\n  \"invoiceNumber\": \"05638505\",\n  \"externalReference\": null,\n  \"deleted\": false,\n  \"anticipated\": false,\n  \"anticipable\": false,\n  \"creditDate\": \"2024-04-28\",\n  \"estimatedCreditDate\": \"2024-04-28\",\n  \"transactionReceiptUrl\": \"https://sandbox.asaas.com/comprovantes/3259969547186965\",\n  \"nossoNumero\": \"1595296\",\n  \"bankSlipUrl\": \"https://sandbox.asaas.com/b/pdf/8ie75zu2qj0do2kf\",\n  \"lastInvoiceViewedDate\": null,\n  \"lastBankSlipViewedDate\": null,\n  \"discount\": {\n   \"value\": 0,\n   \"limitDate\": null,\n   \"dueDateLimitDays\": 0,\n   \"type\": \"FIXED\"\n  },\n  \"fine\": {\n   \"value\": 0,\n   \"type\": \"FIXED\"\n  },\n  \"interest\": {\n   \"value\": 0,\n   \"type\": \"PERCENTAGE\"\n  },\n  \"postalService\": false,\n  \"custody\": null,\n  \"refunds\": null\n }\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{api}}/v1/tax-domicile/purchase/webhook?secret={{asaas_secret_webhook}}",
+									"host": [
+										"{{api}}"
+									],
+									"path": [
+										"v1",
+										"tax-domicile",
+										"purchase",
+										"webhook"
+									],
+									"query": [
+										{
+											"key": "secret",
+											"value": "{{asaas_secret_webhook}}"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "CLICKSIGN Webhook",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "content-hmac",
+										"value": "sha256=2ebaa561da845a4e40a79ce78897790e761296bfac8b5bee5b1982f02d9662e3",
+										"type": "text"
+									},
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"event\": {\n        \"name\": \"add_signer\",\n        \"data\": {\n            \"user\": {\n                \"email\": \"contato@gmail.com\",\n                \"name\": \"Pessoa X\"\n            },\n            \"account\": {\n                \"key\": \"086cb16c-b824-4e23-b060-753de873e1b2\"\n            },\n            \"signers\": [\n                {\n                    \"sign_as\": \"sign\",\n                    \"key\": \"eed95966-6d98-42e8-9aab-4c171713d003\",\n                    \"email\": \"pessoa.x@gmail.com.br\",\n                    \"name\": \"Nome do cliente\",\n                    \"birthday\": null,\n                    \"documentation\": null,\n                    \"has_documentation\": false,\n                    \"created_at\": \"2024-02-24T12:02:14.489-03:00\",\n                    \"auths\": [\n                        \"email\"\n                    ],\n                    \"selfie_enabled\": false,\n                    \"handwritten_enabled\": false,\n                    \"official_document_enabled\": false,\n                    \"liveness_enabled\": false,\n                    \"facial_biometrics_enabled\": false,\n                    \"communicate_by\": \"email\",\n                    \"list_key\": \"1552b77e-289a-4a3e-9252-d79976ca97aa\",\n                    \"url\": \"https://sandbox.clicksign.com/sign/eed95966-6d98-42e8-9aab-4c171713d003\",\n                    \"read_receipts?\": false\n                }\n            ]\n        },\n        \"occurred_at\": \"2024-02-24T12:02:15.505-03:00\"\n    },\n    \"document\": {\n        \"key\": \"0038d058-d39b-4506-a92a-44b0d1839e18\",\n        \"account_key\": \"086cb16c-b824-4e23-b060-753de873e1b2\",\n        \"path\": \"/2024/02/24/06550340055-pessoa.x@gmail.com.br-60f55c0a-f8fd-4e00-8c7d-caf5db223b19.docx\",\n        \"filename\": \"06550340055-pessoa.x@gmail.com.br-60f55c0a-f8fd-4e00-8c7d-caf5db223b19.docx\",\n        \"uploaded_at\": \"2024-02-24T15:02:13.382Z\",\n        \"updated_at\": \"2024-02-24T15:02:15.489Z\",\n        \"finished_at\": null,\n        \"deadline_at\": \"2024-03-25T12:02:13.183-03:00\",\n        \"status\": \"running\",\n        \"auto_close\": true,\n        \"locale\": \"pt-BR\",\n        \"metadata\": {},\n        \"sequence_enabled\": false,\n        \"signable_group\": 1,\n        \"remind_interval\": null,\n        \"block_after_refusal\": true,\n        \"preview\": true,\n        \"downloads\": {\n            \"original_file_url\": \"https://clicksign-sandbox-content.s3.amazonaws.com/2024/02/24/15/02/13/6474f03e-be08-4bf7-969a-0633cd8aaec2/06550340055-pessoa.x%40gmail.com-60f55c0a-f8fd-4e00-8c7d-caf5db223b19.docx?X-Amz-Expires=299\\u0026X-Amz-Date=20240224T150216Z\\u0026X-Amz-Security-Token=IQoJb3JpZ2luX2VjEKf%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLWVhc3QtMSJHMEUCICMjq%2BpHqJ8Qn9GZLYw8EWD52q%2F5CRlTY6zzf63iw2TkAiEA6IeSqFQgL0AgJFLhJlDku2S7%2FnCCj7RBUUSKbt6ADl8qwwUIj%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARADGgw3NDA2NjIyNzg3OTMiDC54JKr4nzHX%2F52jZyqXBdWL3lhWgvSHfJLSIox7MC3Cdcdnwidv%2FjLPtRWBn2oQGT6H8Dg%2B5I%2Bus4M6rTlwv2usekm4A25PwGffx%2BAuv3YK25aBuHVdboEwumWSggLzs7nGig228ccPTS7YEsiIAflK1Mrg6wQY8wvtvK12pAXhE1a%2FXkQf%2FtqPo3OitGD9HbAXMPlPjFto9HQITASlZ4tZpItD4lIq3caw4iO0WNXLZhqRAZ1%2BbYgkcnClUsvdkRCUHF%2B6JB8zf%2BE%2F13T9yqwI6PC0NEnG%2B6XKyEMw3oOJktcv%2BSGvIc%2B%2Bx0%2FjvRJqDJwSENQDV1WKed7BfCIjWap5LnSzASF%2FUoEal%2BpKOTizZCaWc%2FqwXGA258SGpfywx0I99bUVVkdf2j%2FBDa4UC35j0JSdJ8vTa3kH%2B%2BlsSm0QYTFmCNSzEgw37FfOAlzvJ2KBxexOONjyYvZW%2Fl%2FTb037AuhWMdUc2RZceql44xtjWwMp4d%2BMFQudkFFzrVKAd1GQeY78fBXDyFZTYo3Ftbt%2Fz3GdZym9dRlMG60gQDrpiCEKnmwB5Er3XsjsnyfB86S9cSpJ548V7TOJ%2BxLV5zZ%2FwlOIFRxECNNiLUIy%2BWcFk0TWSPwGv4jMJ3jBYQwdYLKCyHxV2RgYdubcOTp%2FXSV6LuXTy%2F5nXo93IfLkwumIEfvqRqY425Ngiorb8HvGMxdYSkYlv9GGTthzxp17zgDG3MgHQsejIZNGKQ6plp7jRp%2FtgU4QsW3T1AIQYnSvnB3isJxD5xbxXnKCOm2cX8xohv%2FZupCf2CgcJlYO2msA3AiHKK4E00Hc12Rv%2FWKQ9NRZUAS4oSDkJFQAogqj2IPvQrIF58rmp5k5GcyhD8k%2BRa64kYVb72r5pl3nQcc8jVmrz%2BT%2BOTDw9ueuBjqxAYqVkXmtzfYCPK2h31jyXdZJGqqAkWkJoHeOBhezv2Xsga8dg2vcJazV5dSCi6CwP59%2Bq11VDehcy06Ff1ghLo4AIZFYgnIgeM%2BqwWn7yxuvr9HQUrHh3J0uPyN3X7bpPh62QZ2Nb89hbnNexmfUE6HoMXfQVKEjh4tDJtDkov17m%2FAK87N8pl2uae%2BbJ73J6O7OBBmcNdBbxEk9Kib5vImkjsLG7zHELBkaNNZy6dpNeg%3D%3D\\u0026X-Amz-Algorithm=AWS4-HMAC-SHA256\\u0026X-Amz-Credential=ASIA2Y4XJPKE24MCG6HP%2F20240224%2Fus-east-1%2Fs3%2Faws4_request\\u0026X-Amz-SignedHeaders=host\\u0026X-Amz-Signature=6f574b8065cfbdc544e0ed0de7843ccf587ac43c223bb835349b77e1e0750156\"\n        },\n        \"template\": {\n            \"key\": \"6012dd37-b9c3-40c8-b859-a625627e12b0\",\n            \"data\": {\n                \"company_name\": \"ngrok company\",\n                \"company_document\": \"30.338.337/0001-74\",\n                \"company_address\": \"rua da empresa, 48, Sala 5, bairro, Cidade Camocim-CE, CEP: 56328130\",\n                \"customer_name\": \"Nome do cliente\",\n                \"customer_document\": \"065.503.400-55\",\n                \"customer_address\": \"Rua do cliente, 323, Sala 5, bairro do cliente, Cidade Petrolina-PE, CEP: 56328130\",\n                \"first_witness_name\": \"Primeiro Signatario do escritorio\",\n                \"first_witness_document\": \"000.000.000-00\",\n                \"second_witness_name\": \"Segindo Signatario do escritorio\",\n                \"second_witness_document\": \"078.897.595-17\"\n            }\n        },\n        \"signers\": [\n            {\n                \"list_key\": \"1552b77e-289a-4a3e-9252-d79976ca97aa\",\n                \"key\": \"eed95966-6d98-42e8-9aab-4c171713d003\",\n                \"request_signature_key\": \"731b60d4-179f-45db-91b0-6a70434f0cd1\",\n                \"email\": \"pessoa.x@gmail.com.br\",\n                \"name\": \"Nome do cliente\",\n                \"has_documentation\": false,\n                \"documentation\": null,\n                \"birthday\": null,\n                \"phone_number\": \"87999999999\",\n                \"sign_as\": \"sign\",\n                \"delivery\": \"email\",\n                \"refusable\": false,\n                \"url\": \"https://sandbox.clicksign.com/sign/731b60d4-179f-45db-91b0-6a70434f0cd1\",\n                \"auths\": [\n                    \"email\"\n                ],\n                \"created_at\": \"2024-02-24T15:02:14.489Z\"\n            }\n        ],\n        \"events\": [\n            {\n                \"name\": \"add_signer\",\n                \"data\": {\n                    \"user\": {\n                        \"email\": \"contato@gmail.com\",\n                        \"name\": \"Pessoa X\"\n                    },\n                    \"account\": {\n                        \"key\": \"086cb16c-b824-4e23-b060-753de873e1b2\"\n                    },\n                    \"signers\": [\n                        {\n                            \"sign_as\": \"sign\",\n                            \"key\": \"eed95966-6d98-42e8-9aab-4c171713d003\",\n                            \"email\": \"pessoa.x@gmail.com.br\",\n                            \"name\": \"Nome do cliente\",\n                            \"birthday\": null,\n                            \"documentation\": null,\n                            \"has_documentation\": false,\n                            \"created_at\": \"2024-02-24T12:02:14.489-03:00\",\n                            \"auths\": [\n                                \"email\"\n                            ],\n                            \"selfie_enabled\": false,\n                            \"handwritten_enabled\": false,\n                            \"official_document_enabled\": false,\n                            \"liveness_enabled\": false,\n                            \"facial_biometrics_enabled\": false,\n                            \"communicate_by\": \"email\",\n                            \"list_key\": \"1552b77e-289a-4a3e-9252-d79976ca97aa\",\n                            \"url\": \"https://sandbox.clicksign.com/sign/eed95966-6d98-42e8-9aab-4c171713d003\",\n                            \"read_receipts?\": false\n                        }\n                    ]\n                },\n                \"occurred_at\": \"2024-02-24T15:02:15.505Z\"\n            },\n            {\n                \"name\": \"upload\",\n                \"data\": {\n                    \"user\": {\n                        \"email\": \"contato@gmail.com\",\n                        \"name\": \"Pessoa X\"\n                    },\n                    \"account\": {\n                        \"key\": \"086cb16c-b824-4e23-b060-753de873e1b2\"\n                    },\n                    \"deadline_at\": \"2024-03-25T12:02:13.183-03:00\",\n                    \"auto_close\": true,\n                    \"locale\": \"pt-BR\"\n                },\n                \"occurred_at\": \"2024-02-24T15:02:13.401Z\"\n            }\n        ],\n        \"attachments\": [],\n        \"links\": {\n            \"self\": \"/accounts/10597/folders/6306985/documents/e1414da8-697b-474e-bd8e-2e433e0d9386\"\n        }\n    }\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{api}}/v1/tax-domicile/document/webhook?secret={{clicksign_secret_webhook}}",
+									"host": [
+										"{{api}}"
+									],
+									"path": [
+										"v1",
+										"tax-domicile",
+										"document",
+										"webhook"
+									],
+									"query": [
+										{
+											"key": "secret",
+											"value": "{{clicksign_secret_webhook}}"
+										}
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "ADD SIGNER",
+									"originalRequest": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "content-hmac",
+												"value": "sha256=d7725acc7b42eb7b99976fba3d6f9e18141d8bd1dce33d3fe83210ff0b3d665d",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\"event\":{\"name\":\"add_signer\",\"data\":{\"user\":{\"email\":\"contato@gmail.com\",\"name\":\"Pessoa X\"},\"account\":{\"key\":\"086cb16c-b824-4e23-b060-753de873e1b2\"},\"signers\":[{\"sign_as\":\"sign\",\"key\":\"80ad2de3-142f-42e2-a946-0b97733e1cef\",\"email\":\"admin@gmail.com\",\"name\":\"Testando assinatura via api\",\"birthday\":null,\"documentation\":null,\"has_documentation\":false,\"created_at\":\"2024-03-01T10:52:35.421-03:00\",\"auths\":[\"api\"],\"selfie_enabled\":false,\"handwritten_enabled\":false,\"official_document_enabled\":false,\"liveness_enabled\":false,\"facial_biometrics_enabled\":false,\"communicate_by\":\"email\",\"list_key\":\"b6898bc9-81e9-4bd4-9a02-7e5de8b6f97b\",\"url\":\"https://sandbox.clicksign.com/sign/80ad2de3-142f-42e2-a946-0b97733e1cef\",\"read_receipts?\":false}]},\"occurred_at\":\"2024-03-01T11:02:19.378-03:00\"},\"document\":{\"key\":\"de8c0461-3eac-4a6c-afb2-fc15564b1f56\",\"account_key\":\"086cb16c-b824-4e23-b060-753de873e1b2\",\"path\":\"/biscoito/1.docx\",\"filename\":\"1.docx\",\"uploaded_at\":\"2024-03-01T14:02:02.905Z\",\"updated_at\":\"2024-03-01T14:02:19.359Z\",\"finished_at\":null,\"deadline_at\":\"2024-03-31T11:02:02.652-03:00\",\"status\":\"running\",\"auto_close\":true,\"locale\":\"pt-BR\",\"metadata\":{},\"sequence_enabled\":false,\"signable_group\":1,\"remind_interval\":null,\"block_after_refusal\":true,\"preview\":true,\"downloads\":{\"original_file_url\":\"https://clicksign-sandbox-content.s3.amazonaws.com/2024/03/01/14/02/02/b6c13999-2dd8-4182-b1bb-ba8885fd0eca/1.docx?X-Amz-Expires=299\\u0026X-Amz-Date=20240301T140220Z\\u0026X-Amz-Security-Token=IQoJb3JpZ2luX2VjEDUaCXVzLWVhc3QtMSJIMEYCIQDLSyYsOXICNPc8kn2JlAtss7q9iUfUCnTXxSYCjaZnLwIhAL7I4OPaAtdBLSAaAabaz4udTv3dm0%2Fr85%2FCQNqtJ6dMKroFCC4QAxoMNzQwNjYyMjc4NzkzIgx%2B%2F8iYe00NFT6s8lkqlwX2C%2B%2BDKkWfyQydR2%2B3Iw6ha5UjtrItS1StGgdwpHTuKB6U%2FRL89cBIAO%2BUqDGWWs8XFbL93%2Bf2LE1I8ywXNJ8dwKwRVdf4jCFPmjaYIiF5600RwwKlS1Ul%2F6qdpP6K4ggBJuSfOJ6jIyoE4OczsmgiDdqDN0qZEzcOo3%2FZ3GnoE13fLU6O66nCEbD8trdzbd3GVViUbDM61OnP5L7V0%2F46Td4fJu9Ljpll8qOYeoNBwUwHp2I%2B5%2BrZKJGg3hJA0McNvHOqKmG%2Bo0SihZXRdaTSuUY2Le%2FtDumozMAYfRC7wFo1DyBTy1%2F3OkoOK1DNCVveeCkSSLvhfL%2BO%2FaT0BjWxK%2F3REgd4fy7v%2BwnuvVXA4237b7%2Fr7qd%2BHLQzG6zdvhlm5Gcq7ueBpZbeqlSPDDK9XkSvhuaJkXyPZwCA%2BIsjbWxV4Gq9b1OSNobTvNY0%2Fhxl5HZ5c4coeYMJxseY%2B%2FigGOEup4xE5uMk67%2FEp8VFto4BfwNdIVcNBmWAhx4ofJPZdWv5MMiAOklwIESvKsr7ICGHIYR%2FGX8oA999AUhcHJLXXnVa%2BUzXlDnKaGTGL4Ha5I6sdSZwN4br5RGHWgXnVpjttoKHCT%2Bia4QlNni7hm2uDVKXC8EPSiibWXnYDf7tSXJVFbmqp0zxWMblItVRwbvflMEpiwKqXv8gJ9Cxr0kRJc%2F9xuO5KngjxsyZWw55UfvSJ2p9wj4CxcKcOQ5TkrfSYBiw7AAnA11U01OR8a53txkf3jv8h%2FwO7su68c8LB%2BcYDTbLOcL4dgks0kIlIkNoh0F6zlfLWnOZ3TwIV8JkITSVtfW7oZ6MwIay%2FmEnztb6okgG8l%2BNSQlIn1LkhJjPQBJeKRjUA9W%2BLE8fi4mwhQfm%2FGQw26OHrwY6sAEnu8MY9dj8yq%2BC1135MDkBEVoOMPgo8XpEmHZPpnOmZtj1qdJbilorTcdcG%2BomBkcclMheNmeEO27NnahGhWKYZEB5ZF4m6J7xysXleQ4sb0TiGEPI4G%2Bm8QAsAdJjs2TMIpmTKJU7tzMLihPx2ZtjvsG%2BLrwez1aoa0R7YjH3SgESfM67%2B0BRVN0zE3YDpElzDtYkKCwyQtNQf3cSCvAV7%2BNd43ABvPP8wxS2YhPK%2BA%3D%3D\\u0026X-Amz-Algorithm=AWS4-HMAC-SHA256\\u0026X-Amz-Credential=ASIA2Y4XJPKEU6FSY2ZI%2F20240301%2Fus-east-1%2Fs3%2Faws4_request\\u0026X-Amz-SignedHeaders=host\\u0026X-Amz-Signature=3af8fbca7f9572dd2609cb5d8809a7954e000775cd87e85fd792d0cd277bc9b6\"},\"template\":{\"key\":\"6012dd37-b9c3-40c8-b859-a625627e12b0\",\"data\":{\"nome\":\"nome\",\"telefone\":\"(11) 3145-2570\",\"Website\":\"https://www.clicksign.com\",\"dias-semana\":\"biscoito\"}},\"signers\":[{\"list_key\":\"b6898bc9-81e9-4bd4-9a02-7e5de8b6f97b\",\"key\":\"80ad2de3-142f-42e2-a946-0b97733e1cef\",\"request_signature_key\":\"0f6227f8-a834-4c04-859a-6b161f8086a7\",\"email\":\"admin@gmail.com\",\"name\":\"Testando assinatura via api\",\"has_documentation\":false,\"documentation\":null,\"birthday\":null,\"phone_number\":\"87999999999\",\"sign_as\":\"sign\",\"delivery\":\"email\",\"refusable\":false,\"url\":\"https://sandbox.clicksign.com/sign/0f6227f8-a834-4c04-859a-6b161f8086a7\",\"auths\":[\"api\"],\"created_at\":\"2024-03-01T13:52:35.421Z\"}],\"events\":[{\"name\":\"add_signer\",\"data\":{\"user\":{\"email\":\"contato@gmail.com\",\"name\":\"Pessoa X\"},\"account\":{\"key\":\"086cb16c-b824-4e23-b060-753de873e1b2\"},\"signers\":[{\"sign_as\":\"sign\",\"key\":\"80ad2de3-142f-42e2-a946-0b97733e1cef\",\"email\":\"admin@gmail.com\",\"name\":\"Testando assinatura via api\",\"birthday\":null,\"documentation\":null,\"has_documentation\":false,\"created_at\":\"2024-03-01T10:52:35.421-03:00\",\"auths\":[\"api\"],\"selfie_enabled\":false,\"handwritten_enabled\":false,\"official_document_enabled\":false,\"liveness_enabled\":false,\"facial_biometrics_enabled\":false,\"communicate_by\":\"email\",\"list_key\":\"b6898bc9-81e9-4bd4-9a02-7e5de8b6f97b\",\"url\":\"https://sandbox.clicksign.com/sign/80ad2de3-142f-42e2-a946-0b97733e1cef\",\"read_receipts?\":false}]},\"occurred_at\":\"2024-03-01T14:02:19.378Z\"},{\"name\":\"upload\",\"data\":{\"user\":{\"email\":\"contato@gmail.com\",\"name\":\"Pessoa X\"},\"account\":{\"key\":\"086cb16c-b824-4e23-b060-753de873e1b2\"},\"deadline_at\":\"2024-03-31T11:02:02.652-03:00\",\"auto_close\":true,\"locale\":\"pt-BR\"},\"occurred_at\":\"2024-03-01T14:02:02.918Z\"}],\"attachments\":[],\"links\":{\"self\":\"/accounts/10597/folders/6317279/documents/de8c0461-3eac-4a6c-afb2-fc15564b1f56\"}}}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{api}}/v1/tax-domicile/document/webhook?secret={{clicksign_secret_webhook}}",
+											"host": [
+												"{{api}}"
+											],
+											"path": [
+												"v1",
+												"tax-domicile",
+												"document",
+												"webhook"
+											],
+											"query": [
+												{
+													"key": "secret",
+													"value": "{{clicksign_secret_webhook}}"
+												}
+											]
+										}
+									},
+									"_postman_previewlanguage": null,
+									"header": null,
+									"cookie": [],
+									"body": null
+								},
+								{
+									"name": "UPLOAD",
+									"originalRequest": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "content-hmac",
+												"value": "sha256=2ebaa561da845a4e40a79ce78897790e761296bfac8b5bee5b1982f02d9662e3",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"event\": {\n        \"name\": \"upload\",\n        \"data\": {\n            \"user\": {\n                \"email\": \"contato@gmail.com\",\n                \"name\": \"Pessoa X\"\n            },\n            \"account\": {\n                \"key\": \"086cb16c-b824-4e23-b060-753de873e1b2\"\n            },\n            \"deadline_at\": \"2024-03-25T12:02:13.183-03:00\",\n            \"auto_close\": true,\n            \"locale\": \"pt-BR\"\n        },\n        \"occurred_at\": \"2024-02-24T12:02:13.401-03:00\"\n    },\n    \"document\": {\n        \"key\": \"e1414da8-697b-474e-bd8e-2e433e0d9386\",\n        \"account_key\": \"086cb16c-b824-4e23-b060-753de873e1b2\",\n        \"path\": \"/2024/02/24/06550340055-pessoa.x@gmail.com.br-60f55c0a-f8fd-4e00-8c7d-caf5db223b19.docx\",\n        \"filename\": \"06550340055-pessoa.x@gmail.com.br-60f55c0a-f8fd-4e00-8c7d-caf5db223b19.docx\",\n        \"uploaded_at\": \"2024-02-24T15:02:13.382Z\",\n        \"updated_at\": \"2024-02-24T15:02:13.389Z\",\n        \"finished_at\": null,\n        \"deadline_at\": \"2024-03-25T12:02:13.183-03:00\",\n        \"status\": \"running\",\n        \"auto_close\": true,\n        \"locale\": \"pt-BR\",\n        \"metadata\": {},\n        \"sequence_enabled\": false,\n        \"signable_group\": null,\n        \"remind_interval\": null,\n        \"block_after_refusal\": true,\n        \"preview\": true,\n        \"downloads\": {\n            \"original_file_url\": \"https://clicksign-sandbox-content.s3.amazonaws.com/2024/02/24/15/02/13/6474f03e-be08-4bf7-969a-0633cd8aaec2/06550340055-pessoa.x%40gmail.com-60f55c0a-f8fd-4e00-8c7d-caf5db223b19.docx?X-Amz-Expires=299\\u0026X-Amz-Date=20240224T150214Z\\u0026X-Amz-Security-Token=IQoJb3JpZ2luX2VjEKb%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLWVhc3QtMSJHMEUCIQC5BF%2FUB44MhqZtyNhhz9rXAYSmCNUI%2Bp%2FAjaujf3J9yQIgTVM%2Fpe7MxfkG8ylIu3N4qI7InHG%2FkPECxw2O6FZ97MUqwgUIjv%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARADGgw3NDA2NjIyNzg3OTMiDHCFE04%2F9W8rBIBAAyqWBZ3I9%2F5LfDZN0jTk6LVWrD35QXhAN7Yz2VYplzmdPS%2BFtn4vfhusus8ZV7AHNifsiMkg2QGg127H43N1ga1UU9CtVMVfn%2F%2BuCmLFSFc5Sj%2BeE%2F%2F%2FW7skCGbs1VaJqNt8IvpD7Aq2bReccPN%2FxR1irBIz3H505cs7sjpEBlE5fr0t24NE45ze0Tc06EJUI9pSEb2X04yVKkESBaIOjAsDBMCjxbcddhxr8WGWh0KcTmaADsogQUpSDxVVjqojCD5d9TV1GP1l262X18964uIBq%2BeiZs%2BWXFa47VQ%2FaGn%2BAUa06cXdtH%2FKiS8NdaO0vWWpoD2OjoJdTYDTKz%2F3qqoS4iy5MrwaqfrbfcWSxHPLYcVoqagYCr6rXQeUxWV2pQoYQ2r4bZVgYOkLik09Cn5Y3PZGlh2tSco1sxjFyfT9mQNyUp%2BCCYOenBIbsgptP8egbyvMfkXVr1fVygRl0dRHybEUCaHCj2iBfzJrzVNR8Pva2kabO0YKyJxc5Wo71YY2VlwYyPUQsy5HcbtjnT6urVcShEOdOQT50gUXkfvtEzHULnotYCu%2B3axpGZwHzA4TKiVzAKqhCqkyWf3Y7Ze0%2BvZCp%2FVZkoC5LOdL3m704eY4Jt6HaNblFK2u3GJFGcH8UOLfwv33pakdvm%2BEP5LecImW4dVgr%2FZ2AXVrPYgDTXrUn4WizamPToz6073SARJTtnzIcXL%2BLpNMz%2Bt4cjD5zLikeDzyh0FQ7z3K0TwPqThN8sOJT736lsLLdb3v5ThVJPSL8FNDvJbjhWqVChTwP8JUirkpN4zMXJQ9lmMyuofC7YOsDCVY2Vie%2BsKlTP1W96q3D4CblFetmKJzjuccg510pBNYyPzI3JIx5g9oXEgOupTUmDSTMPTW564GOrEBfBIqpcYP4qvf7HdGLOCYgX8P5T9%2BLnl8mG%2Bw42PGDPoFSN8VxBVqrYEhuE3gXDKmSp12AuK6WKI3Awwo%2BHpVETu9llEvfDZOC510uIfqjaHVwNgJjuA4xOP9I9yKAwR43tkCl8KfV1UiSy2W%2B67BUjTf%2FVljaHtszk%2BrZmf4Nzet9gCFNHAOVFwoZbRtW%2F6BMoR%2FREkBdzPfLt%2FUhZuKSDq3f4aIq492bxYW6RkOfhgq\\u0026X-Amz-Algorithm=AWS4-HMAC-SHA256\\u0026X-Amz-Credential=ASIA2Y4XJPKEU6FSY2ZI%2F20240301%2Fus-east-1%2Fs3%2Faws4_request\\u0026X-Amz-SignedHeaders=host\\u0026X-Amz-Signature=b5373c37769f71c6b3793d2793f710c13bf52db7aa72803f58a71334ae1db3b7\"\n        },\n        \"template\": {\n            \"key\": \"6012dd37-b9c3-40c8-b859-a625627e12b0\",\n            \"data\": {\n                \"company_name\": \"ngrok company\",\n                \"company_document\": \"30.338.337/0001-74\",\n                \"company_address\": \"rua da empresa, 48, Sala 5, bairro, Cidade Camocim-CE, CEP: 56328130\",\n                \"customer_name\": \"Nome do cliente\",\n                \"customer_document\": \"065.503.400-55\",\n                \"customer_address\": \"Rua do cliente, 323, Sala 5, bairro do cliente, Cidade Petrolina-PE, CEP: 56328130\",\n                \"first_witness_name\": \"Primeiro Signatario do escritorio\",\n                \"first_witness_document\": \"000.000.000-00\",\n                \"second_witness_name\": \"Segindo Signatario do escritorio\",\n                \"second_witness_document\": \"078.897.595-17\"\n            }\n        },\n        \"signers\": [],\n        \"events\": [\n            {\n                \"name\": \"upload\",\n                \"data\": {\n                    \"user\": {\n                        \"email\": \"contato@gmail.com\",\n                        \"name\": \"Pessoa X\"\n                    },\n                    \"account\": {\n                        \"key\": \"086cb16c-b824-4e23-b060-753de873e1b2\"\n                    },\n                    \"deadline_at\": \"2024-03-25T12:02:13.183-03:00\",\n                    \"auto_close\": true,\n                    \"locale\": \"pt-BR\"\n                },\n                \"occurred_at\": \"2024-02-24T15:02:13.401Z\"\n            }\n        ],\n        \"attachments\": [],\n        \"links\": {\n            \"self\": \"/accounts/10597/folders/6306985/documents/e1414da8-697b-474e-bd8e-2e433e0d9386\"\n        }\n    }\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{api}}/v1/tax-domicile/document/webhook?secret={{clicksign_secret_webhook}}",
+											"host": [
+												"{{api}}"
+											],
+											"path": [
+												"v1",
+												"tax-domicile",
+												"document",
+												"webhook"
+											],
+											"query": [
+												{
+													"key": "secret",
+													"value": "{{clicksign_secret_webhook}}"
+												}
+											]
+										}
+									},
+									"_postman_previewlanguage": null,
+									"header": null,
+									"cookie": [],
+									"body": null
+								},
+								{
+									"name": "SIGN",
+									"originalRequest": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "content-hmac",
+												"value": "sha256=2ebaa561da845a4e40a79ce78897790e761296bfac8b5bee5b1982f02d9662e3",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"event\": {\n        \"name\": \"sign\",\n        \"data\": {\n            \"signer\": {\n                \"sign_as\": \"sign\",\n                \"key\": \"eed95966-6d98-42e8-9aab-4c171713d003\",\n                \"email\": \"pessoa.x@gmail.com.br\",\n                \"name\": \"Nome do cliente\",\n                \"birthday\": null,\n                \"documentation\": null,\n                \"has_documentation\": false,\n                \"created_at\": \"2024-02-24T12:02:14.489-03:00\",\n                \"auths\": [\n                    \"email\"\n                ],\n                \"selfie_enabled\": false,\n                \"handwritten_enabled\": false,\n                \"official_document_enabled\": false,\n                \"liveness_enabled\": false,\n                \"facial_biometrics_enabled\": false,\n                \"communicate_by\": \"email\",\n                \"list_key\": \"1552b77e-289a-4a3e-9252-d79976ca97aa\",\n                \"url\": \"https://sandbox.clicksign.com/sign/731b60d4-179f-45db-91b0-6a70434f0cd1\",\n                \"address\": \"186.194.126.236\",\n                \"validation\": {\n                    \"status\": \"cpf_empty\",\n                    \"name\": \"Nome do cliente\"\n                },\n                \"selfie_name\": null,\n                \"selfie_hash\": null,\n                \"handwritten_hash\": null,\n                \"handwritten_name\": null,\n                \"official_document_front_hash\": null,\n                \"official_document_back_hash\": null,\n                \"official_front_name\": \"official_document_front_24 fev 2024, 12-05-21.png\",\n                \"official_back_name\": \"official_document_back_24 fev 2024, 12-05-21.png\",\n                \"read_receipts?\": false\n            },\n            \"secret_hmac\": null,\n            \"account\": {\n                \"key\": \"086cb16c-b824-4e23-b060-753de873e1b2\",\n                \"timestamp_signature_functionality\": false\n            },\n            \"log_version\": \"1.763.0\",\n            \"url\": \"https://sandbox.clicksign.com\"\n        },\n        \"occurred_at\": \"2024-02-24T12:05:21.460-03:00\"\n    },\n    \"document\": {\n        \"key\": \"e1414da8-697b-474e-bd8e-2e433e0d9386\",\n        \"account_key\": \"086cb16c-b824-4e23-b060-753de873e1b2\",\n        \"path\": \"/2024/02/24/06550340055-pessoa.x@gmail.com.br-60f55c0a-f8fd-4e00-8c7d-caf5db223b19.docx\",\n        \"filename\": \"06550340055-pessoa.x@gmail.com.br-60f55c0a-f8fd-4e00-8c7d-caf5db223b19.docx\",\n        \"uploaded_at\": \"2024-02-24T15:02:13.382Z\",\n        \"updated_at\": \"2024-02-24T15:05:21.432Z\",\n        \"finished_at\": null,\n        \"deadline_at\": \"2024-03-25T12:02:13.183-03:00\",\n        \"status\": \"running\",\n        \"auto_close\": true,\n        \"locale\": \"pt-BR\",\n        \"metadata\": {},\n        \"sequence_enabled\": false,\n        \"signable_group\": 2,\n        \"remind_interval\": null,\n        \"block_after_refusal\": true,\n        \"preview\": true,\n        \"downloads\": {\n            \"original_file_url\": \"https://clicksign-sandbox-content.s3.amazonaws.com/2024/02/24/15/02/13/6474f03e-be08-4bf7-969a-0633cd8aaec2/06550340055-pessoa.x%40gmail.com-60f55c0a-f8fd-4e00-8c7d-caf5db223b19.docx?X-Amz-Expires=299\\u0026X-Amz-Date=20240224T150522Z\\u0026X-Amz-Security-Token=IQoJb3JpZ2luX2VjEKb%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLWVhc3QtMSJHMEUCIQC5BF%2FUB44MhqZtyNhhz9rXAYSmCNUI%2Bp%2FAjaujf3J9yQIgTVM%2Fpe7MxfkG8ylIu3N4qI7InHG%2FkPECxw2O6FZ97MUqwgUIjv%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARADGgw3NDA2NjIyNzg3OTMiDHCFE04%2F9W8rBIBAAyqWBZ3I9%2F5LfDZN0jTk6LVWrD35QXhAN7Yz2VYplzmdPS%2BFtn4vfhusus8ZV7AHNifsiMkg2QGg127H43N1ga1UU9CtVMVfn%2F%2BuCmLFSFc5Sj%2BeE%2F%2F%2FW7skCGbs1VaJqNt8IvpD7Aq2bReccPN%2FxR1irBIz3H505cs7sjpEBlE5fr0t24NE45ze0Tc06EJUI9pSEb2X04yVKkESBaIOjAsDBMCjxbcddhxr8WGWh0KcTmaADsogQUpSDxVVjqojCD5d9TV1GP1l262X18964uIBq%2BeiZs%2BWXFa47VQ%2FaGn%2BAUa06cXdtH%2FKiS8NdaO0vWWpoD2OjoJdTYDTKz%2F3qqoS4iy5MrwaqfrbfcWSxHPLYcVoqagYCr6rXQeUxWV2pQoYQ2r4bZVgYOkLik09Cn5Y3PZGlh2tSco1sxjFyfT9mQNyUp%2BCCYOenBIbsgptP8egbyvMfkXVr1fVygRl0dRHybEUCaHCj2iBfzJrzVNR8Pva2kabO0YKyJxc5Wo71YY2VlwYyPUQsy5HcbtjnT6urVcShEOdOQT50gUXkfvtEzHULnotYCu%2B3axpGZwHzA4TKiVzAKqhCqkyWf3Y7Ze0%2BvZCp%2FVZkoC5LOdL3m704eY4Jt6HaNblFK2u3GJFGcH8UOLfwv33pakdvm%2BEP5LecImW4dVgr%2FZ2AXVrPYgDTXrUn4WizamPToz6073SARJTtnzIcXL%2BLpNMz%2Bt4cjD5zLikeDzyh0FQ7z3K0TwPqThN8sOJT736lsLLdb3v5ThVJPSL8FNDvJbjhWqVChTwP8JUirkpN4zMXJQ9lmMyuofC7YOsDCVY2Vie%2BsKlTP1W96q3D4CblFetmKJzjuccg510pBNYyPzI3JIx5g9oXEgOupTUmDSTMPTW564GOrEBfBIqpcYP4qvf7HdGLOCYgX8P5T9%2BLnl8mG%2Bw42PGDPoFSN8VxBVqrYEhuE3gXDKmSp12AuK6WKI3Awwo%2BHpVETu9llEvfDZOC510uIfqjaHVwNgJjuA4xOP9I9yKAwR43tkCl8KfV1UiSy2W%2B67BUjTf%2FVljaHtszk%2BrZmf4Nzet9gCFNHAOVFwoZbRtW%2F6BMoR%2FREkBdzPfLt%2FUhZuKSDq3f4aIq492bxYW6RkOfhgq\\u0026X-Amz-Algorithm=AWS4-HMAC-SHA256\\u0026X-Amz-Credential=ASIA2Y4XJPKE7J3D3ONX%2F20240224%2Fus-east-1%2Fs3%2Faws4_request\\u0026X-Amz-SignedHeaders=host\\u0026X-Amz-Signature=5618b5c5ba2fdb6833c7cf9e7d1fcf7e2d22d81a939be21eeb2564ee74a849f2\"\n        },\n        \"template\": {\n            \"key\": \"6012dd37-b9c3-40c8-b859-a625627e12b0\",\n            \"data\": {\n                \"company_name\": \"ngrok company\",\n                \"company_document\": \"30.338.337/0001-74\",\n                \"company_address\": \"rua da empresa, 48, Sala 5, bairro, Cidade Camocim-CE, CEP: 56328130\",\n                \"customer_name\": \"Nome do cliente\",\n                \"customer_document\": \"065.503.400-55\",\n                \"customer_address\": \"Rua do cliente, 323, Sala 5, bairro do cliente, Cidade Petrolina-PE, CEP: 56328130\",\n                \"first_witness_name\": \"Primeiro Signatario do escritorio\",\n                \"first_witness_document\": \"000.000.000-00\",\n                \"second_witness_name\": \"Segindo Signatario do escritorio\",\n                \"second_witness_document\": \"078.897.595-17\"\n            }\n        },\n        \"signers\": [\n            {\n                \"list_key\": \"1552b77e-289a-4a3e-9252-d79976ca97aa\",\n                \"key\": \"eed95966-6d98-42e8-9aab-4c171713d003\",\n                \"request_signature_key\": \"731b60d4-179f-45db-91b0-6a70434f0cd1\",\n                \"email\": \"pessoa.x@gmail.com.br\",\n                \"name\": \"Nome do cliente\",\n                \"has_documentation\": false,\n                \"documentation\": null,\n                \"birthday\": null,\n                \"phone_number\": \"87999999999\",\n                \"sign_as\": \"sign\",\n                \"delivery\": \"email\",\n                \"refusable\": false,\n                \"url\": \"https://sandbox.clicksign.com/sign/731b60d4-179f-45db-91b0-6a70434f0cd1\",\n                \"auths\": [\n                    \"email\"\n                ],\n                \"created_at\": \"2024-02-24T15:02:14.489Z\",\n                \"signature\": {\n                    \"name\": \"Nome do cliente\",\n                    \"email\": \"pessoa.x@gmail.com.br\",\n                    \"birthday\": null,\n                    \"documentation\": null,\n                    \"validation\": {\n                        \"status\": \"cpf_empty\",\n                        \"name\": \"Nome do cliente\"\n                    },\n                    \"ip_address\": \"186.194.126.236\",\n                    \"signed_at\": \"2024-02-24T15:05:21.353Z\",\n                    \"sign_as\": \"sign\"\n                }\n            },\n            {\n                \"list_key\": \"11e6e6b9-645f-4665-8bad-ee7191f37a43\",\n                \"key\": \"d4852443-8caa-4f30-a583-11a105b234f7\",\n                \"request_signature_key\": \"f45eb7d2-6ba4-48f8-9bdf-8f921b96e4d0\",\n                \"email\": \"1.office@teste.com.br\",\n                \"name\": \"Primeiro Signatario do escritorio\",\n                \"has_documentation\": false,\n                \"documentation\": null,\n                \"birthday\": null,\n                \"phone_number\": \"87999999999\",\n                \"sign_as\": \"witness\",\n                \"delivery\": \"email\",\n                \"refusable\": false,\n                \"url\": \"https://sandbox.clicksign.com/sign/f45eb7d2-6ba4-48f8-9bdf-8f921b96e4d0\",\n                \"auths\": [\n                    \"api\"\n                ],\n                \"created_at\": \"2024-02-24T14:22:10.156Z\"\n            },\n            {\n                \"list_key\": \"053609f4-a85a-468b-97ac-757c3ffaf27f\",\n                \"key\": \"f6ac79a4-9632-435f-bcb0-6d7d0e5bd53d\",\n                \"request_signature_key\": \"682ba383-54c8-43db-ab7c-5e49a797fbeb\",\n                \"email\": \"2.office@teste.com.br\",\n                \"name\": \"Segindo Signatario do escritorio\",\n                \"has_documentation\": false,\n                \"documentation\": null,\n                \"birthday\": null,\n                \"phone_number\": \"87999999999\",\n                \"sign_as\": \"witness\",\n                \"delivery\": \"email\",\n                \"refusable\": false,\n                \"url\": \"https://sandbox.clicksign.com/sign/682ba383-54c8-43db-ab7c-5e49a797fbeb\",\n                \"auths\": [\n                    \"api\"\n                ],\n                \"created_at\": \"2024-02-24T14:22:36.389Z\"\n            },\n            {\n                \"list_key\": \"b0a2a13c-8d20-44ed-989b-06b3625d1896\",\n                \"key\": \"8b7084ae-0e37-463f-951c-ed3dc0557b9f\",\n                \"request_signature_key\": \"13c1c955-cd40-4b54-87f9-2d6c12ec84d4\",\n                \"email\": \"josue@teste.com.br\",\n                \"name\": \"Pessoa X\",\n                \"has_documentation\": false,\n                \"documentation\": null,\n                \"birthday\": null,\n                \"phone_number\": \"87999999999\",\n                \"sign_as\": \"sign\",\n                \"delivery\": \"email\",\n                \"refusable\": false,\n                \"url\": \"https://sandbox.clicksign.com/sign/13c1c955-cd40-4b54-87f9-2d6c12ec84d4\",\n                \"auths\": [\n                    \"api\"\n                ],\n                \"created_at\": \"2024-02-22T22:52:27.684Z\"\n            }\n        ],\n        \"events\": [\n            {\n                \"name\": \"sign\",\n                \"data\": {\n                    \"signer\": {\n                        \"sign_as\": \"sign\",\n                        \"key\": \"eed95966-6d98-42e8-9aab-4c171713d003\",\n                        \"email\": \"pessoa.x@gmail.com.br\",\n                        \"name\": \"Nome do cliente\",\n                        \"birthday\": null,\n                        \"documentation\": null,\n                        \"has_documentation\": false,\n                        \"created_at\": \"2024-02-24T12:02:14.489-03:00\",\n                        \"auths\": [\n                            \"email\"\n                        ],\n                        \"selfie_enabled\": false,\n                        \"handwritten_enabled\": false,\n                        \"official_document_enabled\": false,\n                        \"liveness_enabled\": false,\n                        \"facial_biometrics_enabled\": false,\n                        \"communicate_by\": \"email\",\n                        \"list_key\": \"1552b77e-289a-4a3e-9252-d79976ca97aa\",\n                        \"url\": \"https://sandbox.clicksign.com/sign/731b60d4-179f-45db-91b0-6a70434f0cd1\",\n                        \"address\": \"186.194.126.236\",\n                        \"validation\": {\n                            \"status\": \"cpf_empty\",\n                            \"name\": \"Nome do cliente\"\n                        },\n                        \"selfie_name\": null,\n                        \"selfie_hash\": null,\n                        \"handwritten_hash\": null,\n                        \"handwritten_name\": null,\n                        \"official_document_front_hash\": null,\n                        \"official_document_back_hash\": null,\n                        \"official_front_name\": \"official_document_front_24 fev 2024, 12-05-21.png\",\n                        \"official_back_name\": \"official_document_back_24 fev 2024, 12-05-21.png\",\n                        \"read_receipts?\": false\n                    },\n                    \"secret_hmac\": null,\n                    \"account\": {\n                        \"key\": \"086cb16c-b824-4e23-b060-753de873e1b2\",\n                        \"timestamp_signature_functionality\": false\n                    },\n                    \"log_version\": \"1.763.0\",\n                    \"url\": \"https://sandbox.clicksign.com\"\n                },\n                \"occurred_at\": \"2024-02-24T15:05:21.460Z\"\n            },\n            {\n                \"name\": \"add_signer\",\n                \"data\": {\n                    \"user\": {\n                        \"email\": \"contato@gmail.com\",\n                        \"name\": \"Pessoa X\"\n                    },\n                    \"account\": {\n                        \"key\": \"086cb16c-b824-4e23-b060-753de873e1b2\"\n                    },\n                    \"signers\": [\n                        {\n                            \"sign_as\": \"sign\",\n                            \"key\": \"8b7084ae-0e37-463f-951c-ed3dc0557b9f\",\n                            \"email\": \"josue@teste.com.br\",\n                            \"name\": \"Pessoa X\",\n                            \"birthday\": null,\n                            \"documentation\": null,\n                            \"has_documentation\": false,\n                            \"created_at\": \"2024-02-22T19:52:27.684-03:00\",\n                            \"auths\": [\n                                \"api\"\n                            ],\n                            \"selfie_enabled\": false,\n                            \"handwritten_enabled\": false,\n                            \"official_document_enabled\": false,\n                            \"liveness_enabled\": false,\n                            \"facial_biometrics_enabled\": false,\n                            \"communicate_by\": \"email\",\n                            \"list_key\": \"b0a2a13c-8d20-44ed-989b-06b3625d1896\",\n                            \"url\": \"https://sandbox.clicksign.com/sign/8b7084ae-0e37-463f-951c-ed3dc0557b9f\",\n                            \"read_receipts?\": false\n                        }\n                    ]\n                },\n                \"occurred_at\": \"2024-02-24T15:02:18.606Z\"\n            },\n            {\n                \"name\": \"add_signer\",\n                \"data\": {\n                    \"user\": {\n                        \"email\": \"contato@gmail.com\",\n                        \"name\": \"Pessoa X\"\n                    },\n                    \"account\": {\n                        \"key\": \"086cb16c-b824-4e23-b060-753de873e1b2\"\n                    },\n                    \"signers\": [\n                        {\n                            \"sign_as\": \"witness\",\n                            \"key\": \"f6ac79a4-9632-435f-bcb0-6d7d0e5bd53d\",\n                            \"email\": \"2.office@teste.com.br\",\n                            \"name\": \"Segindo Signatario do escritorio\",\n                            \"birthday\": null,\n                            \"documentation\": null,\n                            \"has_documentation\": false,\n                            \"created_at\": \"2024-02-24T11:22:36.389-03:00\",\n                            \"auths\": [\n                                \"api\"\n                            ],\n                            \"selfie_enabled\": false,\n                            \"handwritten_enabled\": false,\n                            \"official_document_enabled\": false,\n                            \"liveness_enabled\": false,\n                            \"facial_biometrics_enabled\": false,\n                            \"communicate_by\": \"email\",\n                            \"list_key\": \"053609f4-a85a-468b-97ac-757c3ffaf27f\",\n                            \"url\": \"https://sandbox.clicksign.com/sign/f6ac79a4-9632-435f-bcb0-6d7d0e5bd53d\",\n                            \"read_receipts?\": false\n                        }\n                    ]\n                },\n                \"occurred_at\": \"2024-02-24T15:02:17.577Z\"\n            },\n            {\n                \"name\": \"add_signer\",\n                \"data\": {\n                    \"user\": {\n                        \"email\": \"contato@gmail.com\",\n                        \"name\": \"Pessoa X\"\n                    },\n                    \"account\": {\n                        \"key\": \"086cb16c-b824-4e23-b060-753de873e1b2\"\n                    },\n                    \"signers\": [\n                        {\n                            \"sign_as\": \"witness\",\n                            \"key\": \"d4852443-8caa-4f30-a583-11a105b234f7\",\n                            \"email\": \"1.office@teste.com.br\",\n                            \"name\": \"Primeiro Signatario do escritorio\",\n                            \"birthday\": null,\n                            \"documentation\": null,\n                            \"has_documentation\": false,\n                            \"created_at\": \"2024-02-24T11:22:10.156-03:00\",\n                            \"auths\": [\n                                \"api\"\n                            ],\n                            \"selfie_enabled\": false,\n                            \"handwritten_enabled\": false,\n                            \"official_document_enabled\": false,\n                            \"liveness_enabled\": false,\n                            \"facial_biometrics_enabled\": false,\n                            \"communicate_by\": \"email\",\n                            \"list_key\": \"11e6e6b9-645f-4665-8bad-ee7191f37a43\",\n                            \"url\": \"https://sandbox.clicksign.com/sign/d4852443-8caa-4f30-a583-11a105b234f7\",\n                            \"read_receipts?\": false\n                        }\n                    ]\n                },\n                \"occurred_at\": \"2024-02-24T15:02:16.557Z\"\n            },\n            {\n                \"name\": \"add_signer\",\n                \"data\": {\n                    \"user\": {\n                        \"email\": \"contato@gmail.com\",\n                        \"name\": \"Pessoa X\"\n                    },\n                    \"account\": {\n                        \"key\": \"086cb16c-b824-4e23-b060-753de873e1b2\"\n                    },\n                    \"signers\": [\n                        {\n                            \"sign_as\": \"sign\",\n                            \"key\": \"eed95966-6d98-42e8-9aab-4c171713d003\",\n                            \"email\": \"pessoa.x@gmail.com.br\",\n                            \"name\": \"Nome do cliente\",\n                            \"birthday\": null,\n                            \"documentation\": null,\n                            \"has_documentation\": false,\n                            \"created_at\": \"2024-02-24T12:02:14.489-03:00\",\n                            \"auths\": [\n                                \"email\"\n                            ],\n                            \"selfie_enabled\": false,\n                            \"handwritten_enabled\": false,\n                            \"official_document_enabled\": false,\n                            \"liveness_enabled\": false,\n                            \"facial_biometrics_enabled\": false,\n                            \"communicate_by\": \"email\",\n                            \"list_key\": \"1552b77e-289a-4a3e-9252-d79976ca97aa\",\n                            \"url\": \"https://sandbox.clicksign.com/sign/eed95966-6d98-42e8-9aab-4c171713d003\",\n                            \"read_receipts?\": false\n                        }\n                    ]\n                },\n                \"occurred_at\": \"2024-02-24T15:02:15.505Z\"\n            },\n            {\n                \"name\": \"upload\",\n                \"data\": {\n                    \"user\": {\n                        \"email\": \"contato@gmail.com\",\n                        \"name\": \"Pessoa X\"\n                    },\n                    \"account\": {\n                        \"key\": \"086cb16c-b824-4e23-b060-753de873e1b2\"\n                    },\n                    \"deadline_at\": \"2024-03-25T12:02:13.183-03:00\",\n                    \"auto_close\": true,\n                    \"locale\": \"pt-BR\"\n                },\n                \"occurred_at\": \"2024-02-24T15:02:13.401Z\"\n            }\n        ],\n        \"attachments\": [],\n        \"links\": {\n            \"self\": \"/accounts/10597/folders/6306985/documents/e1414da8-697b-474e-bd8e-2e433e0d9386\"\n        }\n    }\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{api}}/v1/tax-domicile/document/webhook?secret={{clicksign_secret_webhook}}",
+											"host": [
+												"{{api}}"
+											],
+											"path": [
+												"v1",
+												"tax-domicile",
+												"document",
+												"webhook"
+											],
+											"query": [
+												{
+													"key": "secret",
+													"value": "{{clicksign_secret_webhook}}"
+												}
+											]
+										}
+									},
+									"_postman_previewlanguage": null,
+									"header": null,
+									"cookie": [],
+									"body": null
+								},
+								{
+									"name": "CLOSE",
+									"originalRequest": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "content-hmac",
+												"value": "sha256=2ebaa561da845a4e40a79ce78897790e761296bfac8b5bee5b1982f02d9662e3",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"event\": {\n        \"name\": \"close\",\n        \"data\": {\n            \"user\": {\n                \"email\": \"contato@gmail.com\",\n                \"name\": \"Pessoa X\"\n            },\n            \"account\": {\n                \"key\": \"086cb16c-b824-4e23-b060-753de873e1b2\"\n            }\n        },\n        \"occurred_at\": \"2024-02-24T12:06:01.972-03:00\"\n    },\n    \"document\": {\n        \"key\": \"e1414da8-697b-474e-bd8e-2e433e0d9386\",\n        \"account_key\": \"086cb16c-b824-4e23-b060-753de873e1b2\",\n        \"path\": \"/2024/02/24/06550340055-pessoa.x@gmail.com.br-60f55c0a-f8fd-4e00-8c7d-caf5db223b19.docx\",\n        \"filename\": \"06550340055-pessoa.x@gmail.com.br-60f55c0a-f8fd-4e00-8c7d-caf5db223b19.docx\",\n        \"uploaded_at\": \"2024-02-24T15:02:13.382Z\",\n        \"updated_at\": \"2024-02-24T15:06:01.939Z\",\n        \"finished_at\": \"2024-02-24T15:06:01.747Z\",\n        \"deadline_at\": \"2024-03-25T12:02:13.183-03:00\",\n        \"status\": \"closed\",\n        \"auto_close\": true,\n        \"locale\": \"pt-BR\",\n        \"metadata\": {},\n        \"sequence_enabled\": false,\n        \"signable_group\": 2,\n        \"remind_interval\": null,\n        \"block_after_refusal\": true,\n        \"preview\": true,\n        \"downloads\": {\n            \"original_file_url\": \"https://clicksign-sandbox-content.s3.amazonaws.com/2024/02/24/15/02/13/6474f03e-be08-4bf7-969a-0633cd8aaec2/06550340055-pessoa.x%40gmail.com-60f55c0a-f8fd-4e00-8c7d-caf5db223b19.docx?X-Amz-Expires=300\\u0026X-Amz-Date=20240224T150602Z\\u0026X-Amz-Security-Token=IQoJb3JpZ2luX2VjEKb%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLWVhc3QtMSJHMEUCIQC5BF%2FUB44MhqZtyNhhz9rXAYSmCNUI%2Bp%2FAjaujf3J9yQIgTVM%2Fpe7MxfkG8ylIu3N4qI7InHG%2FkPECxw2O6FZ97MUqwgUIjv%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARADGgw3NDA2NjIyNzg3OTMiDHCFE04%2F9W8rBIBAAyqWBZ3I9%2F5LfDZN0jTk6LVWrD35QXhAN7Yz2VYplzmdPS%2BFtn4vfhusus8ZV7AHNifsiMkg2QGg127H43N1ga1UU9CtVMVfn%2F%2BuCmLFSFc5Sj%2BeE%2F%2F%2FW7skCGbs1VaJqNt8IvpD7Aq2bReccPN%2FxR1irBIz3H505cs7sjpEBlE5fr0t24NE45ze0Tc06EJUI9pSEb2X04yVKkESBaIOjAsDBMCjxbcddhxr8WGWh0KcTmaADsogQUpSDxVVjqojCD5d9TV1GP1l262X18964uIBq%2BeiZs%2BWXFa47VQ%2FaGn%2BAUa06cXdtH%2FKiS8NdaO0vWWpoD2OjoJdTYDTKz%2F3qqoS4iy5MrwaqfrbfcWSxHPLYcVoqagYCr6rXQeUxWV2pQoYQ2r4bZVgYOkLik09Cn5Y3PZGlh2tSco1sxjFyfT9mQNyUp%2BCCYOenBIbsgptP8egbyvMfkXVr1fVygRl0dRHybEUCaHCj2iBfzJrzVNR8Pva2kabO0YKyJxc5Wo71YY2VlwYyPUQsy5HcbtjnT6urVcShEOdOQT50gUXkfvtEzHULnotYCu%2B3axpGZwHzA4TKiVzAKqhCqkyWf3Y7Ze0%2BvZCp%2FVZkoC5LOdL3m704eY4Jt6HaNblFK2u3GJFGcH8UOLfwv33pakdvm%2BEP5LecImW4dVgr%2FZ2AXVrPYgDTXrUn4WizamPToz6073SARJTtnzIcXL%2BLpNMz%2Bt4cjD5zLikeDzyh0FQ7z3K0TwPqThN8sOJT736lsLLdb3v5ThVJPSL8FNDvJbjhWqVChTwP8JUirkpN4zMXJQ9lmMyuofC7YOsDCVY2Vie%2BsKlTP1W96q3D4CblFetmKJzjuccg510pBNYyPzI3JIx5g9oXEgOupTUmDSTMPTW564GOrEBfBIqpcYP4qvf7HdGLOCYgX8P5T9%2BLnl8mG%2Bw42PGDPoFSN8VxBVqrYEhuE3gXDKmSp12AuK6WKI3Awwo%2BHpVETu9llEvfDZOC510uIfqjaHVwNgJjuA4xOP9I9yKAwR43tkCl8KfV1UiSy2W%2B67BUjTf%2FVljaHtszk%2BrZmf4Nzet9gCFNHAOVFwoZbRtW%2F6BMoR%2FREkBdzPfLt%2FUhZuKSDq3f4aIq492bxYW6RkOfhgq\\u0026X-Amz-Algorithm=AWS4-HMAC-SHA256\\u0026X-Amz-Credential=ASIA2Y4XJPKE7J3D3ONX%2F20240224%2Fus-east-1%2Fs3%2Faws4_request\\u0026X-Amz-SignedHeaders=host\\u0026X-Amz-Signature=98116fcfb9a052f5f90109816045c5ae881a487ae695cb66761720514c665707\"\n        },\n        \"template\": {\n            \"key\": \"6012dd37-b9c3-40c8-b859-a625627e12b0\",\n            \"data\": {\n                \"company_name\": \"ngrok company\",\n                \"company_document\": \"30.338.337/0001-74\",\n                \"company_address\": \"rua da empresa, 48, Sala 5, bairro, Cidade Camocim-CE, CEP: 56328130\",\n                \"customer_name\": \"Nome do cliente\",\n                \"customer_document\": \"065.503.400-55\",\n                \"customer_address\": \"Rua do cliente, 323, Sala 5, bairro do cliente, Cidade Petrolina-PE, CEP: 56328130\",\n                \"first_witness_name\": \"Primeiro Signatario do escritorio\",\n                \"first_witness_document\": \"000.000.000-00\",\n                \"second_witness_name\": \"Segindo Signatario do escritorio\",\n                \"second_witness_document\": \"078.897.595-17\"\n            }\n        },\n        \"signers\": [\n            {\n                \"list_key\": \"1552b77e-289a-4a3e-9252-d79976ca97aa\",\n                \"key\": \"eed95966-6d98-42e8-9aab-4c171713d003\",\n                \"request_signature_key\": \"731b60d4-179f-45db-91b0-6a70434f0cd1\",\n                \"email\": \"pessoa.x@gmail.com.br\",\n                \"name\": \"Nome do cliente\",\n                \"has_documentation\": false,\n                \"documentation\": null,\n                \"birthday\": null,\n                \"phone_number\": \"87999999999\",\n                \"sign_as\": \"sign\",\n                \"delivery\": \"email\",\n                \"refusable\": false,\n                \"url\": \"https://sandbox.clicksign.com/sign/731b60d4-179f-45db-91b0-6a70434f0cd1\",\n                \"auths\": [\n                    \"email\"\n                ],\n                \"created_at\": \"2024-02-24T15:02:14.489Z\",\n                \"signature\": {\n                    \"name\": \"Nome do cliente\",\n                    \"email\": \"pessoa.x@gmail.com.br\",\n                    \"birthday\": null,\n                    \"documentation\": null,\n                    \"validation\": {\n                        \"status\": \"cpf_empty\",\n                        \"name\": \"Nome do cliente\"\n                    },\n                    \"ip_address\": \"186.194.126.236\",\n                    \"signed_at\": \"2024-02-24T15:05:21.353Z\",\n                    \"sign_as\": \"sign\"\n                }\n            },\n            {\n                \"list_key\": \"11e6e6b9-645f-4665-8bad-ee7191f37a43\",\n                \"key\": \"d4852443-8caa-4f30-a583-11a105b234f7\",\n                \"request_signature_key\": \"f45eb7d2-6ba4-48f8-9bdf-8f921b96e4d0\",\n                \"email\": \"1.office@teste.com.br\",\n                \"name\": \"Primeiro Signatario do escritorio\",\n                \"has_documentation\": false,\n                \"documentation\": null,\n                \"birthday\": null,\n                \"phone_number\": \"87999999999\",\n                \"sign_as\": \"witness\",\n                \"delivery\": \"email\",\n                \"refusable\": false,\n                \"url\": \"https://sandbox.clicksign.com/sign/f45eb7d2-6ba4-48f8-9bdf-8f921b96e4d0\",\n                \"auths\": [\n                    \"api\"\n                ],\n                \"created_at\": \"2024-02-24T14:22:10.156Z\"\n            },\n            {\n                \"list_key\": \"053609f4-a85a-468b-97ac-757c3ffaf27f\",\n                \"key\": \"f6ac79a4-9632-435f-bcb0-6d7d0e5bd53d\",\n                \"request_signature_key\": \"682ba383-54c8-43db-ab7c-5e49a797fbeb\",\n                \"email\": \"2.office@teste.com.br\",\n                \"name\": \"Segindo Signatario do escritorio\",\n                \"has_documentation\": false,\n                \"documentation\": null,\n                \"birthday\": null,\n                \"phone_number\": \"87999999999\",\n                \"sign_as\": \"witness\",\n                \"delivery\": \"email\",\n                \"refusable\": false,\n                \"url\": \"https://sandbox.clicksign.com/sign/682ba383-54c8-43db-ab7c-5e49a797fbeb\",\n                \"auths\": [\n                    \"api\"\n                ],\n                \"created_at\": \"2024-02-24T14:22:36.389Z\"\n            },\n            {\n                \"list_key\": \"b0a2a13c-8d20-44ed-989b-06b3625d1896\",\n                \"key\": \"8b7084ae-0e37-463f-951c-ed3dc0557b9f\",\n                \"request_signature_key\": \"13c1c955-cd40-4b54-87f9-2d6c12ec84d4\",\n                \"email\": \"josue@teste.com.br\",\n                \"name\": \"Pessoa X\",\n                \"has_documentation\": false,\n                \"documentation\": null,\n                \"birthday\": null,\n                \"phone_number\": \"87999999999\",\n                \"sign_as\": \"sign\",\n                \"delivery\": \"email\",\n                \"refusable\": false,\n                \"url\": \"https://sandbox.clicksign.com/sign/13c1c955-cd40-4b54-87f9-2d6c12ec84d4\",\n                \"auths\": [\n                    \"api\"\n                ],\n                \"created_at\": \"2024-02-22T22:52:27.684Z\"\n            }\n        ],\n        \"events\": [\n            {\n                \"name\": \"close\",\n                \"data\": {\n                    \"user\": {\n                        \"email\": \"contato@gmail.com\",\n                        \"name\": \"Pessoa X\"\n                    },\n                    \"account\": {\n                        \"key\": \"086cb16c-b824-4e23-b060-753de873e1b2\"\n                    }\n                },\n                \"occurred_at\": \"2024-02-24T15:06:01.972Z\"\n            },\n            {\n                \"name\": \"sign\",\n                \"data\": {\n                    \"signer\": {\n                        \"sign_as\": \"sign\",\n                        \"key\": \"eed95966-6d98-42e8-9aab-4c171713d003\",\n                        \"email\": \"pessoa.x@gmail.com.br\",\n                        \"name\": \"Nome do cliente\",\n                        \"birthday\": null,\n                        \"documentation\": null,\n                        \"has_documentation\": false,\n                        \"created_at\": \"2024-02-24T12:02:14.489-03:00\",\n                        \"auths\": [\n                            \"email\"\n                        ],\n                        \"selfie_enabled\": false,\n                        \"handwritten_enabled\": false,\n                        \"official_document_enabled\": false,\n                        \"liveness_enabled\": false,\n                        \"facial_biometrics_enabled\": false,\n                        \"communicate_by\": \"email\",\n                        \"list_key\": \"1552b77e-289a-4a3e-9252-d79976ca97aa\",\n                        \"url\": \"https://sandbox.clicksign.com/sign/731b60d4-179f-45db-91b0-6a70434f0cd1\",\n                        \"address\": \"186.194.126.236\",\n                        \"validation\": {\n                            \"status\": \"cpf_empty\",\n                            \"name\": \"Nome do cliente\"\n                        },\n                        \"selfie_name\": null,\n                        \"selfie_hash\": null,\n                        \"handwritten_hash\": null,\n                        \"handwritten_name\": null,\n                        \"official_document_front_hash\": null,\n                        \"official_document_back_hash\": null,\n                        \"official_front_name\": \"official_document_front_24 fev 2024, 12-05-21.png\",\n                        \"official_back_name\": \"official_document_back_24 fev 2024, 12-05-21.png\",\n                        \"read_receipts?\": false\n                    },\n                    \"secret_hmac\": null,\n                    \"account\": {\n                        \"key\": \"086cb16c-b824-4e23-b060-753de873e1b2\",\n                        \"timestamp_signature_functionality\": false\n                    },\n                    \"log_version\": \"1.763.0\",\n                    \"url\": \"https://sandbox.clicksign.com\"\n                },\n                \"occurred_at\": \"2024-02-24T15:05:21.460Z\"\n            },\n            {\n                \"name\": \"add_signer\",\n                \"data\": {\n                    \"user\": {\n                        \"email\": \"contato@gmail.com\",\n                        \"name\": \"Pessoa X\"\n                    },\n                    \"account\": {\n                        \"key\": \"086cb16c-b824-4e23-b060-753de873e1b2\"\n                    },\n                    \"signers\": [\n                        {\n                            \"sign_as\": \"sign\",\n                            \"key\": \"8b7084ae-0e37-463f-951c-ed3dc0557b9f\",\n                            \"email\": \"josue@teste.com.br\",\n                            \"name\": \"Pessoa X\",\n                            \"birthday\": null,\n                            \"documentation\": null,\n                            \"has_documentation\": false,\n                            \"created_at\": \"2024-02-22T19:52:27.684-03:00\",\n                            \"auths\": [\n                                \"api\"\n                            ],\n                            \"selfie_enabled\": false,\n                            \"handwritten_enabled\": false,\n                            \"official_document_enabled\": false,\n                            \"liveness_enabled\": false,\n                            \"facial_biometrics_enabled\": false,\n                            \"communicate_by\": \"email\",\n                            \"list_key\": \"b0a2a13c-8d20-44ed-989b-06b3625d1896\",\n                            \"url\": \"https://sandbox.clicksign.com/sign/8b7084ae-0e37-463f-951c-ed3dc0557b9f\",\n                            \"read_receipts?\": false\n                        }\n                    ]\n                },\n                \"occurred_at\": \"2024-02-24T15:02:18.606Z\"\n            },\n            {\n                \"name\": \"add_signer\",\n                \"data\": {\n                    \"user\": {\n                        \"email\": \"contato@gmail.com\",\n                        \"name\": \"Pessoa X\"\n                    },\n                    \"account\": {\n                        \"key\": \"086cb16c-b824-4e23-b060-753de873e1b2\"\n                    },\n                    \"signers\": [\n                        {\n                            \"sign_as\": \"witness\",\n                            \"key\": \"f6ac79a4-9632-435f-bcb0-6d7d0e5bd53d\",\n                            \"email\": \"2.office@teste.com.br\",\n                            \"name\": \"Segindo Signatario do escritorio\",\n                            \"birthday\": null,\n                            \"documentation\": null,\n                            \"has_documentation\": false,\n                            \"created_at\": \"2024-02-24T11:22:36.389-03:00\",\n                            \"auths\": [\n                                \"api\"\n                            ],\n                            \"selfie_enabled\": false,\n                            \"handwritten_enabled\": false,\n                            \"official_document_enabled\": false,\n                            \"liveness_enabled\": false,\n                            \"facial_biometrics_enabled\": false,\n                            \"communicate_by\": \"email\",\n                            \"list_key\": \"053609f4-a85a-468b-97ac-757c3ffaf27f\",\n                            \"url\": \"https://sandbox.clicksign.com/sign/f6ac79a4-9632-435f-bcb0-6d7d0e5bd53d\",\n                            \"read_receipts?\": false\n                        }\n                    ]\n                },\n                \"occurred_at\": \"2024-02-24T15:02:17.577Z\"\n            },\n            {\n                \"name\": \"add_signer\",\n                \"data\": {\n                    \"user\": {\n                        \"email\": \"contato@gmail.com\",\n                        \"name\": \"Pessoa X\"\n                    },\n                    \"account\": {\n                        \"key\": \"086cb16c-b824-4e23-b060-753de873e1b2\"\n                    },\n                    \"signers\": [\n                        {\n                            \"sign_as\": \"witness\",\n                            \"key\": \"d4852443-8caa-4f30-a583-11a105b234f7\",\n                            \"email\": \"1.office@teste.com.br\",\n                            \"name\": \"Primeiro Signatario do escritorio\",\n                            \"birthday\": null,\n                            \"documentation\": null,\n                            \"has_documentation\": false,\n                            \"created_at\": \"2024-02-24T11:22:10.156-03:00\",\n                            \"auths\": [\n                                \"api\"\n                            ],\n                            \"selfie_enabled\": false,\n                            \"handwritten_enabled\": false,\n                            \"official_document_enabled\": false,\n                            \"liveness_enabled\": false,\n                            \"facial_biometrics_enabled\": false,\n                            \"communicate_by\": \"email\",\n                            \"list_key\": \"11e6e6b9-645f-4665-8bad-ee7191f37a43\",\n                            \"url\": \"https://sandbox.clicksign.com/sign/d4852443-8caa-4f30-a583-11a105b234f7\",\n                            \"read_receipts?\": false\n                        }\n                    ]\n                },\n                \"occurred_at\": \"2024-02-24T15:02:16.557Z\"\n            },\n            {\n                \"name\": \"add_signer\",\n                \"data\": {\n                    \"user\": {\n                        \"email\": \"contato@gmail.com\",\n                        \"name\": \"Pessoa X\"\n                    },\n                    \"account\": {\n                        \"key\": \"086cb16c-b824-4e23-b060-753de873e1b2\"\n                    },\n                    \"signers\": [\n                        {\n                            \"sign_as\": \"sign\",\n                            \"key\": \"eed95966-6d98-42e8-9aab-4c171713d003\",\n                            \"email\": \"pessoa.x@gmail.com.br\",\n                            \"name\": \"Nome do cliente\",\n                            \"birthday\": null,\n                            \"documentation\": null,\n                            \"has_documentation\": false,\n                            \"created_at\": \"2024-02-24T12:02:14.489-03:00\",\n                            \"auths\": [\n                                \"email\"\n                            ],\n                            \"selfie_enabled\": false,\n                            \"handwritten_enabled\": false,\n                            \"official_document_enabled\": false,\n                            \"liveness_enabled\": false,\n                            \"facial_biometrics_enabled\": false,\n                            \"communicate_by\": \"email\",\n                            \"list_key\": \"1552b77e-289a-4a3e-9252-d79976ca97aa\",\n                            \"url\": \"https://sandbox.clicksign.com/sign/eed95966-6d98-42e8-9aab-4c171713d003\",\n                            \"read_receipts?\": false\n                        }\n                    ]\n                },\n                \"occurred_at\": \"2024-02-24T15:02:15.505Z\"\n            },\n            {\n                \"name\": \"upload\",\n                \"data\": {\n                    \"user\": {\n                        \"email\": \"contato@gmail.com\",\n                        \"name\": \"Pessoa X\"\n                    },\n                    \"account\": {\n                        \"key\": \"086cb16c-b824-4e23-b060-753de873e1b2\"\n                    },\n                    \"deadline_at\": \"2024-03-25T12:02:13.183-03:00\",\n                    \"auto_close\": true,\n                    \"locale\": \"pt-BR\"\n                },\n                \"occurred_at\": \"2024-02-24T15:02:13.401Z\"\n            }\n        ],\n        \"attachments\": [],\n        \"links\": {\n            \"self\": \"/accounts/10597/folders/6306985/documents/e1414da8-697b-474e-bd8e-2e433e0d9386\"\n        }\n    }\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{api}}/v1/tax-domicile/document/webhook?secret={{clicksign_secret_webhook}}",
+											"host": [
+												"{{api}}"
+											],
+											"path": [
+												"v1",
+												"tax-domicile",
+												"document",
+												"webhook"
+											],
+											"query": [
+												{
+													"key": "secret",
+													"value": "{{clicksign_secret_webhook}}"
+												}
+											]
+										}
+									},
+									"_postman_previewlanguage": null,
+									"header": null,
+									"cookie": [],
+									"body": null
+								},
+								{
+									"name": "DOCUMENT CLOSED",
+									"originalRequest": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "content-hmac",
+												"value": "sha256=2ebaa561da845a4e40a79ce78897790e761296bfac8b5bee5b1982f02d9662e3",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"event\": {\n        \"name\": \"close\",\n        \"data\": {\n            \"user\": {\n                \"email\": \"contato@gmail.com\",\n                \"name\": \"Pessoa X\"\n            },\n            \"account\": {\n                \"key\": \"086cb16c-b824-4e23-b060-753de873e1b2\"\n            }\n        },\n        \"occurred_at\": \"2024-02-24T12:06:01.972-03:00\"\n    },\n    \"document\": {\n        \"key\": \"e1414da8-697b-474e-bd8e-2e433e0d9386\",\n        \"account_key\": \"086cb16c-b824-4e23-b060-753de873e1b2\",\n        \"path\": \"/2024/02/24/06550340055-pessoa.x@gmail.com.br-60f55c0a-f8fd-4e00-8c7d-caf5db223b19.docx\",\n        \"filename\": \"06550340055-pessoa.x@gmail.com.br-60f55c0a-f8fd-4e00-8c7d-caf5db223b19.docx\",\n        \"uploaded_at\": \"2024-02-24T15:02:13.382Z\",\n        \"updated_at\": \"2024-02-24T15:06:01.939Z\",\n        \"finished_at\": \"2024-02-24T15:06:01.747Z\",\n        \"deadline_at\": \"2024-03-25T12:02:13.183-03:00\",\n        \"status\": \"closed\",\n        \"auto_close\": true,\n        \"locale\": \"pt-BR\",\n        \"metadata\": {},\n        \"sequence_enabled\": false,\n        \"signable_group\": 2,\n        \"remind_interval\": null,\n        \"block_after_refusal\": true,\n        \"preview\": true,\n        \"downloads\": {\n            \"original_file_url\": \"https://clicksign-sandbox-content.s3.amazonaws.com/2024/02/24/15/02/13/6474f03e-be08-4bf7-969a-0633cd8aaec2/06550340055-pessoa.x%40gmail.com-60f55c0a-f8fd-4e00-8c7d-caf5db223b19.docx?X-Amz-Expires=300\\u0026X-Amz-Date=20240224T150602Z\\u0026X-Amz-Security-Token=IQoJb3JpZ2luX2VjEKb%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLWVhc3QtMSJHMEUCIQC5BF%2FUB44MhqZtyNhhz9rXAYSmCNUI%2Bp%2FAjaujf3J9yQIgTVM%2Fpe7MxfkG8ylIu3N4qI7InHG%2FkPECxw2O6FZ97MUqwgUIjv%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARADGgw3NDA2NjIyNzg3OTMiDHCFE04%2F9W8rBIBAAyqWBZ3I9%2F5LfDZN0jTk6LVWrD35QXhAN7Yz2VYplzmdPS%2BFtn4vfhusus8ZV7AHNifsiMkg2QGg127H43N1ga1UU9CtVMVfn%2F%2BuCmLFSFc5Sj%2BeE%2F%2F%2FW7skCGbs1VaJqNt8IvpD7Aq2bReccPN%2FxR1irBIz3H505cs7sjpEBlE5fr0t24NE45ze0Tc06EJUI9pSEb2X04yVKkESBaIOjAsDBMCjxbcddhxr8WGWh0KcTmaADsogQUpSDxVVjqojCD5d9TV1GP1l262X18964uIBq%2BeiZs%2BWXFa47VQ%2FaGn%2BAUa06cXdtH%2FKiS8NdaO0vWWpoD2OjoJdTYDTKz%2F3qqoS4iy5MrwaqfrbfcWSxHPLYcVoqagYCr6rXQeUxWV2pQoYQ2r4bZVgYOkLik09Cn5Y3PZGlh2tSco1sxjFyfT9mQNyUp%2BCCYOenBIbsgptP8egbyvMfkXVr1fVygRl0dRHybEUCaHCj2iBfzJrzVNR8Pva2kabO0YKyJxc5Wo71YY2VlwYyPUQsy5HcbtjnT6urVcShEOdOQT50gUXkfvtEzHULnotYCu%2B3axpGZwHzA4TKiVzAKqhCqkyWf3Y7Ze0%2BvZCp%2FVZkoC5LOdL3m704eY4Jt6HaNblFK2u3GJFGcH8UOLfwv33pakdvm%2BEP5LecImW4dVgr%2FZ2AXVrPYgDTXrUn4WizamPToz6073SARJTtnzIcXL%2BLpNMz%2Bt4cjD5zLikeDzyh0FQ7z3K0TwPqThN8sOJT736lsLLdb3v5ThVJPSL8FNDvJbjhWqVChTwP8JUirkpN4zMXJQ9lmMyuofC7YOsDCVY2Vie%2BsKlTP1W96q3D4CblFetmKJzjuccg510pBNYyPzI3JIx5g9oXEgOupTUmDSTMPTW564GOrEBfBIqpcYP4qvf7HdGLOCYgX8P5T9%2BLnl8mG%2Bw42PGDPoFSN8VxBVqrYEhuE3gXDKmSp12AuK6WKI3Awwo%2BHpVETu9llEvfDZOC510uIfqjaHVwNgJjuA4xOP9I9yKAwR43tkCl8KfV1UiSy2W%2B67BUjTf%2FVljaHtszk%2BrZmf4Nzet9gCFNHAOVFwoZbRtW%2F6BMoR%2FREkBdzPfLt%2FUhZuKSDq3f4aIq492bxYW6RkOfhgq\\u0026X-Amz-Algorithm=AWS4-HMAC-SHA256\\u0026X-Amz-Credential=ASIA2Y4XJPKE7J3D3ONX%2F20240224%2Fus-east-1%2Fs3%2Faws4_request\\u0026X-Amz-SignedHeaders=host\\u0026X-Amz-Signature=98116fcfb9a052f5f90109816045c5ae881a487ae695cb66761720514c665707\"\n        },\n        \"template\": {\n            \"key\": \"6012dd37-b9c3-40c8-b859-a625627e12b0\",\n            \"data\": {\n                \"company_name\": \"ngrok company\",\n                \"company_document\": \"30.338.337/0001-74\",\n                \"company_address\": \"rua da empresa, 48, Sala 5, bairro, Cidade Camocim-CE, CEP: 56328130\",\n                \"customer_name\": \"Nome do cliente\",\n                \"customer_document\": \"065.503.400-55\",\n                \"customer_address\": \"Rua do cliente, 323, Sala 5, bairro do cliente, Cidade Petrolina-PE, CEP: 56328130\",\n                \"first_witness_name\": \"Primeiro Signatario do escritorio\",\n                \"first_witness_document\": \"000.000.000-00\",\n                \"second_witness_name\": \"Segindo Signatario do escritorio\",\n                \"second_witness_document\": \"078.897.595-17\"\n            }\n        },\n        \"signers\": [\n            {\n                \"list_key\": \"1552b77e-289a-4a3e-9252-d79976ca97aa\",\n                \"key\": \"eed95966-6d98-42e8-9aab-4c171713d003\",\n                \"request_signature_key\": \"731b60d4-179f-45db-91b0-6a70434f0cd1\",\n                \"email\": \"pessoa.x@gmail.com.br\",\n                \"name\": \"Nome do cliente\",\n                \"has_documentation\": false,\n                \"documentation\": null,\n                \"birthday\": null,\n                \"phone_number\": \"87999999999\",\n                \"sign_as\": \"sign\",\n                \"delivery\": \"email\",\n                \"refusable\": false,\n                \"url\": \"https://sandbox.clicksign.com/sign/731b60d4-179f-45db-91b0-6a70434f0cd1\",\n                \"auths\": [\n                    \"email\"\n                ],\n                \"created_at\": \"2024-02-24T15:02:14.489Z\",\n                \"signature\": {\n                    \"name\": \"Nome do cliente\",\n                    \"email\": \"pessoa.x@gmail.com.br\",\n                    \"birthday\": null,\n                    \"documentation\": null,\n                    \"validation\": {\n                        \"status\": \"cpf_empty\",\n                        \"name\": \"Nome do cliente\"\n                    },\n                    \"ip_address\": \"186.194.126.236\",\n                    \"signed_at\": \"2024-02-24T15:05:21.353Z\",\n                    \"sign_as\": \"sign\"\n                }\n            },\n            {\n                \"list_key\": \"11e6e6b9-645f-4665-8bad-ee7191f37a43\",\n                \"key\": \"d4852443-8caa-4f30-a583-11a105b234f7\",\n                \"request_signature_key\": \"f45eb7d2-6ba4-48f8-9bdf-8f921b96e4d0\",\n                \"email\": \"1.office@teste.com.br\",\n                \"name\": \"Primeiro Signatario do escritorio\",\n                \"has_documentation\": false,\n                \"documentation\": null,\n                \"birthday\": null,\n                \"phone_number\": \"87999999999\",\n                \"sign_as\": \"witness\",\n                \"delivery\": \"email\",\n                \"refusable\": false,\n                \"url\": \"https://sandbox.clicksign.com/sign/f45eb7d2-6ba4-48f8-9bdf-8f921b96e4d0\",\n                \"auths\": [\n                    \"api\"\n                ],\n                \"created_at\": \"2024-02-24T14:22:10.156Z\"\n            },\n            {\n                \"list_key\": \"053609f4-a85a-468b-97ac-757c3ffaf27f\",\n                \"key\": \"f6ac79a4-9632-435f-bcb0-6d7d0e5bd53d\",\n                \"request_signature_key\": \"682ba383-54c8-43db-ab7c-5e49a797fbeb\",\n                \"email\": \"2.office@teste.com.br\",\n                \"name\": \"Segindo Signatario do escritorio\",\n                \"has_documentation\": false,\n                \"documentation\": null,\n                \"birthday\": null,\n                \"phone_number\": \"87999999999\",\n                \"sign_as\": \"witness\",\n                \"delivery\": \"email\",\n                \"refusable\": false,\n                \"url\": \"https://sandbox.clicksign.com/sign/682ba383-54c8-43db-ab7c-5e49a797fbeb\",\n                \"auths\": [\n                    \"api\"\n                ],\n                \"created_at\": \"2024-02-24T14:22:36.389Z\"\n            },\n            {\n                \"list_key\": \"b0a2a13c-8d20-44ed-989b-06b3625d1896\",\n                \"key\": \"8b7084ae-0e37-463f-951c-ed3dc0557b9f\",\n                \"request_signature_key\": \"13c1c955-cd40-4b54-87f9-2d6c12ec84d4\",\n                \"email\": \"josue@teste.com.br\",\n                \"name\": \"Pessoa X\",\n                \"has_documentation\": false,\n                \"documentation\": null,\n                \"birthday\": null,\n                \"phone_number\": \"87999999999\",\n                \"sign_as\": \"sign\",\n                \"delivery\": \"email\",\n                \"refusable\": false,\n                \"url\": \"https://sandbox.clicksign.com/sign/13c1c955-cd40-4b54-87f9-2d6c12ec84d4\",\n                \"auths\": [\n                    \"api\"\n                ],\n                \"created_at\": \"2024-02-22T22:52:27.684Z\"\n            }\n        ],\n        \"events\": [\n            {\n                \"name\": \"close\",\n                \"data\": {\n                    \"user\": {\n                        \"email\": \"contato@gmail.com\",\n                        \"name\": \"Pessoa X\"\n                    },\n                    \"account\": {\n                        \"key\": \"086cb16c-b824-4e23-b060-753de873e1b2\"\n                    }\n                },\n                \"occurred_at\": \"2024-02-24T15:06:01.972Z\"\n            },\n            {\n                \"name\": \"sign\",\n                \"data\": {\n                    \"signer\": {\n                        \"sign_as\": \"sign\",\n                        \"key\": \"eed95966-6d98-42e8-9aab-4c171713d003\",\n                        \"email\": \"pessoa.x@gmail.com.br\",\n                        \"name\": \"Nome do cliente\",\n                        \"birthday\": null,\n                        \"documentation\": null,\n                        \"has_documentation\": false,\n                        \"created_at\": \"2024-02-24T12:02:14.489-03:00\",\n                        \"auths\": [\n                            \"email\"\n                        ],\n                        \"selfie_enabled\": false,\n                        \"handwritten_enabled\": false,\n                        \"official_document_enabled\": false,\n                        \"liveness_enabled\": false,\n                        \"facial_biometrics_enabled\": false,\n                        \"communicate_by\": \"email\",\n                        \"list_key\": \"1552b77e-289a-4a3e-9252-d79976ca97aa\",\n                        \"url\": \"https://sandbox.clicksign.com/sign/731b60d4-179f-45db-91b0-6a70434f0cd1\",\n                        \"address\": \"186.194.126.236\",\n                        \"validation\": {\n                            \"status\": \"cpf_empty\",\n                            \"name\": \"Nome do cliente\"\n                        },\n                        \"selfie_name\": null,\n                        \"selfie_hash\": null,\n                        \"handwritten_hash\": null,\n                        \"handwritten_name\": null,\n                        \"official_document_front_hash\": null,\n                        \"official_document_back_hash\": null,\n                        \"official_front_name\": \"official_document_front_24 fev 2024, 12-05-21.png\",\n                        \"official_back_name\": \"official_document_back_24 fev 2024, 12-05-21.png\",\n                        \"read_receipts?\": false\n                    },\n                    \"secret_hmac\": null,\n                    \"account\": {\n                        \"key\": \"086cb16c-b824-4e23-b060-753de873e1b2\",\n                        \"timestamp_signature_functionality\": false\n                    },\n                    \"log_version\": \"1.763.0\",\n                    \"url\": \"https://sandbox.clicksign.com\"\n                },\n                \"occurred_at\": \"2024-02-24T15:05:21.460Z\"\n            },\n            {\n                \"name\": \"add_signer\",\n                \"data\": {\n                    \"user\": {\n                        \"email\": \"contato@gmail.com\",\n                        \"name\": \"Pessoa X\"\n                    },\n                    \"account\": {\n                        \"key\": \"086cb16c-b824-4e23-b060-753de873e1b2\"\n                    },\n                    \"signers\": [\n                        {\n                            \"sign_as\": \"sign\",\n                            \"key\": \"8b7084ae-0e37-463f-951c-ed3dc0557b9f\",\n                            \"email\": \"josue@teste.com.br\",\n                            \"name\": \"Pessoa X\",\n                            \"birthday\": null,\n                            \"documentation\": null,\n                            \"has_documentation\": false,\n                            \"created_at\": \"2024-02-22T19:52:27.684-03:00\",\n                            \"auths\": [\n                                \"api\"\n                            ],\n                            \"selfie_enabled\": false,\n                            \"handwritten_enabled\": false,\n                            \"official_document_enabled\": false,\n                            \"liveness_enabled\": false,\n                            \"facial_biometrics_enabled\": false,\n                            \"communicate_by\": \"email\",\n                            \"list_key\": \"b0a2a13c-8d20-44ed-989b-06b3625d1896\",\n                            \"url\": \"https://sandbox.clicksign.com/sign/8b7084ae-0e37-463f-951c-ed3dc0557b9f\",\n                            \"read_receipts?\": false\n                        }\n                    ]\n                },\n                \"occurred_at\": \"2024-02-24T15:02:18.606Z\"\n            },\n            {\n                \"name\": \"add_signer\",\n                \"data\": {\n                    \"user\": {\n                        \"email\": \"contato@gmail.com\",\n                        \"name\": \"Pessoa X\"\n                    },\n                    \"account\": {\n                        \"key\": \"086cb16c-b824-4e23-b060-753de873e1b2\"\n                    },\n                    \"signers\": [\n                        {\n                            \"sign_as\": \"witness\",\n                            \"key\": \"f6ac79a4-9632-435f-bcb0-6d7d0e5bd53d\",\n                            \"email\": \"2.office@teste.com.br\",\n                            \"name\": \"Segindo Signatario do escritorio\",\n                            \"birthday\": null,\n                            \"documentation\": null,\n                            \"has_documentation\": false,\n                            \"created_at\": \"2024-02-24T11:22:36.389-03:00\",\n                            \"auths\": [\n                                \"api\"\n                            ],\n                            \"selfie_enabled\": false,\n                            \"handwritten_enabled\": false,\n                            \"official_document_enabled\": false,\n                            \"liveness_enabled\": false,\n                            \"facial_biometrics_enabled\": false,\n                            \"communicate_by\": \"email\",\n                            \"list_key\": \"053609f4-a85a-468b-97ac-757c3ffaf27f\",\n                            \"url\": \"https://sandbox.clicksign.com/sign/f6ac79a4-9632-435f-bcb0-6d7d0e5bd53d\",\n                            \"read_receipts?\": false\n                        }\n                    ]\n                },\n                \"occurred_at\": \"2024-02-24T15:02:17.577Z\"\n            },\n            {\n                \"name\": \"add_signer\",\n                \"data\": {\n                    \"user\": {\n                        \"email\": \"contato@gmail.com\",\n                        \"name\": \"Pessoa X\"\n                    },\n                    \"account\": {\n                        \"key\": \"086cb16c-b824-4e23-b060-753de873e1b2\"\n                    },\n                    \"signers\": [\n                        {\n                            \"sign_as\": \"witness\",\n                            \"key\": \"d4852443-8caa-4f30-a583-11a105b234f7\",\n                            \"email\": \"1.office@teste.com.br\",\n                            \"name\": \"Primeiro Signatario do escritorio\",\n                            \"birthday\": null,\n                            \"documentation\": null,\n                            \"has_documentation\": false,\n                            \"created_at\": \"2024-02-24T11:22:10.156-03:00\",\n                            \"auths\": [\n                                \"api\"\n                            ],\n                            \"selfie_enabled\": false,\n                            \"handwritten_enabled\": false,\n                            \"official_document_enabled\": false,\n                            \"liveness_enabled\": false,\n                            \"facial_biometrics_enabled\": false,\n                            \"communicate_by\": \"email\",\n                            \"list_key\": \"11e6e6b9-645f-4665-8bad-ee7191f37a43\",\n                            \"url\": \"https://sandbox.clicksign.com/sign/d4852443-8caa-4f30-a583-11a105b234f7\",\n                            \"read_receipts?\": false\n                        }\n                    ]\n                },\n                \"occurred_at\": \"2024-02-24T15:02:16.557Z\"\n            },\n            {\n                \"name\": \"add_signer\",\n                \"data\": {\n                    \"user\": {\n                        \"email\": \"contato@gmail.com\",\n                        \"name\": \"Pessoa X\"\n                    },\n                    \"account\": {\n                        \"key\": \"086cb16c-b824-4e23-b060-753de873e1b2\"\n                    },\n                    \"signers\": [\n                        {\n                            \"sign_as\": \"sign\",\n                            \"key\": \"eed95966-6d98-42e8-9aab-4c171713d003\",\n                            \"email\": \"pessoa.x@gmail.com.br\",\n                            \"name\": \"Nome do cliente\",\n                            \"birthday\": null,\n                            \"documentation\": null,\n                            \"has_documentation\": false,\n                            \"created_at\": \"2024-02-24T12:02:14.489-03:00\",\n                            \"auths\": [\n                                \"email\"\n                            ],\n                            \"selfie_enabled\": false,\n                            \"handwritten_enabled\": false,\n                            \"official_document_enabled\": false,\n                            \"liveness_enabled\": false,\n                            \"facial_biometrics_enabled\": false,\n                            \"communicate_by\": \"email\",\n                            \"list_key\": \"1552b77e-289a-4a3e-9252-d79976ca97aa\",\n                            \"url\": \"https://sandbox.clicksign.com/sign/eed95966-6d98-42e8-9aab-4c171713d003\",\n                            \"read_receipts?\": false\n                        }\n                    ]\n                },\n                \"occurred_at\": \"2024-02-24T15:02:15.505Z\"\n            },\n            {\n                \"name\": \"upload\",\n                \"data\": {\n                    \"user\": {\n                        \"email\": \"contato@gmail.com\",\n                        \"name\": \"Pessoa X\"\n                    },\n                    \"account\": {\n                        \"key\": \"086cb16c-b824-4e23-b060-753de873e1b2\"\n                    },\n                    \"deadline_at\": \"2024-03-25T12:02:13.183-03:00\",\n                    \"auto_close\": true,\n                    \"locale\": \"pt-BR\"\n                },\n                \"occurred_at\": \"2024-02-24T15:02:13.401Z\"\n            }\n        ],\n        \"attachments\": [],\n        \"links\": {\n            \"self\": \"/accounts/10597/folders/6306985/documents/e1414da8-697b-474e-bd8e-2e433e0d9386\"\n        }\n    }\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{api}}/v1/tax-domicile/document/webhook?secret={{clicksign_secret_webhook}}",
+											"host": [
+												"{{api}}"
+											],
+											"path": [
+												"v1",
+												"tax-domicile",
+												"document",
+												"webhook"
+											],
+											"query": [
+												{
+													"key": "secret",
+													"value": "{{clicksign_secret_webhook}}"
+												}
+											]
+										}
+									},
+									"_postman_previewlanguage": null,
+									"header": null,
+									"cookie": [],
+									"body": null
+								},
+								{
+									"name": "AUTO CLOSE",
+									"originalRequest": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "content-hmac",
+												"value": "sha256=c627907f338d8afec976cc17c17fa9c73d8ae78a0dda85744f3dbe8bf15f45af",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"event\": {\n        \"name\": \"auto_close\",\n        \"data\": null,\n        \"occurred_at\": \"2024-04-28T12:59:25.883-03:00\"\n    },\n    \"document\": {\n        \"key\": \"f34a8b9f-9a69-4d53-a9b9-2d695635b107\",\n        \"account_key\": \"086cb16c-b824-4e23-b060-753de873e1b2\",\n        \"path\": \"/2024/04/18/11272120015-contato@gmail.com-19f62c39-99f0-4e38-8ce3-c87afbdc1705.docx\",\n        \"filename\": \"11272120015-contato@gmail.com-19f62c39-99f0-4e38-8ce3-c87afbdc1705.docx\",\n        \"uploaded_at\": \"2024-04-18T04:46:05.014Z\",\n        \"updated_at\": \"2024-04-28T15:59:25.860Z\",\n        \"finished_at\": \"2024-04-28T15:59:25.503Z\",\n        \"deadline_at\": \"2024-05-18T01:46:04.752-03:00\",\n        \"status\": \"closed\",\n        \"auto_close\": true,\n        \"locale\": \"pt-BR\",\n        \"metadata\": {},\n        \"sequence_enabled\": false,\n        \"signable_group\": null,\n        \"remind_interval\": null,\n        \"block_after_refusal\": true,\n        \"preview\": true,\n        \"downloads\": {\n            \"original_file_url\": \"https://clicksign-sandbox-content.s3.amazonaws.com/2024/04/18/04/46/04/2ecdb3df-81e7-4755-bcf0-43fce9fb6b9c/11272120015-contato%40gmail.com-19f62c39-99f0-4e38-8ce3-c87afbdc1705.docx?X-Amz-Expires=299\\u0026X-Amz-Date=20240428T155926Z\\u0026X-Amz-Security-Token=IQoJb3JpZ2luX2VjEKf%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLWVhc3QtMSJHMEUCIA4Mz697aYqRC0NatlQCEKnlsQVHPSj38eFnfniJR0EmAiEA5Jh6ESrRWHFqb2vpKx%2FLzfoC6xvx7z9tUz5Yper2MKoqxAUI8P%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARADGgw3NDA2NjIyNzg3OTMiDHzvoU2b32uevLpaKyqYBdvKvIconZKgW2h1undSLZeBHoXbOzeetCxgJ8C1jA4AZyXX3nG6p%2BZpUer5oQQi2dK%2BHbSmhHDQOYSAr7x6iBo%2Bcm9%2BFVt81QtiOrG6vLtCOrjHuQ49z52g2eDS%2B186bxpnKkWgus9xY5AYowB7Ao%2FoeS5AyHV%2BUv3L3%2FHsiURE%2Fw4%2BXL%2FdFANRQJz4m4nGcQ2pThmjtqfKxwv6DmXPbAEhjYdL9hgr0UIHZjj074dl%2FrSCUnCV9Qpl7EKq3cUD%2B07vN6q0lBi4Cv6q8%2F3zDj0Lz1XybXtxC2LgSAtydxrjHsVmUYLTFNMuH%2FSW7vu%2BR1IEBnzUqRA6JTwsFQPQKf5wsj3bx5oImSuWBF56HQ6fyezA5JR99h3Gj%2Fl7xlx2xi009JnpHDeVDoq6pKoa5QwNA8Fm41OXmrBtI0srcdzuc8%2B2cYvPwgIcL1KHtfzyTCAjD1JsLiF2mFAHmx2a1SGL65345%2FNXINfAEC0Jkotp8VchPgB3V7ezbVbrkNNQoLtOxAxugE%2FQB0ik1iSwpwBjFPzWeYcZkOMdJbbDTzfx3zhBCQh8QrVZAtVJK5jYaCrbPha%2FwuVAylew77ugABzt7R1qgDQDZo8J9vHNFRsk%2BEEuufP49zfwzeYuiX%2Bo67fdv11y%2Fj%2BEFmowPw1fzhqUoK1OMX92UQS5SlXmhcqLNCIulO0lDV5tWMEvW%2F7jjCxXHS8J%2BanwZ80GJ3YwxrpnceCU3Ha0MhszGaA6rTRbNlWXrApHMNmZUJ%2Fk1VlCHidIhiyzgFD9mSrCiKtSilqyYkwbp%2FsZHQfpjTuSoj0rh16DK2rXgC4lDqo9aUnp03s9rfUWs%2BcgTo902szqygdOUe7i9hm3KpjKsA9kVZlr0qQKJ%2Bc2b1Ew8cO5sQY6sQHo%2FS3F%2F%2BGquOBE7Y2O%2Fgigl307yapR9K3t8fIp%2BoMVjP2Wrpt4slKWLU7mlm%2BYcEZVs%2BCNHQPYgwQQ9mu%2BJDzcIinhGgAAt3vswsURfSRVT4jGOS0TFwcIhgzQEb6etpMPCq55Z0Z1nY2GQDzrXpC5EPnwAzRHd%2FN934EVMWwo%2Bs77oxEZ%2FVJAi2lOoF4zC2vZdDcXrUohf9qZ3BY7aqGt7gYBwMruwS2y9pQAJj0KP10%3D\\u0026X-Amz-Algorithm=AWS4-HMAC-SHA256\\u0026X-Amz-Credential=ASIA2Y4XJPKETZ53HYV3%2F20240428%2Fus-east-1%2Fs3%2Faws4_request\\u0026X-Amz-SignedHeaders=host\\u0026X-Amz-Signature=a4aa497ee55f2d983ffeef35a7cfe9b011f004b98a9f6a206bb61203a1dddd27\"\n        },\n        \"template\": {\n            \"key\": \"b2c6d7a6-6b2d-472d-838d-a4bc45c32abd\",\n            \"data\": {\n                \"contractor\": \"CONTRATANTE: Empresa Contratante, pessoa Jurídica de direito privado, inscrita no CNPJ sob o no 90.235.002/0001-52, com sede na rua da empresa, 48, Sala 5, bairro, Cidade Camocim-CE, CEP: 56328130 neste ato representado por Pessoa X, brasileiro(a), portador do CPF de número 112.721.200-15.\",\n                \"customer_name\": \"Pessoa X\",\n                \"customer_document\": \"112.721.200-15\",\n                \"first_witness_name\": \"Pessoa X\",\n                \"first_witness_document\": \"000.000.000-00\",\n                \"second_witness_name\": \"Segunda Testemunha\",\n                \"second_witness_document\": \"078.897.595-17\"\n            }\n        },\n        \"signers\": [\n            {\n                \"list_key\": \"f9b2aa83-da50-4f00-ae52-54a7ac7353c7\",\n                \"key\": \"dbd335f2-4794-422d-aea4-b4ebaebb56fd\",\n                \"request_signature_key\": \"e84153f0-9ff5-4fb2-b814-1fecbe729e38\",\n                \"email\": \"contato@gmail.com\",\n                \"name\": \"Pessoa X\",\n                \"has_documentation\": false,\n                \"documentation\": null,\n                \"birthday\": null,\n                \"phone_number\": \"87999999999\",\n                \"sign_as\": \"sign\",\n                \"delivery\": \"email\",\n                \"refusable\": false,\n                \"url\": \"https://sandbox.clicksign.com/sign/e84153f0-9ff5-4fb2-b814-1fecbe729e38\",\n                \"auths\": [\n                    \"email\"\n                ],\n                \"created_at\": \"2024-04-18T04:46:06.521Z\",\n                \"signature\": {\n                    \"name\": \"Pessoa X\",\n                    \"email\": \"contato@gmail.com\",\n                    \"birthday\": null,\n                    \"documentation\": null,\n                    \"validation\": {\n                        \"status\": \"cpf_empty\",\n                        \"name\": \"Pessoa X\"\n                    },\n                    \"ip_address\": \"10.20.50.124\",\n                    \"signed_at\": \"2024-04-28T15:59:25.358Z\",\n                    \"sign_as\": \"sign\"\n                }\n            }\n        ],\n        \"events\": [\n            {\n                \"name\": \"auto_close\",\n                \"data\": null,\n                \"occurred_at\": \"2024-04-28T15:59:25.883Z\"\n            },\n            {\n                \"name\": \"sign\",\n                \"data\": {\n                    \"signer\": {\n                        \"sign_as\": \"sign\",\n                        \"key\": \"dbd335f2-4794-422d-aea4-b4ebaebb56fd\",\n                        \"email\": \"contato@gmail.com\",\n                        \"name\": \"Pessoa X\",\n                        \"birthday\": null,\n                        \"documentation\": null,\n                        \"has_documentation\": false,\n                        \"created_at\": \"2024-04-18T01:46:06.521-03:00\",\n                        \"auths\": [\n                            \"email\"\n                        ],\n                        \"selfie_enabled\": false,\n                        \"handwritten_enabled\": false,\n                        \"official_document_enabled\": false,\n                        \"liveness_enabled\": false,\n                        \"facial_biometrics_enabled\": false,\n                        \"communicate_by\": \"email\",\n                        \"list_key\": \"f9b2aa83-da50-4f00-ae52-54a7ac7353c7\",\n                        \"url\": \"https://sandbox.clicksign.com/sign/e84153f0-9ff5-4fb2-b814-1fecbe729e38\",\n                        \"address\": \"10.20.50.124\",\n                        \"validation\": {\n                            \"status\": \"cpf_empty\",\n                            \"name\": \"Pessoa X\"\n                        },\n                        \"selfie_name\": null,\n                        \"selfie_hash\": null,\n                        \"handwritten_hash\": null,\n                        \"handwritten_name\": null,\n                        \"official_document_front_hash\": null,\n                        \"official_document_back_hash\": null,\n                        \"official_front_name\": \"official_document_front_28 abr 2024, 12-59-25.png\",\n                        \"official_back_name\": \"official_document_back_28 abr 2024, 12-59-25.png\",\n                        \"read_receipts?\": false\n                    },\n                    \"secret_hmac\": null,\n                    \"account\": {\n                        \"key\": \"086cb16c-b824-4e23-b060-753de873e1b2\",\n                        \"timestamp_signature_functionality\": false\n                    },\n                    \"log_version\": \"1.837.0\",\n                    \"url\": \"https://sandbox.clicksign.com\"\n                },\n                \"occurred_at\": \"2024-04-28T15:59:25.453Z\"\n            },\n            {\n                \"name\": \"add_signer\",\n                \"data\": {\n                    \"user\": {\n                        \"email\": \"contato@gmail.com\",\n                        \"name\": \"Pessoa X\"\n                    },\n                    \"account\": {\n                        \"key\": \"086cb16c-b824-4e23-b060-753de873e1b2\"\n                    },\n                    \"signers\": [\n                        {\n                            \"sign_as\": \"sign\",\n                            \"key\": \"dbd335f2-4794-422d-aea4-b4ebaebb56fd\",\n                            \"email\": \"contato@gmail.com\",\n                            \"name\": \"Pessoa X\",\n                            \"birthday\": null,\n                            \"documentation\": null,\n                            \"has_documentation\": false,\n                            \"created_at\": \"2024-04-18T01:46:06.521-03:00\",\n                            \"auths\": [\n                                \"email\"\n                            ],\n                            \"selfie_enabled\": false,\n                            \"handwritten_enabled\": false,\n                            \"official_document_enabled\": false,\n                            \"liveness_enabled\": false,\n                            \"facial_biometrics_enabled\": false,\n                            \"communicate_by\": \"email\",\n                            \"list_key\": \"f9b2aa83-da50-4f00-ae52-54a7ac7353c7\",\n                            \"url\": \"https://sandbox.clicksign.com/sign/dbd335f2-4794-422d-aea4-b4ebaebb56fd\",\n                            \"read_receipts?\": false\n                        }\n                    ]\n                },\n                \"occurred_at\": \"2024-04-18T04:46:07.905Z\"\n            },\n            {\n                \"name\": \"upload\",\n                \"data\": {\n                    \"user\": {\n                        \"email\": \"contato@gmail.com\",\n                        \"name\": \"Pessoa X\"\n                    },\n                    \"account\": {\n                        \"key\": \"086cb16c-b824-4e23-b060-753de873e1b2\"\n                    },\n                    \"deadline_at\": \"2024-05-18T01:46:04.752-03:00\",\n                    \"auto_close\": true,\n                    \"locale\": \"pt-BR\"\n                },\n                \"occurred_at\": \"2024-04-18T04:46:05.038Z\"\n            }\n        ],\n        \"attachments\": [],\n        \"links\": {\n            \"self\": \"/accounts/10597/folders/6701254/documents/f34a8b9f-9a69-4d53-a9b9-2d695635b107\"\n        }\n    }\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{api}}/v1/tax-domicile/document/webhook?secret={{clicksign_secret_webhook}}",
+											"host": [
+												"{{api}}"
+											],
+											"path": [
+												"v1",
+												"tax-domicile",
+												"document",
+												"webhook"
+											],
+											"query": [
+												{
+													"key": "secret",
+													"value": "{{clicksign_secret_webhook}}"
+												}
+											]
+										}
+									},
+									"_postman_previewlanguage": null,
+									"header": null,
+									"cookie": [],
+									"body": null
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "Received From Landing Page",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"customer\": {\n        \"name\": \"Segunda Testemunha\",\n        \"email\": \"contato@gmail.com\",\n        \"phone\": \"87999999999\",\n        \"document\": \"32350876055\",\n        \"street\": \"Rua Presidente João Goulart\",\n        \"number\": \"42\",\n        \"neighborhood\": \"Coab II\",\n        \"city\": \"Sobral\",\n        \"state\": \"CE\",\n        \"postal_code\": \"56328130\",\n        \"country\": \"Brasil\",\n        \"complement\": \"Sala 5\",\n        \"person\": \"PJ\"\n    },\n    \"company\": {\n        \"document\": \"83628918000107\",\n        \"name\": \"Empresa Contratante\",\n        \"street\": \"rua da empresa\",\n        \"number\": \"48\",\n        \"neighborhood\": \"bairro\",\n        \"city\": \"Camocim\",\n        \"state\": \"CE\",\n        \"country\": \"Brasil\",\n        \"postal_code\": \"56328130\",\n        \"complement\": \"Sala 5\"\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{api}}/v1/tax-domicile/purchase?secret={{landing_page_secret}}",
+							"host": [
+								"{{api}}"
+							],
+							"path": [
+								"v1",
+								"tax-domicile",
+								"purchase"
+							],
+							"query": [
+								{
+									"key": "secret",
+									"value": "{{landing_page_secret}}"
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Testando com Pessoa Y",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\": \"Pessoa Y Teste\",\n    \"email\": \"pessoa.y@hotmail.com\",\n    \"phone\": \"87988341772\",\n    \"document\": \"07889759517\",\n    \"street\": \"Rua 1\",\n    \"number\": \"11\",\n    \"neighborhood\": \"centro\",\n    \"city\": \"juazeiro\",\n    \"state\": \"BA\",\n    \"postal_code\": \"4890084\",\n    \"country\": \"Brasil\",\n    \"complement\": null,\n    \"company\": {\n        \"document\": \"07889759517\",\n        \"name\": \"Pessoa Y Teste\",\n        \"street\": \"Rua 1\",\n        \"number\": \"11\",\n        \"neighborhood\": \"centro\",\n        \"city\": \"juazeiro\",\n        \"state\": \"BA\",\n        \"country\": \"Brasil\",\n        \"postal_code\": \"4890084\",\n        \"complement\": null\n    }\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{api}}/v1/tax-domicile/purchase",
+									"host": [
+										"{{api}}"
+									],
+									"path": [
+										"v1",
+										"tax-domicile",
+										"purchase"
+									]
+								}
+							},
+							"_postman_previewlanguage": null,
+							"header": null,
+							"cookie": [],
+							"body": null
+						},
+						{
+							"name": "Erro de validacao",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\": \"Pessoa X\",\n    \"email\": \"pessoa.x@gmail.com\",\n    \"phone\": \"87999999999\",\n    \"document\": \"47448494074\",\n    \"street\": \"Rua dwo cliente\",\n    \"number\": \"223\",\n    \"neighborhood\": \"bairro do clientesss\",\n    \"city\": \"Petrolina\",\n    \"state\": \"PE\",\n    \"postal_code\": \"56328130\",\n    \"country\": \"Brasil\",\n    \"complement\": \"Sala 5\",\n    \"company\": {\n        \"document\": \"44154679000149\",\n        \"name\": \"ngrok company\",\n        \"street\": \"rua da empresa\",\n        \"number\": \"48\",\n        \"neighborhood\": \"bairro\",\n        \"city\": \"Camocim\",\n        \"state\": \"CE\",\n        \"country\": \"Brasil\",\n        \"postal_code\": \"56328130\",\n        \"complement\": \"Sala 5\"\n    }\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{api}}/v1/tax-domicile/purchase",
+									"host": [
+										"{{api}}"
+									],
+									"path": [
+										"v1",
+										"tax-domicile",
+										"purchase"
+									]
+								}
+							},
+							"_postman_previewlanguage": null,
+							"header": null,
+							"cookie": [],
+							"body": null
+						},
+						{
+							"name": "Valor Fechado - Boleto, PIX e Cartão de Crédito",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\": \"Pessoa X\",\n    \"email\": \"contato@gmail.com\",\n    \"phone\": \"87999999999\",\n    \"document\": \"00560402023\",\n    \"street\": \"Rua dwo cliente\",\n    \"number\": \"223\",\n    \"neighborhood\": \"bairro do clientesss\",\n    \"city\": \"Petrolina\",\n    \"state\": \"PE\",\n    \"postal_code\": \"56328130\",\n    \"country\": \"Brasil\",\n    \"complement\": \"Sala 5\",\n    \"company\": {\n        \"document\": \"13982558000161\",\n        \"name\": \"ngrok company\",\n        \"street\": \"rua da empresa\",\n        \"number\": \"48\",\n        \"neighborhood\": \"bairro\",\n        \"city\": \"Camocim\",\n        \"state\": \"CE\",\n        \"country\": \"Brasil\",\n        \"postal_code\": \"56328130\",\n        \"complement\": \"Sala 5\"\n    }\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{api}}/v1/tax-domicile/purchase",
+									"host": [
+										"{{api}}"
+									],
+									"path": [
+										"v1",
+										"tax-domicile",
+										"purchase"
+									]
+								}
+							},
+							"_postman_previewlanguage": null,
+							"header": null,
+							"cookie": [],
+							"body": null
+						},
+						{
+							"name": "Assinatura - Boleto",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"customer\": {\n        \"name\": \"Segunda Testemunha\",\n        \"email\": \"contato@gmail.com\",\n        \"phone\": \"87999999999\",\n        \"document\": \"32350876055\",\n        \"street\": \"Rua Presidente João Goulart\",\n        \"number\": \"42\",\n        \"neighborhood\": \"Coab II\",\n        \"city\": \"Sobral\",\n        \"state\": \"CE\",\n        \"postal_code\": \"56328130\",\n        \"country\": \"Brasil\",\n        \"complement\": \"Sala 5\",\n        \"person\": \"PJ\"\n    },\n    \"company\": {\n        \"document\": \"83628918000107\",\n        \"name\": \"Empresa Contratante\",\n        \"street\": \"rua da empresa\",\n        \"number\": \"48\",\n        \"neighborhood\": \"bairro\",\n        \"city\": \"Camocim\",\n        \"state\": \"CE\",\n        \"country\": \"Brasil\",\n        \"postal_code\": \"56328130\",\n        \"complement\": \"Sala 5\"\n    },\n    \"payment\": {\n        \"method\": \"credit_card\",\n        \"cycle\": \"YEAR\"\n    }\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{api}}/v1/tax-domicile/purchase?secret={{landing_page_secret}}",
+									"host": [
+										"{{api}}"
+									],
+									"path": [
+										"v1",
+										"tax-domicile",
+										"purchase"
+									],
+									"query": [
+										{
+											"key": "secret",
+											"value": "{{landing_page_secret}}"
+										}
+									]
+								}
+							},
+							"_postman_previewlanguage": null,
+							"header": null,
+							"cookie": [],
+							"body": null
+						}
+					]
+				}
+			]
+		}
+	]
+}
